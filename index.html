@@ -3218,7 +3218,7 @@ onCreateOwn={handleOnboardCreateOwn}
             }}>{dayInfo?.type?"Ändern":"+ Planen"}</button>
           </div>
           <div className="savebar">
-            <span className={`savetxt ${saveStatus}`}>{saveStatus==="ing"?"Speichert…":"Gespeichert"}</span>
+            <span className={`savetxt ${saveStatus}`}>{saveStatus==="ing"?"Speichert...":"Gespeichert"}</span>
           </div>
         </div>
         {planIdx!==null?(
@@ -3258,7 +3258,6 @@ onCreateOwn={handleOnboardCreateOwn}
 
 ReactDOM.createRoot(document.getElementById(‘root’)).render(React.createElement(App));
 
-// Hide splash after render
 requestAnimationFrame(function() {
 var splash = document.getElementById(‘splash’);
 if(splash) { splash.style.opacity=‘0’; setTimeout(function(){ splash.style.display=‘none’; },600); }
