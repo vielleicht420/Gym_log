@@ -1457,8 +1457,8 @@ return “#e8ff47”;
 }
 function getPlanName(type) {
 if(type===“rest”) return “💤 Ruhetag”;
-if(type===“A”) return “Tag A – Brust & Rücken”;
-if(type===“B”) return “Tag B – Schulter & Arme”;
+if(type===“A”) return “Tag A - Brust & Rücken”;
+if(type===“B”) return “Tag B - Schulter & Arme”;
 if(type?.startsWith(“custom_”)) return customPlans.find(p=>“custom_”+p.id===type)?.name||“Eigener Plan”;
 return type;
 }
@@ -1512,10 +1512,10 @@ function onTouchEnd() { clearTimeout(pressTimer.current); }
 
 function handleDayTap(date, dk, di) {
 if(di?.type) {
-// Day has a plan — go directly
+// Day has a plan – go directly
 onSelectDate(date);
 } else {
-// Empty day — ask if they want to plan it
+// Empty day – ask if they want to plan it
 setConfirmDay({date, dk});
 }
 }
@@ -1565,7 +1565,7 @@ onContextMenu={e=>{e.preventDefault();if(di?.type) setPopup({dk,di});}}>
 </div>
 
 ```
-  {/* Confirm plan modal — shown when tapping empty day */}
+  {/* Confirm plan modal -- shown when tapping empty day */}
   {confirmDay&&(
     <div style={{position:"fixed",inset:0,zIndex:400,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px",background:"rgba(0,0,0,.6)",backdropFilter:"blur(6px)"}}
       onClick={e=>{e.stopPropagation();setConfirmDay(null);}}>
@@ -1640,7 +1640,7 @@ onContextMenu={e=>{e.preventDefault();if(di?.type) setPopup({dk,di});}}>
           </div>
 
           <div style={{padding:"18px 22px 22px"}}>
-                          {/* Quick stats only — details via button */}
+                          {/* Quick stats only -- details via button */}
             {di?.type!=="rest"&&stats.total>0&&(
               <div style={{display:"flex",gap:"8px",marginBottom:"16px"}}>
                 <div style={{flex:1,background:"rgba(255,255,255,.04)",borderRadius:"10px",padding:"10px 6px",textAlign:"center",border:"1px solid rgba(255,255,255,.06)"}}>
@@ -1835,9 +1835,9 @@ borderRadius:“10px”,transition:“all .2s”,fontFamily:”‘Nunito’,sans
     <div className="stats-section-title">Verlauf</div>
     <div className="graph-card">
       <div className="graph-title">Maximales Gewicht pro Training</div>
-      <div className="graph-sub">{!selectedEx?"Wähle eine Übung":graphPoints.length>=2?"Antippen für Details":graphPoints.length===0?"Noch keine Daten":"1 Eintrag – noch 1 weiteres Training"}</div>
+      <div className="graph-sub">{!selectedEx?"Wähle eine Übung":graphPoints.length>=2?"Antippen für Details":graphPoints.length===0?"Noch keine Daten":"1 Eintrag - noch 1 weiteres Training"}</div>
       <select className="graph-select" value={selectedEx} onChange={e=>{setSelectedEx(e.target.value);setGraphExpanded(false);}}>
-        <option value="">— Übung wählen —</option>
+        <option value="">-- Übung wählen --</option>
         {allExercises.map(ex=><option key={ex.id} value={ex.id}>{ex.name}</option>)}
       </select>
       {!selectedEx&&<><div style={{fontSize:".62rem",color:"var(--mut)",marginBottom:"6px",fontStyle:"italic"}}>Beispiel:</div><BigGraph points={examplePoints} color="#444b55" isExample={true}/></>}
@@ -1946,7 +1946,7 @@ return (
           {sec.exercises.map((ex,ei)=>(
             <div key={ei} style={{display:"flex",alignItems:"center",padding:"8px 12px",borderBottom:"1px solid rgba(255,255,255,.03)"}}>
               <div style={{flex:1,fontSize:".78rem",fontWeight:600}}>{ex.name}</div>
-              <div style={{fontSize:".62rem",color:"var(--mut)",marginRight:"8px",fontWeight:600}}>{ex.sets}× {ex.reps}</div>
+              <div style={{fontSize:".62rem",color:"var(--mut)",marginRight:"8px",fontWeight:600}}>{ex.sets}x {ex.reps}</div>
               <button onClick={()=>removeExercise(si,ei)} style={{background:"none",border:"none",color:"var(--mut2)",cursor:"pointer",fontSize:".8rem"}}>✕</button>
             </div>
           ))}
@@ -2129,7 +2129,7 @@ Wähle beim Training einen Plan aus
                 <div key={ei} className="plan-ex-pill" style={{fontSize:".65rem",fontWeight:700,padding:"3px 8px",
                   background:"rgba(255,255,255,.04)",borderRadius:"6px",border:"1px solid rgba(255,255,255,.06)",
                   color:"var(--acc3)"}}>
-                  {ex.name} <span style={{color:"var(--mut)",fontWeight:600}}>{ex.sets}×</span>
+                  {ex.name} <span style={{color:"var(--mut)",fontWeight:600}}>{ex.sets}x</span>
                 </div>
               ))}
             </div>
@@ -2316,7 +2316,7 @@ OK
     <div style={{ background: "var(--card)", border: "1px solid var(--bdr)", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
       <div style={{ fontSize: "2rem", marginBottom: "8px" }}>🏋️</div>
       <div style={{ fontSize: ".85rem", fontWeight: 600, marginBottom: "4px", color: "var(--txt)" }}>Gym-Auslastung</div>
-      <div style={{ fontSize: ".72rem", lineHeight: 1.6, color: "var(--mut)" }}>Tippe deinen Gym-Namen ein — ich suche automatisch nach echten Standorten mit Adresse.</div>
+      <div style={{ fontSize: ".72rem", lineHeight: 1.6, color: "var(--mut)" }}>Tippe deinen Gym-Namen ein -- ich suche automatisch nach echten Standorten mit Adresse.</div>
     </div>
   )}
 
@@ -2495,7 +2495,7 @@ return (
 <div style={{display:“flex”,justifyContent:“space-between”,alignItems:“flex-start”}}>
 <div>
 <div className="review-title">Diese Woche</div>
-<div className="review-sub">{weekStart.toLocaleDateString(“de-DE”,{day:“numeric”,month:“long”})} – heute</div>
+<div className="review-sub">{weekStart.toLocaleDateString(“de-DE”,{day:“numeric”,month:“long”})} - heute</div>
 </div>
 {diff!==0&&<div style={{fontSize:”.65rem”,fontWeight:800,padding:“4px 10px”,borderRadius:“10px”,
 background:diff>0?“rgba(134,239,172,.15)”:“rgba(248,113,113,.15)”,
@@ -2762,7 +2762,7 @@ return (
 <div style={{width:36,height:4,background:“rgba(255,255,255,.12)”,borderRadius:2,margin:“0 auto 22px”}}/>
 <div className="onboard-title">Willkommen! 💪</div>
 <div className="onboard-sub">
-Wähle einen fertigen Trainingsplan oder erstelle deinen eigenen — du kannst alles jederzeit anpassen.
+Wähle einen fertigen Trainingsplan oder erstelle deinen eigenen – du kannst alles jederzeit anpassen.
 </div>
 
 ```
@@ -3045,7 +3045,7 @@ const [showPicker,setShowPicker]=useState(false);
 const [saveStatus,setSaveStatus]=useState(“ok”);
 const saveTimer=useRef(null);
 
-// Listen for system dark/light mode changes — only if user never manually set it
+// Listen for system dark/light mode changes – only if user never manually set it
 useEffect(()=>{
 const mq = window.matchMedia(’(prefers-color-scheme: light)’);
 function handleChange(e) {
@@ -3053,7 +3053,7 @@ const saved = user ? localStorage.getItem(“gymlog_dark_”+user) : localStorag
 if (saved === null || saved === undefined) {
 setDarkMode(!e.matches);
 }
-// If user manually set it — ignore system changes completely
+// If user manually set it – ignore system changes completely
 }
 mq.addEventListener(‘change’, handleChange);
 return () => mq.removeEventListener(‘change’, handleChange);
@@ -3090,7 +3090,7 @@ setTimerDuration(JSON.parse(localStorage.getItem(“gymlog_timer_”+u)||“90�
         localStorage.setItem("gymlog_dark_"+u, guestDark);
         localStorage.removeItem("gymlog_dark_guest");
       } else {
-        // No preference saved — follow system
+        // No preference saved -- follow system
         setDarkMode(!window.matchMedia('(prefers-color-scheme: light)').matches);
       }
       setStatus("app");return;
@@ -3146,7 +3146,7 @@ function saveHiddenDefaults(next){setHiddenDefaults(next);localStorage.setItem(�
 function toggleDarkMode(){
 const next=!darkMode;
 setDarkMode(next);
-// Save to localStorage with user key or guest key — marks as manually overridden
+// Save to localStorage with user key or guest key – marks as manually overridden
 const key = user ? “gymlog_dark_”+user : “gymlog_dark_guest”;
 localStorage.setItem(key, JSON.stringify(next));
 }
@@ -3238,7 +3238,7 @@ return (
             }}>{dayInfo?.type?"Ändern":"+ Planen"}</button>
           </div>
           <div className="savebar">
-            <span className={`savetxt ${saveStatus}`}>{saveStatus==="ing"?"Speichert…":"Gespeichert"}</span>
+            <span className={`savetxt ${saveStatus}`}>{saveStatus==="ing"?"Speichert...":"Gespeichert"}</span>
           </div>
         </div>
         {planIdx!==null?(
