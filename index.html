@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GYM LOG">
@@ -11,7 +11,10 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:#080a0f}
 input,textarea,select{font-size:max(16px,1rem)!important}
-#root{height:100%}
+/* Hide scrollbar everywhere */
+*::-webkit-scrollbar{display:none}
+*{-ms-overflow-style:none;scrollbar-width:none}
+#root{height:100%;height:100dvh}
 #splash{position:fixed;inset:0;background:#080a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:9999}
 .sp-logo{font-family:'Arial Black',Impact,sans-serif;font-size:2.4rem;font-weight:900;letter-spacing:6px;color:#fff;animation:gp 2s ease-in-out infinite}
 @keyframes gp{0%,100%{opacity:1}50%{opacity:.6}}
@@ -24,6 +27,7 @@ body.theme-purple{--acc:#a78bfa;--acc2:#8b5cf6;--acc3:#c4b5fd}
 body.theme-orange{--acc:#fb923c;--acc2:#f97316;--acc3:#fdba74}
 body.theme-pink{--acc:#f472b6;--acc2:#ec4899;--acc3:#f9a8d4}
 body.theme-yellow{--acc:#fbbf24;--acc2:#f59e0b;--acc3:#fcd34d}
+body.theme-red{--acc:#f87171;--acc2:#ef4444;--acc3:#fca5a5}
 
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -64,7 +68,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Nunito',sans-serif;min-h
 .ltab{flex:1;padding:9px;text-align:center;font-size:.7rem;font-weight:700;
   letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;
   background:none;color:var(--mut);border-radius:10px;transition:all .2s;font-family:'Nunito',sans-serif}
-.ltab.on{background:var(--acc);color:#080a0f}
+.ltab.on{background:var(--acc);color:var(--acc-txt,#080a0f)}
 .fld{display:flex;flex-direction:column;gap:6px}
 .fld label{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mut);font-weight:700}
 .fld input{background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;font-size:max(16px,.92rem)!important;
@@ -416,7 +420,7 @@ header{background:rgba(8,10,15,.92);backdrop-filter:blur(20px);-webkit-backdrop-
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
 /* CUSTOM PLANS */
-.plans-page{padding:16px 16px 110px}
+.plans-page{padding:16px 16px 110px;min-height:calc(100vh - 120px);display:flex;flex-direction:column}
 .plan-card{background:linear-gradient(145deg,rgba(26,31,42,.95) 0%,rgba(20,24,32,.98) 100%);
   border:1px solid rgba(255,255,255,.07);border-radius:18px;margin-bottom:10px;
   overflow:hidden;transition:all .2s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
@@ -480,7 +484,7 @@ header{background:rgba(8,10,15,.92);backdrop-filter:blur(20px);-webkit-backdrop-
 body.light{
   --bg:#f0f2f8;--sur:#ffffff;--card:#f8f9ff;--card2:#eef0fa;
   --bdr:#dde0f0;--bdr2:#ccd0e8;
-  --acc:#1a1f2a;--acc2:#3b6bff;--acc3:#4466bb;
+  --acc:#1a1f2a;--acc2:#3b6bff;--acc3:#4466bb;--acc-txt:#ffffff;
   --txt:#0d1020;--mut:#7080a0;--mut2:#a0aac0;
   --ga:#0066aa;--ga-bg:#e0f0ff;--gb:#007744;--gb-bg:#e0f5ea;
   --red:#cc2222;--red-bg:#ffe8e8;--grn:#007744;--grn-bg:#e0f5ea;
@@ -505,7 +509,7 @@ body.light .modal-opt{background:#f0f2fa!important;border-color:rgba(0,0,0,.08)!
 body.light .modal-opt.active{background:#e8f0ff!important;border-color:var(--acc)!important}
 
 /* Header & nav */
-body.light header{background:rgba(240,242,248,.92)!important;border-bottom-color:rgba(0,0,0,.07)!important}
+body.light header{background:rgba(240,242,248,.92)!important;border-bottom-color:rgba(0,0,0,.07)!important;padding-top:env(safe-area-inset-top,0px)!important}
 body.light .bnav{background:rgba(235,237,248,.95)!important;border-top-color:rgba(0,0,0,.07)!important}
 
 /* Pill stays dark in light mode */
@@ -638,10 +642,85 @@ body.light .loading{background:radial-gradient(ellipse 80% 50% at 50% 0%,#dde5ff
 /* pfill in light mode */
 body.light .pfill{background:linear-gradient(90deg,#1a1f2a,#4466bb)!important}
 body.light .cal-confirm-btn{color:#ffffff!important}
+/* Active section tab - dark bg needs white text in light mode */
+body.light button[style*="var(--acc)"][style*="#080a0f"]{color:#ffffff!important}
+/* Template übernehmen button */
+body.light .tmpl-card button{color:#ffffff!important}
+/* Any button with var(--acc) background gets white text in light mode */
+body.light .pbtn{color:#ffffff!important}
+body.light button.pbtn{color:#ffffff!important}
 
 /* Avatar (T) - white text on dark bg in light mode */
 body.light .uav{background:#1a1f2a!important;color:#ffffff!important}
 body.light .gym-ok-btn{color:#ffffff!important}
+/* Login screen light mode */
+body.light .ltab.on{color:#ffffff!important}
+body.light .logo{color:#0d1020!important;-webkit-text-fill-color:#0d1020!important}
+body.light .logo-sub{color:#7080a0!important}
+body.light .lc{background:#ffffff!important;box-shadow:0 8px 40px rgba(0,0,0,.12)!important}
+body.light .lw{background:linear-gradient(135deg,#e8eaf6,#f0f2f8)!important}
+body.light .fld label{color:#7080a0!important}
+
+/* Light mode: inline style overrides using rgba(255,255,255,...) - make them use dark equivalents */
+body.light .plans-page div[style*="rgba(255,255,255,.06)"],
+body.light .plans-page div[style*="rgba(255,255,255,.05)"],
+body.light .plans-page div[style*="rgba(255,255,255,.04)"],
+body.light .plans-page div[style*="rgba(255,255,255,.03)"] {
+  background:rgba(0,0,0,.04)!important;
+}
+body.light .plans-page div[style*="rgba(255,255,255,.07)"],
+body.light .plans-page div[style*="rgba(255,255,255,.08)"] {
+  border-color:rgba(0,0,0,.1)!important;
+}
+/* Plan header text in light mode */
+body.light .plans-page { color: #0d1020 !important; }
+
+/* Abschnitt tab buttons in light mode */
+body.light button[style*="rgba(255,255,255,.06)"] {
+  background:rgba(0,0,0,.06)!important;
+  color:#7080a0!important;
+}
+/* Weiter button */
+body.light button[style*="rgba(255,255,255,.04)"] {
+  background:rgba(0,0,0,.04)!important;
+  border-color:rgba(0,0,0,.1)!important;
+  color:#7080a0!important;
+}
+/* Exercise pills in expanded plan */
+body.light .plans-page div[style*="rgba(255,255,255,.05)"] {
+  background:#eef0fa!important;
+  border-color:rgba(0,0,0,.1)!important;
+  color:#0d1020!important;
+}
+/* Section label text */
+body.light .seclbl { color: #0d1020 !important; }
+body.light .dayhdr { color: #0d1020 !important; }
+body.light .daysub { color: #7080a0 !important; }
+/* Stats page text */
+body.light .stats-page { color: #0d1020 !important; }
+/* Modal text */
+body.light .modal { color: #0d1020 !important; }
+body.light .modal-title { color: #0d1020 !important; }
+/* Settings modal buttons */
+body.light .modal button[style*="var(--card2)"] {
+  background:#eef0fa!important;
+  color:#4466bb!important;
+}
+/* Set block inputs in light mode - new design */
+body.light .sb input[style*="color:var(--txt)"] {
+  color:#0d1020!important;
+}
+/* Abschnitt done buttons green text stays */
+body.light button[style*="#3fd4a0"] { color:#007744!important; }
+body.light button[style*="rgba(63,212,160"] {
+  background:rgba(0,120,70,.1)!important;
+  border-color:rgba(0,120,70,.2)!important;
+  color:#007744!important;
+}
+/* Settings modal dark/light toggle */
+body.light .modal button[style*="rgba(255,255,255,.06)"] {
+  background:#eef0fa!important;
+}
 
 /* Plan exercise tags in light mode */
 body.light .tmpl-tag{background:#eef0fa!important;border-color:rgba(0,0,0,.1)!important;color:#4466bb!important}
@@ -773,6 +852,7 @@ header{
   -webkit-backdrop-filter:blur(32px) saturate(2)!important;
   border-bottom:1px solid rgba(255,255,255,.06)!important;
   box-shadow:0 1px 0 rgba(255,255,255,.04),0 4px 24px rgba(0,0,0,.5);
+  padding-top:env(safe-area-inset-top,0px)!important;
 }
 .bnav{
   background:rgba(8,10,15,.7)!important;
@@ -780,6 +860,7 @@ header{
   -webkit-backdrop-filter:blur(32px) saturate(2)!important;
   border-top:1px solid rgba(255,255,255,.06)!important;
   box-shadow:0 -4px 24px rgba(0,0,0,.5);
+  padding-bottom:env(safe-area-inset-bottom,0px)!important;
 }
 .modal{
   background:linear-gradient(180deg,rgba(18,22,32,.97) 0%,rgba(12,15,22,.99) 100%)!important;
@@ -904,6 +985,141 @@ header{
 .stats-page>*:nth-child(4){animation-delay:.2s}
 .stats-page>*:nth-child(5){animation-delay:.25s}
 
+
+/* ── LEBENDIGKEIT ────────────────────────────────────────────── */
+
+/* Floating dots background on empty training page */
+@keyframes float1{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.05)}}
+@keyframes orbFloat1{
+  0%{transform:translate(0,0) scale(1);opacity:.8}
+  25%{transform:translate(6%,8%) scale(1.06);opacity:1}
+  50%{transform:translate(3%,15%) scale(.95);opacity:.75}
+  75%{transform:translate(-4%,6%) scale(1.04);opacity:.9}
+  100%{transform:translate(0,0) scale(1);opacity:.8}
+}
+@keyframes orbFloat2{
+  0%{transform:translate(0,0) scale(1);opacity:.75}
+  30%{transform:translate(-8%,10%) scale(1.08);opacity:.95}
+  60%{transform:translate(-4%,18%) scale(.93);opacity:.7}
+  80%{transform:translate(5%,8%) scale(1.03);opacity:.85}
+  100%{transform:translate(0,0) scale(1);opacity:.75}
+}
+@keyframes orbFloat3{
+  0%{transform:translate(0,0) scale(1);opacity:.7}
+  35%{transform:translate(10%,-8%) scale(1.1);opacity:.9}
+  65%{transform:translate(5%,-14%) scale(.92);opacity:.65}
+  100%{transform:translate(0,0) scale(1);opacity:.7}
+}
+@keyframes float2{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(.95)}}
+@keyframes float3{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+@keyframes pulseGlow{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.7;transform:scale(1.08)}}
+@keyframes breathe{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes shimmerMove{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes ringPulse{0%,100%{box-shadow:0 0 0 0 var(--acc)33}50%{box-shadow:0 0 0 12px rgba(0,0,0,0)}}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Pulse on the green dot in header */
+.dot{animation:pulseGlow 2.5s ease-in-out infinite!important}
+
+/* Savebar breathes */
+.savetxt.ok{animation:breathe 3s ease-in-out infinite}
+
+/* ExCard hover feel */
+.excard{transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s!important}
+.excard:active{transform:scale(.98)!important}
+
+/* Set block done pop */
+.sb.done{animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both,glowPulse 2.5s ease-in-out infinite!important}
+
+/* Nav buttons spring */
+.bnav-btn:active{transform:scale(.88)!important;transition:transform .1s!important}
+.bnav-btn.on{animation:popIn .25s cubic-bezier(.34,1.56,.64,1) both}
+
+/* Plan cards slide in */
+.plans-page>*{animation:slideUp .35s cubic-bezier(.25,.46,.45,.94) both}
+.plans-page>*:nth-child(1){animation-delay:.05s}
+.plans-page>*:nth-child(2){animation-delay:.1s}
+.plans-page>*:nth-child(3){animation-delay:.15s}
+.plans-page>*:nth-child(4){animation-delay:.2s}
+
+/* Pbtn shimmer */
+.pbtn{
+  background-size:200% auto!important;
+  animation:shimmerMove 4s linear infinite!important;
+}
+
+/* Progress bar pulse when complete */
+.pfill[style*="100%"]{animation:ringPulse 2s ease-in-out infinite}
+
+/* History entries slide in */
+.history-entry{animation:slideUp .3s cubic-bezier(.25,.46,.45,.94) both}
+.history-entry:nth-child(1){animation-delay:.04s}
+.history-entry:nth-child(2){animation-delay:.08s}
+.history-entry:nth-child(3){animation-delay:.12s}
+.history-entry:nth-child(4){animation-delay:.16s}
+.history-entry:nth-child(5){animation-delay:.2s}
+.history-entry:nth-child(6){animation-delay:.24s}
+
+/* Section tabs spring on click */
+button[style*="borderRadius:20"]:active{transform:scale(.93)!important;transition:transform .1s!important}
+
+/* Achievement cards pop in */
+.achieve-card{animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both}
+.achieve-card:nth-child(1){animation-delay:.05s}
+.achieve-card:nth-child(2){animation-delay:.1s}
+.achieve-card:nth-child(3){animation-delay:.15s}
+.achieve-card:nth-child(4){animation-delay:.2s}
+.achieve-card:nth-child(5){animation-delay:.25s}
+.achieve-card:nth-child(6){animation-delay:.3s}
+
+/* Modal slides up with spring */
+.modal{animation:slideUp .32s cubic-bezier(.34,1.2,.64,1) both!important}
+
+/* Day banner subtle pulse */
+.day-banner{transition:all .2s}
+.day-banner:active{transform:scale(.99)}
+
+/* Cal day spring */
+.cal-day:active{transform:scale(.85)!important}
+
+/* Streak mini cards */
+.streak-mini{transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+.streak-mini:active{transform:scale(.94)}
+
+
+/* ── CSS ORBS (no JS needed) ─────────────────────────────────────────────────*/
+.orb-layer{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(48px);will-change:transform,opacity;
+}
+.orb-1{
+  width:75vw;height:75vw;
+  background:radial-gradient(circle,rgba(99,102,241,.5) 0%,rgba(99,102,241,.15) 45%,transparent 70%);
+  top:-15%;left:-20%;
+  animation:orbFloat1 9s ease-in-out infinite;
+}
+.orb-2{
+  width:65vw;height:65vw;
+  background:radial-gradient(circle,rgba(16,185,129,.42) 0%,rgba(16,185,129,.12) 45%,transparent 70%);
+  top:25%;right:-18%;
+  animation:orbFloat2 11s ease-in-out infinite;
+}
+.orb-3{
+  width:60vw;height:60vw;
+  background:radial-gradient(circle,rgba(139,92,246,.38) 0%,rgba(139,92,246,.1) 45%,transparent 70%);
+  bottom:5%;left:-15%;
+  animation:orbFloat3 8s ease-in-out infinite;
+}
+.orb-4{
+  width:45vw;height:45vw;
+  background:radial-gradient(circle,rgba(236,72,153,.3) 0%,rgba(236,72,153,.08) 45%,transparent 70%);
+  bottom:25%;right:-8%;
+  animation:orbFloat1 13s ease-in-out infinite reverse;
+}
 </style></head><body>
 <div id="splash"><div class="sp-logo">GYM LOG</div><div class="sp-ring"></div><div class="sp-msg" id="sp-msg">Wird geladen...</div></div>
 <div id="root"></div>
@@ -916,12 +1132,7 @@ loadScript("https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.produc
 loadScript("https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js",function(){
 loadScript("https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js",function(){
 requestAnimationFrame(function(){setTimeout(function(){
-try{
-var src=document.getElementById("app-src").textContent;
-var compiled=Babel.transform(src,{presets:[["react",{runtime:"classic"}]],sourceType:"script",compact:true}).code;
-(new Function("React","ReactDOM",compiled))(React,ReactDOM);
-hideSplash();
-}catch(e){showError(e.message?e.message.slice(0,300):"Fehler");}
+try{var src=document.getElementById("app-src").textContent;var compiled=Babel.transform(src,{presets:[["react",{runtime:"classic"}]],sourceType:"script",compact:true}).code;(new Function("React","ReactDOM",compiled))(React,ReactDOM);hideSplash();}catch(e){showError(e.message?e.message.slice(0,300):"Fehler");}
 },100);});});});});
 </script>
 <script type="text/plain" id="app-src">
@@ -1127,7 +1338,7 @@ function GraphModal({points, exName, color="#e8ff47", onClose}) {
           {[...points].reverse().map((p,i)=>(
             <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 12px",background:"var(--card)",borderRadius:"8px",border:`1px solid ${p.y===maxW?"#4a3800":"var(--bdr)"}`}}>
               <div style={{fontSize:".72rem",color:"var(--mut)"}}>{p.label}</div>
-              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1rem",color:p.y===maxW?"#ffd700":"var(--txt)"}}>{p.y} kg{p.y===maxW?" 🏆":""}</div>
+              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"1rem",color:p.y===maxW?"#ffd700":"var(--txt)"}}>{p.y} kg{p.y===maxW?"*":""}</div>
             </div>
           ))}
         </div>
@@ -1199,7 +1410,7 @@ function Confetti({onDone}) {
           Training abgeschlossen
         </div>
         <div style={{fontSize:".7rem",color:"rgba(255,255,255,.45)",fontWeight:600,letterSpacing:"1px"}}>
-          Gut gemacht! 💪
+          Gut gemacht!
         </div>
       </div>
     </div>
@@ -1232,14 +1443,20 @@ function RestTimer({onDismiss, duration=90}) {
   );
 }
 
-function SetBlock({idx, data={}, onChange, isPR, prevWeight=null}) {
-  const isDone=!!(data.w&&data.r&&parseFloat(data.w)>0&&parseFloat(data.r)>0);
+function SetBlock({idx, data={}, onChange, isPR, prevWeight=null, bodyweight=false}) {
+  // bodyweight: only reps needed, weight is optional
+  const isDone = bodyweight
+    ? !!(data.r&&parseFloat(data.r)>0)
+    : !!(data.w&&data.r&&parseFloat(data.w)>0&&parseFloat(data.r)>0);
+
   return (
     <div className={`sb${isDone?" done":""}`}>
       <div className="slbl">Satz {idx+1}</div>
-      <input className="si" type="number" placeholder="kg" step="0.5" value={data.w??""} onChange={e=>onChange("w",e.target.value)}/>
-      {prevWeight&&!data.w&&<div className="prev-hint">{prevWeight}kg</div>}
-      <div className="ulbl">Gewicht</div>
+      {!bodyweight&&<>
+        <input className="si" type="number" placeholder="kg" step="0.5" value={data.w??""} onChange={e=>onChange("w",e.target.value)}/>
+        {prevWeight&&!data.w&&<div className="prev-hint">{prevWeight}kg</div>}
+        <div className="ulbl">Gewicht</div>
+      </>}
       <input className="si" type="number" placeholder="Wdh" step="1" value={data.r??""} onChange={e=>onChange("r",e.target.value)}/>
       <div className="ulbl">Wdh.</div>
       {isDone&&<div className="sb-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="1,4.5 3.5,7 8,1.5"/></svg></div>}
@@ -1298,15 +1515,21 @@ function AddExerciseModal({onAdd, onClose}) {
 
 function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, onSetComplete, prs, prevExData={}}) {
   const [showEdit,setShowEdit]=useState(false);
+  const [localBW,setLocalBW]=useState(!!overrides.bodyweight);
+  // Sync when overrides change from parent
+  React.useEffect(()=>{ setLocalBW(!!overrides.bodyweight); },[overrides.bodyweight]);
+  const isBW = localBW;
   const effSets=overrides.sets??ex.sets, effReps=overrides.reps??ex.reps;
   const isUserAdded=ex.id?.startsWith("cx_");
-  const allDone=Array.from({length:effSets},(_,i)=>{const s=exData[i]??{};return !!(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0);}).every(Boolean);
+  const allDone=Array.from({length:effSets},(_,i)=>{const s=exData[i]??{};return isBW?!!(s.r&&parseFloat(s.r)>0):!!(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0);}).every(Boolean);
 
   function handleChange(i,f,v) {
     const updated={...exData,[i]:{...exData[i],[f]:v}};
     onUpdate(updated);
     const s=updated[i];
-    if(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0) onSetComplete(ex.id,parseFloat(s.w));
+    const bw=isBW;
+    const done=bw?(s.r&&parseFloat(s.r)>0):(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0);
+    if(done) onSetComplete(ex.id,parseFloat(s.w)||parseFloat(s.r)||0);
   }
 
   return (
@@ -1316,14 +1539,38 @@ function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, on
           <div className="exname">{ex.name}</div>
           <div className="exhdr-right">
             <div className={`badge b${ex.badge}`}>{effSets}x * {effReps}{(overrides.sets||overrides.reps)?<span style={{marginLeft:"3px",opacity:.6}}>e</span>:""}</div>
+
             <button className="icon-btn" onClick={()=>setShowEdit(true)}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
             {isUserAdded&&<button className="icon-btn del" onClick={onDelete}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/></svg></button>}
           </div>
         </div>
+        {/* Bodyweight toggle */}
+        <div style={{padding:"0 14px 8px",display:"flex",alignItems:"center",gap:"8px"}}>
+          <button onClick={()=>{ const newBW=!isBW; setLocalBW(newBW); onEditSave({...overrides,bodyweight:newBW}); }}
+            style={{display:"flex",alignItems:"center",gap:"6px",
+              background:isBW?"rgba(var(--acc-rgb,255,255,255),.12)":"rgba(255,255,255,.04)",
+              border:isBW?"1.5px solid var(--acc)":"1.5px solid rgba(255,255,255,.1)",
+              borderRadius:20,padding:"5px 12px 5px 8px",cursor:"pointer",transition:"all .2s",
+              fontFamily:"'Nunito',sans-serif",fontSize:".62rem",fontWeight:800,
+              color:isBW?"var(--acc)":"var(--mut)",letterSpacing:".3px"}}>
+            <div style={{width:16,height:16,borderRadius:"50%",
+              background:isBW?"var(--acc)":"rgba(255,255,255,.1)",
+              display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",flexShrink:0}}>
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none"
+                stroke={isBW?"#080a0f":"rgba(255,255,255,.4)"}
+                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="5" r="3"/>
+                <path d="M6.5 8a6 6 0 0 0-1 3.5C5.5 15 8 18 12 20c4-2 6.5-5 6.5-8.5A6 6 0 0 0 17.5 8"/>
+              </svg>
+            </div>
+            Körpergewicht
+          </button>
+          {isBW&&<span style={{fontSize:".58rem",color:"var(--mut)",fontWeight:600}}>Nur Wdh. nötig · Zusatzgewicht optional</span>}
+        </div>
         <div className="sgrid">
-          {Array.from({length:effSets},(_,i)=>{const s=exData[i]??{},w=parseFloat(s.w)||0,isPR=w>0&&prs[ex.id]===w;return <SetBlock key={i} idx={i} data={s} isPR={isPR} onChange={(f,v)=>handleChange(i,f,v)} onComplete={()=>onSetComplete(ex.id,parseFloat(s.w)||0)}/>;  })}
+          {Array.from({length:effSets},(_,i)=>{const s=exData[i]??{},w=parseFloat(s.w)||0,isPR=w>0&&prs[ex.id]===w;return <SetBlock key={i} idx={i} data={s} isPR={isPR} bodyweight={isBW} onChange={(f,v)=>handleChange(i,f,v)} onComplete={()=>onSetComplete(ex.id,parseFloat(s.w)||0)}/>;  })}
         </div>
       </div>
       {showEdit&&<EditModal ex={ex} overrides={overrides} onSave={v=>{onEditSave(v);setShowEdit(false);}} onClose={()=>setShowEdit(false)}/>}
@@ -1334,6 +1581,7 @@ function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, on
 function TrainingPage({planIdx, dayData={}, customExercises={}, onUpdate, onUpdateCustom, onChangeType, prs, onNewPR, timerDuration=90, allDays={}, currentDk=''}) {
   const [showTimer,setShowTimer]=useState(false);
   const [addingToSection,setAddingToSection]=useState(null);
+  const [activeSec,setActiveSec]=useState(0);
   const [showConfetti,setShowConfetti]=useState(false);
   const prevDoneRef=useRef(0);
   const confettiShownRef=useRef(false); // only show once per session
@@ -1354,7 +1602,7 @@ function TrainingPage({planIdx, dayData={}, customExercises={}, onUpdate, onUpda
     prevDoneRef.current=done;
   },[done,total]);
   function upEx(si,ei,val){onUpdate({...dayData,sections:{...dayData?.sections,[si]:{...dayData?.sections?.[si],[ei]:val}}});}
-  function saveOverride(si,ei,val){const k=`${si}_${ei}`,newOv={...overrides};if(!val.sets&&!val.reps) delete newOv[k]; else newOv[k]=val;onUpdate({...dayData,overrides:newOv});}
+  function saveOverride(si,ei,val){const k=`${si}_${ei}`,newOv={...overrides};if(!val.sets&&!val.reps&&!val.bodyweight) delete newOv[k]; else newOv[k]=val;onUpdate({...dayData,overrides:newOv});}
   function handleSetComplete(exId,weight){setShowTimer(true);if(weight>0) onNewPR(exId,weight);}
   function addCustomEx(si,ex){const key=`${planIdx}_${si}`,prev=customExercises[key]??[];onUpdateCustom({...customExercises,[key]:[...prev,ex]});setAddingToSection(null);}
   function deleteCustomEx(si,idx){const key=`${planIdx}_${si}`,prev=[...(customExercises[key]??[])];onUpdateCustom({...customExercises,[key]:prev.filter((_,i)=>i!==idx)});}
@@ -1381,17 +1629,30 @@ function TrainingPage({planIdx, dayData={}, customExercises={}, onUpdate, onUpda
       {showTimer&&<RestTimer onDismiss={()=>setShowTimer(false)} duration={timerDuration}/>}
       <div className="dayhdr">{tab.title}</div>
       <div className="daysub">{tab.subtitle}</div>
+      {/* Abschnitt-Tabs */}
+      <div style={{display:"flex",gap:6,marginBottom:16,flexWrap:"wrap"}}>
+        {tab.sections.map((s,i)=>{
+          const cl2=customExercises[`${planIdx}_${i}`]??[];
+          const ae2=[...s.exercises,...cl2];
+          let d2=0,t2=0;
+          ae2.forEach((ex,ei)=>{const ov2=overrides[`${i}_${ei}`]??{};const es2=ov2.sets??ex.sets;const ed2=dayData?.sections?.[i]?.[ei]??{};t2+=es2;for(let j=0;j<es2;j++){const s2=ed2[j]??{};if(s2.w&&s2.r&&parseFloat(s2.w)>0&&parseFloat(s2.r)>0)d2++;}});
+          const ok2=t2>0&&d2===t2;
+          return <button key={i} onClick={()=>setActiveSec(i)} style={{padding:"7px 16px",borderRadius:20,border:"none",cursor:"pointer",background:activeSec===i?"var(--acc)":ok2?"rgba(63,212,160,.15)":"rgba(255,255,255,.06)",color:activeSec===i?"var(--acc-txt,#080a0f)":ok2?"#3fd4a0":"var(--mut)",fontSize:".62rem",fontWeight:800,letterSpacing:".5px",textTransform:"uppercase",fontFamily:"'Nunito',sans-serif",transition:"all .2s"}}>{ok2?"✓ ":""}{s.label}</button>;
+        })}
+      </div>
       {tab.sections.map((sec,si)=>{
+        if(si!==activeSec) return null;
         const customList=customExercises[`${planIdx}_${si}`]??[];
         const allEx=[...sec.exercises,...customList];
         return (
-          <div key={si}>
-            <div className="seclbl">{sec.label}<button className="add-ex-btn" onClick={()=>setAddingToSection(si)}>+ Übung</button></div>
+          <div key={si} style={{animation:"fadeSlideUp .25s ease both"}}>
+            <div className="seclbl">{sec.label}<button className="add-ex-btn" onClick={()=>setAddingToSection(si)}>+ Ubung</button></div>
             {allEx.map((ex,ei)=><ExCard key={ex.id||ei} ex={ex} exData={dayData?.sections?.[si]?.[ei]??{}} overrides={overrides[`${si}_${ei}`]??{}} prs={prs} prevExData={prevSessionData?.sections?.[si]?.[ei]??{}} onUpdate={v=>upEx(si,ei,v)} onEditSave={v=>saveOverride(si,ei,v)} onDelete={()=>deleteCustomEx(si,ei-sec.exercises.length)} onSetComplete={handleSetComplete} onNewPR={onNewPR}/>)}
+            {activeSec<tab.sections.length-1&&<button onClick={()=>setActiveSec(activeSec+1)} style={{width:"100%",background:"rgba(255,255,255,.04)",border:"1.5px solid rgba(255,255,255,.08)",borderRadius:16,padding:"13px",cursor:"pointer",color:"var(--mut)",fontFamily:"'Nunito',sans-serif",fontSize:".78rem",fontWeight:800,marginTop:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>Weiter: {tab.sections[activeSec+1].label} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><polyline points="12,5 19,12 12,19"/></svg></button>}
           </div>
         );
       })}
-      <textarea className="notes" placeholder="Notizen zum Training..." value={dayData?.notes??""} onChange={e=>onUpdate({...dayData,notes:e.target.value})}/>
+      <textarea className="notes" placeholder="Notizen zum Training..." value={dayData?.notes??""} onChange={e=>onUpdate({...dayData,notes:e.target.value})} style={{marginTop:16}}/>
       {addingToSection!==null&&<AddExerciseModal onAdd={ex=>addCustomEx(addingToSection,ex)} onClose={()=>setAddingToSection(null)}/>}
     </div>
   );
@@ -1413,7 +1674,7 @@ function DayPickerModal({date, current, onSelect, onClose, customPlans=[], hidde
         <div className="modal-opts">
           {allOpts.map(o=>(
             <div key={o.type} className={`modal-opt${current===o.type?" active":""}`} onClick={()=>onSelect(o.type)}>
-              <div className="modal-opt-icon" style={{background:o.color+"22",color:o.color}}>{o.icon}</div>
+              <div className="modal-opt-icon" style={{background:o.color+"22",color:o.color}}>{o.type==="rest"?"💤":(o.name[0]?.toUpperCase()||"?")}</div>
               <div className="modal-opt-text"><div className="modal-opt-name">{o.name}</div><div className="modal-opt-desc">{o.desc}</div></div>
               {current===o.type&&<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--acc)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="2,8 6,12 14,4"/></svg>}
             </div>
@@ -1448,7 +1709,7 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
     return "#e8ff47";
   }
   function getPlanName(type) {
-    if(type==="rest") return "💤 Ruhetag";
+    if(type==="rest") return "Ruhetag";
     if(type==="A") return "Tag A - Brust & Rücken";
     if(type==="B") return "Tag B - Schulter & Arme";
     if(type?.startsWith("custom_")) return customPlans.find(p=>"custom_"+p.id===type)?.name||"Eigener Plan";
@@ -1562,7 +1823,7 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
             boxShadow:"0 24px 64px rgba(0,0,0,.7)",animation:"scaleIn .2s cubic-bezier(.34,1.56,.64,1)"}}
             onClick={e=>e.stopPropagation()}>
             <div style={{textAlign:"center",marginBottom:"18px"}}>
-              <div style={{fontSize:"2rem",marginBottom:"8px"}}>📅</div>
+              
               <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1rem",fontWeight:900,letterSpacing:"1px",marginBottom:"6px"}}>
                 Training planen?
               </div>
@@ -1613,7 +1874,7 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
                     background:planColor?planColor+"28":"rgba(255,255,255,.08)",
                     border:`1.5px solid ${planColor||"rgba(255,255,255,.15)"}44`,
                     display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.6rem",flexShrink:0}}>
-                    {di?.type==="rest"?"💤":plan?.icon||"🏋️"}
+                    {di?.type==="rest"?"ZZZ":plan?.icon||(di?.type==="A"?"A":di?.type==="B"?"B":"?")}
                   </div>
                   <div>
                     <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.05rem",fontWeight:900,
@@ -1649,7 +1910,7 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
                   <div style={{background:"rgba(255,255,255,.03)",borderRadius:"10px",padding:"9px 12px",
                     marginBottom:"14px",fontSize:".72rem",color:"var(--mut)",fontStyle:"italic",lineHeight:1.5,
                     border:"1px solid rgba(255,255,255,.05)"}}>
-                    📝 {di.notes}
+                    {di.notes}
                   </div>
                 )}
                 {/* Actions */}
@@ -1693,7 +1954,7 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
                       borderRadius:"12px",padding:"10px",cursor:"pointer",color:"var(--red)",
                       fontFamily:"'Nunito',sans-serif",fontSize:".75rem",fontWeight:800,
                       letterSpacing:".5px",textTransform:"uppercase"}}>
-                    🗑 Training löschen
+                    Training loschen
                   </button>
                 )}
               </div>
@@ -1728,11 +1989,28 @@ function StatsPage({allDays, prs, bodyWeights, onSaveBW, weekGoal, onSetWeekGoal
   const graphPoints=[];
   Object.entries(allDays).sort(([a],[b])=>a.localeCompare(b)).forEach(([dk,di])=>{
     if(!di?.sections) return;
+    // Search in all plans (default + custom)
+    let found=false;
     DEFAULT_PLAN.forEach(tab=>tab.sections.forEach((sec,si)=>sec.exercises.forEach((ex,ei)=>{
-      if(ex.id!==selectedEx) return;
+      if(found||ex.id!==selectedEx) return;
       const ed=di.sections?.[si]?.[ei];if(!ed) return;
-      let max=0;Object.values(ed).forEach(s=>{if(s.w&&parseFloat(s.w)>max) max=parseFloat(s.w);});
-      if(max>0) graphPoints.push({x:graphPoints.length,y:max,label:dk.slice(5)});
+      let max=0;
+      Object.values(ed).forEach(s=>{
+        // Support bodyweight exercises: use reps as value if no weight
+        const w=s.w&&parseFloat(s.w)>0?parseFloat(s.w):s.r&&parseFloat(s.r)>0?parseFloat(s.r):0;
+        if(w>max) max=w;
+      });
+      if(max>0){graphPoints.push({x:graphPoints.length,y:max,label:dk.slice(5)});found=true;}
+    })));
+    if(!found) customPlans.forEach(cp=>cp.sections?.forEach((sec,si)=>sec.exercises?.forEach((ex,ei)=>{
+      if(found||ex.id!==selectedEx) return;
+      const ed=di.sections?.[si]?.[ei];if(!ed) return;
+      let max=0;
+      Object.values(ed).forEach(s=>{
+        const w=s.w&&parseFloat(s.w)>0?parseFloat(s.w):s.r&&parseFloat(s.r)>0?parseFloat(s.r):0;
+        if(w>max) max=w;
+      });
+      if(max>0){graphPoints.push({x:graphPoints.length,y:max,label:dk.slice(5)});found=true;}
     })));
   });
 
@@ -1751,7 +2029,7 @@ function StatsPage({allDays, prs, bodyWeights, onSaveBW, weekGoal, onSetWeekGoal
     <div className="stats-page">
       {/* Sub tabs */}
       <div className="stats-subtabs" style={{display:"flex",background:"var(--card)",borderRadius:"14px",padding:"4px",gap:"4px",marginBottom:"16px",border:"1px solid rgba(255,255,255,.06)"}}>
-        {[["stats","📊 Stats"],["history","📋 Verlauf"],["achievements","🏆 Abzeichen"]].map(([key,label])=>(
+        {[["stats","Stats"],["history","Verlauf"],["achievements","Abzeichen"]].map(([key,label])=>(
           <button key={key} onClick={()=>setStatsTab(key)}
             className={statsTab===key?"stats-tab-active":"stats-tab-inactive"}
             style={{flex:1,padding:"8px",textAlign:"center",fontSize:".65rem",fontWeight:800,
@@ -1851,133 +2129,418 @@ function StatsPage({allDays, prs, bodyWeights, onSaveBW, weekGoal, onSetWeekGoal
 
 
 // ── Custom Plan Creator ──────────────────────────────────────────────────────
-const PLAN_COLORS = ["#7dd3fc","#86efac","#f9a8d4","#fbbf24","#a78bfa","#fb923c","#34d399","#f87171","#e879f9","#38bdf8"];
+const PLAN_COLORS = ["#7dd3fc","#86efac","#f9a8d4","#fbbf24","#a78bfa","#fb923c","#34d399","#f87171"];
 
 function NewPlanModal({onSave, onClose, editPlan=null}) {
-  const [name, setName] = useState(editPlan?.name||"");
-  const [color, setColor] = useState(editPlan?.color||PLAN_COLORS[0]);
-  const [sections, setSections] = useState(editPlan?.sections||[{label:"ÜBUNGEN",exercises:[]}]);
-  const [newSecName, setNewSecName] = useState("");
-  const [newExName, setNewExName] = useState("");
-  const [newExSets, setNewExSets] = useState(3);
-  const [newExReps, setNewExReps] = useState("8-12");
-  const [addingToSec, setAddingToSec] = useState(null);
+  const [step, setStep] = React.useState(0);
+  const [name, setName] = React.useState(editPlan?.name||"");
+  const [color, setColor] = React.useState(editPlan?.color||PLAN_COLORS[0]);
+  const [sections, setSections] = React.useState(editPlan?.sections||[{label:"ÜBUNGEN",exercises:[]}]);
+  const [activeSec, setActiveSec] = React.useState(0);
+  const [addingEx, setAddingEx] = React.useState(false);
+  const [newExName, setNewExName] = React.useState("");
+  const [newExSets, setNewExSets] = React.useState(3);
+  const [newExReps, setNewExReps] = React.useState("8-12");
+  const [newSecName, setNewSecName] = React.useState(null);
 
-  function addSection() {
-    if(!newSecName.trim()) return;
-    setSections(s=>[...s,{label:newSecName.trim().toUpperCase(),exercises:[]}]);
-    setNewSecName("");
-  }
-  function removeSection(i) { setSections(s=>s.filter((_,idx)=>idx!==i)); }
-  function addExercise(si) {
+  const totalEx = sections.reduce((a,s)=>a+s.exercises.length,0);
+  const canSave = name.trim() && totalEx > 0;
+
+  function addExercise() {
     if(!newExName.trim()) return;
     const ex={id:"cx_"+Date.now(),name:newExName.trim(),sets:newExSets,reps:newExReps,badge:"a"};
-    setSections(s=>s.map((sec,i)=>i===si?{...sec,exercises:[...sec.exercises,ex]}:sec));
-    setNewExName(""); setAddingToSec(null);
+    setSections(s=>s.map((sec,i)=>i===activeSec?{...sec,exercises:[...sec.exercises,ex]}:sec));
+    setNewExName(""); setAddingEx(false);
   }
   function removeExercise(si,ei) {
     setSections(s=>s.map((sec,i)=>i===si?{...sec,exercises:sec.exercises.filter((_,j)=>j!==ei)}:sec));
   }
+  function removeSection(i) {
+    if(sections.length<=1) return;
+    setSections(s=>s.filter((_,idx)=>idx!==i));
+    setActiveSec(Math.max(0,activeSec-1));
+  }
 
-  const icon = name.trim()[0]?.toUpperCase()||"?";
-
+  // Full screen layout
   return (
-    <div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal">
-        <div className="modal-handle"/>
-        <div className="modal-title">{editPlan?"Plan bearbeiten":"Neuer Plan"}</div>
+    <div style={{position:"fixed",inset:0,zIndex:900,background:"var(--bg)",
+      display:"flex",flexDirection:"column",overflowY:"hidden"}}>
 
-        {/* Preview */}
-        <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 0 16px",borderBottom:"1px solid rgba(255,255,255,.06)",marginBottom:"16px"}}>
-          <div style={{width:48,height:48,borderRadius:14,background:color+"22",border:"1px solid "+color+"44",
-            display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Montserrat',sans-serif",
-            fontSize:"1.3rem",fontWeight:900,color,flexShrink:0}}>{icon}</div>
-          <div>
-            <div style={{fontSize:".9rem",fontWeight:800,color:"var(--acc)"}}>{name||"Plan Name..."}</div>
-            <div style={{fontSize:".62rem",color:"var(--mut)",marginTop:"2px",fontWeight:600}}>{sections.length} Abschnitt{sections.length!==1?"e":""} · {sections.reduce((a,s)=>a+s.exercises.length,0)} Übungen</div>
+      {/* ── HEADER ── */}
+      <div style={{flexShrink:0,padding:"16px 20px 0",
+        borderBottom:"1px solid rgba(255,255,255,.06)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
+          <button onClick={step===1?()=>setStep(0):onClose}
+            style={{background:"rgba(255,255,255,.06)",border:"none",borderRadius:12,
+              padding:"8px 14px",cursor:"pointer",color:"var(--txt)",
+              fontFamily:"'Nunito',sans-serif",fontSize:".78rem",fontWeight:800,
+              display:"flex",alignItems:"center",gap:6}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5"/><polyline points="12,19 5,12 12,5"/>
+            </svg>
+            {step===1?"Zurück":"Abbrechen"}
+          </button>
+          <div style={{flex:1,textAlign:"center"}}>
+            <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:".95rem",fontWeight:900,
+              letterSpacing:"1px"}}>
+              {editPlan?"Plan bearbeiten":"Neuer Plan"}
+            </div>
           </div>
-        </div>
-
-        {/* Name */}
-        <div style={{marginBottom:"14px"}}>
-          <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",color:"var(--mut)",fontWeight:700,marginBottom:"6px"}}>Plan Name</div>
-          <input value={name} onChange={e=>setName(e.target.value)} placeholder="z.B. Beine & Bauch"
-            style={{width:"100%",background:"var(--card)",border:"1.5px solid var(--bdr)",borderRadius:"12px",color:"var(--txt)",fontFamily:"'Nunito',sans-serif",fontSize:".9rem",fontWeight:700,padding:"11px 14px",outline:"none"}}/>
-        </div>
-
-        {/* Color */}
-        <div style={{marginBottom:"16px"}}>
-          <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",color:"var(--mut)",fontWeight:700,marginBottom:"8px"}}>Farbe</div>
-          <div className="color-grid">
-            {PLAN_COLORS.map(c=>(
-              <div key={c} className={`color-dot${color===c?" sel":""}`} style={{background:c}}
-                onClick={()=>setColor(c)}/>
+          {/* Step indicator */}
+          <div style={{display:"flex",gap:4}}>
+            {[0,1].map(i=>(
+              <div key={i} style={{height:4,borderRadius:2,transition:"all .3s",
+                width:i===step?24:8,
+                background:i===step?"var(--acc)":"rgba(255,255,255,.15)"}}/>
             ))}
           </div>
         </div>
 
-        {/* Sections */}
-        <div style={{marginBottom:"14px"}}>
-          <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",color:"var(--mut)",fontWeight:700,marginBottom:"8px"}}>Abschnitte & Übungen</div>
-          {sections.map((sec,si)=>(
-            <div key={si} style={{background:"var(--card)",border:"1px solid rgba(255,255,255,.06)",borderRadius:"12px",marginBottom:"8px",overflow:"hidden"}}>
-              <div style={{display:"flex",alignItems:"center",padding:"10px 12px",borderBottom:"1px solid rgba(255,255,255,.05)"}}>
-                <div style={{flex:1,fontSize:".75rem",fontWeight:800,letterSpacing:"1px"}}>{sec.label}</div>
-                <button onClick={()=>setAddingToSec(si===addingToSec?null:si)}
-                  style={{background:"none",border:"1px solid rgba(255,255,255,.1)",color:"var(--acc3)",borderRadius:"6px",padding:"3px 8px",cursor:"pointer",fontSize:".6rem",fontWeight:800,fontFamily:"'Nunito',sans-serif"}}>+ Übung</button>
-                {sections.length>1&&<button onClick={()=>removeSection(si)}
-                  style={{background:"none",border:"none",color:"var(--red)",cursor:"pointer",fontSize:".8rem",marginLeft:"6px",padding:"2px 4px"}}>✕</button>}
-              </div>
-              {sec.exercises.map((ex,ei)=>(
-                <div key={ei} style={{display:"flex",alignItems:"center",padding:"8px 12px",borderBottom:"1px solid rgba(255,255,255,.03)"}}>
-                  <div style={{flex:1,fontSize:".78rem",fontWeight:600}}>{ex.name}</div>
-                  <div style={{fontSize:".62rem",color:"var(--mut)",marginRight:"8px",fontWeight:600}}>{ex.sets}x {ex.reps}</div>
-                  <button onClick={()=>removeExercise(si,ei)} style={{background:"none",border:"none",color:"var(--mut2)",cursor:"pointer",fontSize:".8rem"}}>✕</button>
-                </div>
-              ))}
-              {addingToSec===si&&(
-                <div style={{padding:"10px 12px",borderTop:"1px solid rgba(255,255,255,.05)",display:"flex",flexDirection:"column",gap:"8px"}}>
-                  <input value={newExName} onChange={e=>setNewExName(e.target.value)} placeholder="Übungsname"
-                    style={{width:"100%",background:"var(--sur)",border:"1px solid var(--bdr)",borderRadius:"8px",color:"var(--txt)",fontFamily:"'Nunito',sans-serif",fontSize:".82rem",fontWeight:700,padding:"8px 10px",outline:"none"}}/>
-                  <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
-                    <div style={{display:"flex",alignItems:"center",background:"var(--sur)",border:"1px solid var(--bdr)",borderRadius:"8px",overflow:"hidden",flex:1}}>
-                      <button onClick={()=>setNewExSets(s=>Math.max(1,s-1))} style={{background:"none",border:"none",color:"var(--txt)",padding:"7px 10px",cursor:"pointer",fontSize:".9rem",fontWeight:800}}>-</button>
-                      <div style={{flex:1,textAlign:"center",fontSize:".78rem",fontWeight:800}}>{newExSets} Sätze</div>
-                      <button onClick={()=>setNewExSets(s=>Math.min(10,s+1))} style={{background:"none",border:"none",color:"var(--txt)",padding:"7px 10px",cursor:"pointer",fontSize:".9rem",fontWeight:800}}>+</button>
-                    </div>
-                    <input value={newExReps} onChange={e=>setNewExReps(e.target.value)} placeholder="Wdh."
-                      style={{width:"70px",background:"var(--sur)",border:"1px solid var(--bdr)",borderRadius:"8px",color:"var(--txt)",fontFamily:"'Nunito',sans-serif",fontSize:".82rem",fontWeight:700,padding:"8px 8px",outline:"none",textAlign:"center"}}/>
-                    <button onClick={()=>addExercise(si)}
-                      style={{background:"var(--acc)",color:"#080a0f",border:"none",borderRadius:"8px",padding:"8px 12px",cursor:"pointer",fontFamily:"'Montserrat',sans-serif",fontSize:".75rem",fontWeight:800}}>OK</button>
-                  </div>
-                </div>
-              )}
+        {/* Step tabs */}
+        <div style={{display:"flex",gap:0,marginBottom:-1}}>
+          {["Name & Farbe","Übungen"].map((label,i)=>(
+            <div key={i} onClick={()=>i===0||name.trim()?setStep(i):null}
+              style={{padding:"8px 16px",cursor:i===0||name.trim()?"pointer":"default",
+                fontSize:".65rem",fontWeight:800,letterSpacing:".5px",textTransform:"uppercase",
+                color:step===i?"var(--acc)":"var(--mut)",
+                borderBottom:step===i?"2px solid var(--acc)":"2px solid transparent",
+                transition:"all .2s",fontFamily:"'Nunito',sans-serif"}}>
+              {label}
             </div>
           ))}
-          {/* Add section */}
-          <div style={{display:"flex",gap:"8px",marginTop:"4px"}}>
-            <input value={newSecName} onChange={e=>setNewSecName(e.target.value)} placeholder="Neuer Abschnitt..."
-              style={{flex:1,background:"var(--card)",border:"1px solid rgba(255,255,255,.06)",borderRadius:"10px",color:"var(--txt)",fontFamily:"'Nunito',sans-serif",fontSize:".82rem",fontWeight:700,padding:"9px 12px",outline:"none"}}
-              onKeyDown={e=>e.key==="Enter"&&addSection()}/>
-            <button onClick={addSection} style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",color:"var(--acc3)",borderRadius:"10px",padding:"9px 14px",cursor:"pointer",fontFamily:"'Montserrat',sans-serif",fontSize:".8rem",fontWeight:800}}>+</button>
+        </div>
+      </div>
+
+      {/* ── STEP 0: Name + Color ── */}
+      {step===0&&(
+        <div style={{flex:1,overflowY:"auto",padding:"24px 20px"}}>
+          {/* Preview */}
+          <div style={{display:"flex",alignItems:"center",gap:14,padding:"16px",
+            background:color+"12",borderRadius:20,border:"1.5px solid "+color+"33",
+            marginBottom:28}}>
+            <div style={{width:52,height:52,borderRadius:16,background:color+"22",
+              border:"1.5px solid "+color+"44",display:"flex",alignItems:"center",
+              justifyContent:"center",fontFamily:"'Montserrat',sans-serif",
+              fontSize:"1.4rem",fontWeight:900,color,flexShrink:0}}>
+              {name.trim()[0]?.toUpperCase()||"?"}
+            </div>
+            <div>
+              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",
+                fontWeight:900,color:color}}>{name||"Plan Name..."}</div>
+              <div style={{fontSize:".65rem",color:"rgba(255,255,255,.4)",marginTop:3,fontWeight:600}}>
+                {sections.length} Abschnitt{sections.length!==1?"e":""} · {totalEx} Übungen
+              </div>
+            </div>
+          </div>
+
+          {/* Name */}
+          <div style={{marginBottom:28}}>
+            <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",
+              color:"var(--mut)",fontWeight:800,marginBottom:10}}>Plan Name</div>
+            <input value={name} onChange={e=>setName(e.target.value)}
+              placeholder="z.B. Push · Legs · Fullbody"
+              autoFocus
+              style={{width:"100%",background:"var(--card)",border:"1.5px solid var(--bdr)",
+                borderRadius:16,color:"var(--txt)",fontFamily:"'Nunito',sans-serif",
+                fontSize:"1.05rem",fontWeight:700,padding:"15px 18px",outline:"none"}}
+              onFocus={e=>e.target.style.borderColor="var(--acc)"}
+              onBlur={e=>e.target.style.borderColor="var(--bdr)"}
+              onKeyDown={e=>e.key==="Enter"&&name.trim()&&setStep(1)}/>
+          </div>
+
+          {/* Color */}
+          <div style={{marginBottom:32}}>
+            <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",
+              color:"var(--mut)",fontWeight:800,marginBottom:14}}>Farbe</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8,alignItems:"center"}}>
+              {PLAN_COLORS.map(c=>(
+                <div key={c} onClick={()=>setColor(c)}
+                  style={{width:32,height:32,borderRadius:"50%",background:c,cursor:"pointer",
+                    border:`2.5px solid ${color===c?"#fff":"transparent"}`,
+                    boxShadow:color===c?`0 0 0 2px ${c}`:"none",
+                    transform:color===c?"scale(1.15)":"scale(1)",transition:"all .2s",
+                    display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  {color===c&&!PLAN_COLORS.includes(color)===false&&<svg width="11" height="11" viewBox="0 0 14 14" fill="none"
+                    stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="2,7 5.5,10.5 12,3.5"/>
+                  </svg>}
+                </div>
+              ))}
+              {/* Custom color picker */}
+              <div style={{position:"relative",width:32,height:32,flexShrink:0}}>
+                <div style={{width:32,height:32,borderRadius:"50%",
+                  border:`2.5px solid ${!PLAN_COLORS.includes(color)?"#fff":"rgba(255,255,255,.25)"}`,
+                  boxShadow:!PLAN_COLORS.includes(color)?`0 0 0 2px ${color}`:"none",
+                  transform:!PLAN_COLORS.includes(color)?"scale(1.15)":"scale(1)",
+                  transition:"all .2s",
+                  background:!PLAN_COLORS.includes(color)
+                    ? color
+                    : "linear-gradient(135deg,#f9a8d4,#a78bfa,#7dd3fc)",
+                  display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  {PLAN_COLORS.includes(color)&&(
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                      stroke="rgba(255,255,255,.8)" strokeWidth="2.5"
+                      strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"/>
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  )}
+                  {!PLAN_COLORS.includes(color)&&(
+                    <svg width="10" height="10" viewBox="0 0 14 14" fill="none"
+                      stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="2,7 5.5,10.5 12,3.5"/>
+                    </svg>
+                  )}
+                </div>
+                <input type="color" value={color} onChange={e=>setColor(e.target.value)}
+                  style={{position:"absolute",inset:0,opacity:0,width:"100%",height:"100%",
+                    cursor:"pointer",border:"none",padding:0,margin:0}}/>
+              </div>
+            </div>
+          </div>
+
+          <button onClick={()=>name.trim()&&setStep(1)} disabled={!name.trim()}
+            style={{width:"100%",background:name.trim()?"var(--acc)":"rgba(255,255,255,.08)",
+              color:name.trim()?"var(--acc-txt,#080a0f)":"var(--mut)",border:"none",
+              borderRadius:18,padding:"17px",cursor:name.trim()?"pointer":"default",
+              fontFamily:"'Montserrat',sans-serif",fontSize:"1rem",fontWeight:900,
+              letterSpacing:"2px",textTransform:"uppercase"}}>
+            Weiter →
+          </button>
+        </div>
+      )}
+
+      {/* ── STEP 1: Sections + Exercises ── */}
+      {step===1&&(
+        <div style={{flex:1,display:"flex",flexDirection:"column",overflowY:"hidden"}}>
+          {/* Section tabs */}
+          <div style={{flexShrink:0,padding:"14px 20px 0",
+            borderBottom:"1px solid rgba(255,255,255,.06)"}}>
+            <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:14}}>
+              {sections.map((sec,i)=>(
+                <button key={i} onClick={()=>setActiveSec(i)}
+                  style={{padding:"8px 18px",borderRadius:20,border:"none",cursor:"pointer",
+                    background:activeSec===i?"var(--acc)":"rgba(255,255,255,.06)",
+                    color:activeSec===i?"var(--acc-txt,#080a0f)":"var(--mut)",
+                    fontSize:".65rem",fontWeight:800,letterSpacing:".5px",textTransform:"uppercase",
+                    fontFamily:"'Nunito',sans-serif",whiteSpace:"nowrap",flexShrink:0,
+                    display:"flex",alignItems:"center",gap:6,transition:"all .2s"}}>
+                  {sec.label}
+                  <span style={{background:activeSec===i?"rgba(0,0,0,.15)":"rgba(255,255,255,.1)",
+                    borderRadius:10,padding:"1px 6px",fontSize:".55rem",fontWeight:900}}>
+                    {sec.exercises.length}
+                  </span>
+                </button>
+              ))}
+              <button onClick={()=>setNewSecName("")}
+                style={{padding:"8px 14px",borderRadius:20,
+                  border:"1.5px dashed rgba(255,255,255,.2)",cursor:"pointer",
+                  background:"none",color:"var(--mut)",fontSize:".65rem",fontWeight:800,
+                  fontFamily:"'Nunito',sans-serif",whiteSpace:"nowrap",flexShrink:0}}>
+                + Abschnitt
+              </button>
+            </div>
+          </div>
+
+          {/* Exercises list */}
+          <div style={{flex:1,overflowY:"auto",padding:"16px 20px"}}>
+            {sections[activeSec]?.exercises.length===0?(
+              <div style={{display:"flex",flexDirection:"column",alignItems:"center",
+                justifyContent:"center",padding:"40px 20px",gap:12,opacity:.5}}>
+                <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",
+                  fontWeight:800,letterSpacing:"2px",color:"var(--mut)"}}>
+                  KEINE ÜBUNGEN
+                </div>
+                <div style={{fontSize:".7rem",color:"var(--mut)",fontWeight:600}}>
+                  Füge deine erste Übung hinzu
+                </div>
+              </div>
+            ):(
+              <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:12}}>
+                {sections[activeSec]?.exercises.map((ex,ei)=>(
+                  <div key={ei} style={{display:"flex",alignItems:"center",gap:12,
+                    background:"var(--card)",border:"1px solid var(--bdr)",
+                    borderRadius:16,padding:"13px 16px"}}>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:".88rem",fontWeight:700}}>{ex.name}</div>
+                      <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:600,marginTop:2}}>
+                        {ex.sets} Sätze · {ex.reps} Wdh.
+                      </div>
+                    </div>
+                    <button onClick={()=>removeExercise(activeSec,ei)}
+                      style={{background:"rgba(248,113,113,.1)",border:"1px solid rgba(248,113,113,.2)",
+                        borderRadius:10,padding:"6px 10px",cursor:"pointer",color:"var(--red)",
+                        fontSize:".7rem",fontWeight:800,fontFamily:"'Nunito',sans-serif"}}>
+                      Entf.
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add exercise form */}
+            {addingEx?(
+              <div style={{background:"var(--card)",border:"1.5px solid var(--acc)",
+                borderRadius:18,padding:"16px",marginBottom:12}}>
+                <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",
+                  color:"var(--mut)",fontWeight:800,marginBottom:10}}>Neue Übung</div>
+                <input value={newExName} onChange={e=>setNewExName(e.target.value)}
+                  placeholder="Übungsname..."
+                  autoFocus
+                  style={{width:"100%",background:"var(--bg)",border:"1px solid var(--bdr)",
+                    borderRadius:12,color:"var(--txt)",fontFamily:"'Nunito',sans-serif",
+                    fontSize:".95rem",fontWeight:700,padding:"12px 14px",outline:"none",
+                    marginBottom:12}}
+                  onKeyDown={e=>e.key==="Enter"&&addExercise()}/>
+                <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:14}}>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:".58rem",color:"var(--mut)",fontWeight:700,
+                      letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Sätze</div>
+                    <div style={{display:"flex",alignItems:"center",background:"var(--bg)",
+                      border:"1px solid var(--bdr)",borderRadius:12,overflow:"hidden"}}>
+                      <button onClick={()=>setNewExSets(s=>Math.max(1,s-1))}
+                        style={{background:"none",border:"none",color:"var(--txt)",padding:"10px 16px",
+                          cursor:"pointer",fontSize:"1.1rem",fontWeight:800}}>−</button>
+                      <div style={{flex:1,textAlign:"center",fontFamily:"'Montserrat',sans-serif",
+                        fontSize:"1rem",fontWeight:900}}>{newExSets}</div>
+                      <button onClick={()=>setNewExSets(s=>Math.min(10,s+1))}
+                        style={{background:"none",border:"none",color:"var(--txt)",padding:"10px 16px",
+                          cursor:"pointer",fontSize:"1.1rem",fontWeight:800}}>+</button>
+                    </div>
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:".58rem",color:"var(--mut)",fontWeight:700,
+                      letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Wdh.</div>
+                    <input value={newExReps} onChange={e=>setNewExReps(e.target.value)}
+                      style={{width:"100%",background:"var(--bg)",border:"1px solid var(--bdr)",
+                        borderRadius:12,color:"var(--txt)",fontFamily:"'Nunito',sans-serif",
+                        fontSize:".95rem",fontWeight:700,padding:"10px 14px",outline:"none",
+                        textAlign:"center"}}/>
+                  </div>
+                </div>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={addExercise} disabled={!newExName.trim()}
+                    style={{flex:2,background:newExName.trim()?"var(--acc)":"rgba(255,255,255,.08)",
+                      color:newExName.trim()?"var(--acc-txt,#080a0f)":"var(--mut)",
+                      border:"none",borderRadius:14,padding:"13px",cursor:"pointer",
+                      fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",fontWeight:900,
+                      letterSpacing:"1px",textTransform:"uppercase"}}>
+                    Hinzufügen
+                  </button>
+                  <button onClick={()=>{setAddingEx(false);setNewExName("");}}
+                    style={{flex:1,background:"rgba(255,255,255,.06)",
+                      border:"1px solid rgba(255,255,255,.1)",borderRadius:14,padding:"13px",
+                      cursor:"pointer",color:"var(--mut)",fontFamily:"'Nunito',sans-serif",
+                      fontSize:".82rem",fontWeight:700}}>
+                    Abbruch
+                  </button>
+                </div>
+              </div>
+            ):(
+              <button onClick={()=>setAddingEx(true)}
+                style={{width:"100%",background:"none",border:"1.5px dashed rgba(255,255,255,.15)",
+                  borderRadius:16,padding:"14px",cursor:"pointer",color:"var(--acc3)",
+                  fontFamily:"'Nunito',sans-serif",fontSize:".82rem",fontWeight:800,
+                  display:"flex",alignItems:"center",justifyContent:"center",gap:8,
+                  marginBottom:12}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Übung hinzufügen
+              </button>
+            )}
+
+            {/* Delete section */}
+            {sections.length>1&&!addingEx&&(
+              <button onClick={()=>removeSection(activeSec)}
+                style={{width:"100%",background:"none",border:"1px solid rgba(248,113,113,.15)",
+                  borderRadius:14,padding:"11px",cursor:"pointer",color:"var(--red)",
+                  fontFamily:"'Nunito',sans-serif",fontSize:".75rem",fontWeight:700,
+                  marginTop:4}}>
+                Abschnitt „{sections[activeSec]?.label}" löschen
+              </button>
+            )}
+          </div>
+
+          {/* Save button */}
+          <div style={{flexShrink:0,padding:"12px 20px",
+            borderTop:"1px solid rgba(255,255,255,.06)",
+            paddingBottom:"max(12px,env(safe-area-inset-bottom))"}}>
+            <button onClick={()=>{
+              if(canSave) onSave({
+                id:editPlan?.id||"p_"+Date.now(),
+                name:name.trim(),color,sections,
+                icon:name.trim()[0]?.toUpperCase()
+              });
+            }} disabled={!canSave}
+              style={{width:"100%",background:canSave?"var(--acc)":"rgba(255,255,255,.08)",
+                color:canSave?"var(--acc-txt,#080a0f)":"var(--mut)",border:"none",
+                borderRadius:16,padding:"16px",cursor:canSave?"pointer":"default",
+                fontFamily:"'Montserrat',sans-serif",fontSize:".95rem",fontWeight:900,
+                letterSpacing:"2px",textTransform:"uppercase"}}>
+              {editPlan?"Änderungen speichern":"Plan erstellen"}
+            </button>
           </div>
         </div>
+      )}
 
-        <button onClick={()=>{if(name.trim()&&sections.some(s=>s.exercises.length>0)) onSave({id:editPlan?.id||"p_"+Date.now(),name:name.trim(),color,sections,icon:name.trim()[0]?.toUpperCase()});}}
-          disabled={!name.trim()||!sections.some(s=>s.exercises.length>0)}
-          style={{width:"100%",background:"var(--acc)",color:"#080a0f",border:"none",borderRadius:"14px",
-            fontFamily:"'Montserrat',sans-serif",fontSize:"1rem",fontWeight:800,letterSpacing:"2px",
-            textTransform:"uppercase",padding:"14px",cursor:"pointer",opacity:(!name.trim()||!sections.some(s=>s.exercises.length>0))?".35":"1"}}>
-          {editPlan?"SPEICHERN":"PLAN ERSTELLEN"}
-        </button>
-        <button className="modal-cancel" onClick={onClose}>Abbrechen</button>
-      </div>
+      {/* Add section overlay */}
+      {newSecName!==null&&(
+        <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.7)",
+          backdropFilter:"blur(8px)",display:"flex",alignItems:"flex-end",zIndex:10}}>
+          <div style={{width:"100%",background:"var(--sur)",borderRadius:"24px 24px 0 0",
+            padding:"20px 20px 40px",boxShadow:"0 -8px 40px rgba(0,0,0,.6)"}}>
+            <div style={{width:36,height:4,background:"rgba(255,255,255,.15)",borderRadius:2,
+              margin:"0 auto 20px"}}/>
+            <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:800,letterSpacing:"2px",
+              textTransform:"uppercase",marginBottom:12}}>Neuer Abschnitt</div>
+            <input value={newSecName} onChange={e=>setNewSecName(e.target.value)}
+              placeholder="z.B. Brust, Rücken, Beine..."
+              autoFocus
+              style={{width:"100%",background:"var(--card)",border:"1.5px solid var(--acc)",
+                borderRadius:14,color:"var(--txt)",fontFamily:"'Nunito',sans-serif",
+                fontSize:"1rem",fontWeight:700,padding:"14px 16px",outline:"none",marginBottom:14}}
+              onKeyDown={e=>{
+                if(e.key==="Enter"&&newSecName.trim()){
+                  setSections(s=>[...s,{label:newSecName.trim().toUpperCase(),exercises:[]}]);
+                  setActiveSec(sections.length);
+                  setNewSecName(null);
+                }
+                if(e.key==="Escape") setNewSecName(null);
+              }}/>
+            <div style={{display:"flex",gap:10}}>
+              <button onClick={()=>{
+                if(newSecName.trim()){
+                  setSections(s=>[...s,{label:newSecName.trim().toUpperCase(),exercises:[]}]);
+                  setActiveSec(sections.length);
+                }
+                setNewSecName(null);
+              }} style={{flex:1,background:"var(--acc)",border:"none",borderRadius:14,
+                padding:"14px",cursor:"pointer",color:"var(--acc-txt,#080a0f)",
+                fontFamily:"'Montserrat',sans-serif",fontSize:".9rem",fontWeight:900,
+                letterSpacing:"1px",textTransform:"uppercase"}}>
+                Hinzufügen
+              </button>
+              <button onClick={()=>setNewSecName(null)}
+                style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",
+                  borderRadius:14,padding:"14px 20px",cursor:"pointer",color:"var(--mut)",
+                  fontFamily:"'Nunito',sans-serif",fontSize:".85rem",fontWeight:700}}>
+                Abbruch
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
+
 // ── Custom TrainingPage ───────────────────────────────────────────────────────
 function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNewPR, timerDuration=90}) {
+  const [activeSec,setActiveSec]=useState(0);
   const [showTimer,setShowTimer]=useState(false);
   const [showConfetti,setShowConfetti]=useState(false);
   const prevDoneRef=useRef(0);
@@ -1999,7 +2562,7 @@ function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNe
     prevDoneRef.current=done;
   },[done,total]);
   function upEx(si,ei,val){onUpdate({...dayData,sections:{...dayData?.sections,[si]:{...dayData?.sections?.[si],[ei]:val}}});}
-  function saveOverride(si,ei,val){const k=`${si}_${ei}`,newOv={...overrides};if(!val.sets&&!val.reps) delete newOv[k]; else newOv[k]=val;onUpdate({...dayData,overrides:newOv});}
+  function saveOverride(si,ei,val){const k=`${si}_${ei}`,newOv={...overrides};if(!val.sets&&!val.reps&&!val.bodyweight) delete newOv[k]; else newOv[k]=val;onUpdate({...dayData,overrides:newOv});}
   function handleSetComplete(exId,weight){setShowTimer(true);if(weight>0) onNewPR(exId,weight);}
 
   return (
@@ -2024,23 +2587,25 @@ function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNe
       {showTimer&&<RestTimer onDismiss={()=>setShowTimer(false)} duration={timerDuration}/>}
       <div className="dayhdr" style={{color:plan.color||"var(--txt)"}}>{plan.name.toUpperCase()}</div>
       <div className="daysub">{plan.sections.length} Abschnitte · {plan.sections.reduce((a,s)=>a+s.exercises.length,0)} Übungen</div>
-      {plan.sections.map((sec,si)=>(
-        <div key={si}>
-          <div className="seclbl">{sec.label}</div>
-          {sec.exercises.map((ex,ei)=>(
-            <ExCard key={ex.id||ei} ex={ex}
-              exData={dayData?.sections?.[si]?.[ei]??{}}
-              overrides={overrides[`${si}_${ei}`]??{}}
-              prs={prs}
-              onUpdate={v=>upEx(si,ei,v)}
-              onEditSave={v=>saveOverride(si,ei,v)}
-              onDelete={()=>{}}
-              onSetComplete={handleSetComplete}
-              onNewPR={onNewPR}
-            />
-          ))}
-        </div>
-      ))}
+      {/* Abschnitt-Tabs */}
+      <div style={{display:"flex",gap:6,marginBottom:16,flexWrap:"wrap"}}>
+        {plan.sections.map((s,i)=>{
+          let d3=0,t3=0;
+          s.exercises.forEach((ex,ei)=>{const ov3=overrides[`${i}_${ei}`]??{};const es3=ov3.sets??ex.sets;const ed3=dayData?.sections?.[i]?.[ei]??{};t3+=es3;for(let j=0;j<es3;j++){const s3=ed3[j]??{};if(s3.w&&s3.r&&parseFloat(s3.w)>0&&parseFloat(s3.r)>0)d3++;}});
+          const ok3=t3>0&&d3===t3;
+          return <button key={i} onClick={()=>setActiveSec(i)} style={{padding:"7px 16px",borderRadius:20,border:"none",cursor:"pointer",background:activeSec===i?"var(--acc)":ok3?"rgba(63,212,160,.15)":"rgba(255,255,255,.06)",color:activeSec===i?"var(--acc-txt,#080a0f)":ok3?"#3fd4a0":"var(--mut)",fontSize:".62rem",fontWeight:800,letterSpacing:".5px",textTransform:"uppercase",fontFamily:"'Nunito',sans-serif",transition:"all .2s"}}>{ok3?"✓ ":""}{s.label}</button>;
+        })}
+      </div>
+      {plan.sections.map((sec,si)=>{
+        if(si!==activeSec) return null;
+        return (
+          <div key={si} style={{animation:"fadeSlideUp .25s ease both"}}>
+            <div className="seclbl">{sec.label}</div>
+            {sec.exercises.map((ex,ei)=><ExCard key={ex.id||ei} ex={ex} exData={dayData?.sections?.[si]?.[ei]??{}} overrides={overrides[`${si}_${ei}`]??{}} prs={prs} onUpdate={v=>upEx(si,ei,v)} onEditSave={v=>saveOverride(si,ei,v)} onDelete={()=>{}} onSetComplete={handleSetComplete} onNewPR={onNewPR}/>)}
+            {activeSec<plan.sections.length-1&&<button onClick={()=>setActiveSec(activeSec+1)} style={{width:"100%",background:"rgba(255,255,255,.04)",border:"1.5px solid rgba(255,255,255,.08)",borderRadius:16,padding:"13px",cursor:"pointer",color:"var(--mut)",fontFamily:"'Nunito',sans-serif",fontSize:".78rem",fontWeight:800,marginTop:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>Weiter: {plan.sections[activeSec+1].label} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><polyline points="12,5 19,12 12,19"/></svg></button>}
+          </div>
+        );
+      })}
       <textarea className="notes" placeholder="Notizen zum Training..." value={dayData?.notes??""} onChange={e=>onUpdate({...dayData,notes:e.target.value})}/>
     </div>
   );
@@ -2048,142 +2613,170 @@ function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNe
 
 // ── Plans Page ───────────────────────────────────────────────────────────────
 function PlansPage({customPlans, onSavePlans, hiddenDefaults, onToggleDefault}) {
-  const [showNew, setShowNew] = useState(false);
-  const [editPlan, setEditPlan] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(null);
-  const [showTemplates, setShowTemplates] = useState(false);
+  const [editing,setEditing]=useState(null);
+  const [showTemplates,setShowTemplates]=useState(false);
+  const [expandedPlan,setExpandedPlan]=useState(null);
+  const [showNewPlan,setShowNewPlan]=useState(false);
 
-  function toggleDefault(id) {
-    onToggleDefault(hiddenDefaults.includes(id)
-      ? hiddenDefaults.filter(x=>x!==id)
-      : [...hiddenDefaults, id]);
+  function deletePlan(id){
+    if(window.confirm("Plan loschen?")) onSavePlans(customPlans.filter(p=>p.id!==id));
   }
 
-  function savePlan(plan) {
-    if(editPlan) {
-      onSavePlans(customPlans.map(p=>p.id===plan.id?plan:p));
-    } else {
-      onSavePlans([...customPlans, plan]);
-    }
-    setShowNew(false);
-    setEditPlan(null);
-  }
-
-  function deletePlan(id) {
-    onSavePlans(customPlans.filter(p=>p.id!==id));
-  }
-
-  const defaultPlans = [];
+  const totalEx = p => p.sections?.reduce((a,s)=>a+(s.exercises?.length||0),0)||0;
 
   return (
     <div className="plans-page">
       <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",fontWeight:900,
-        letterSpacing:"3px",textTransform:"uppercase",marginBottom:"6px",color:"var(--txt)"}}>
-        Trainingspläne
-      </div>
-      <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:600,marginBottom:"18px"}}>
+        letterSpacing:"3px",textTransform:"uppercase",marginBottom:"4px"}}>Trainingsplane</div>
+      <div style={{fontSize:".63rem",color:"var(--mut)",fontWeight:600,marginBottom:"20px"}}>
         Wähle beim Training einen Plan aus
       </div>
 
-
-
       {/* Custom plans */}
       {customPlans.length>0&&<>
-        <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",color:"var(--mut)",
-          fontWeight:800,margin:"18px 0 8px"}}>Eigene Pläne</div>
+        <div style={{fontSize:".52rem",letterSpacing:"3px",textTransform:"uppercase",
+          color:"rgba(255,255,255,.2)",fontWeight:800,marginBottom:"10px"}}>Eigene Pläne</div>
         {customPlans.map(p=>(
-          <div key={p.id} className="plan-card" style={{animation:"fadeSlideUp .3s cubic-bezier(.25,.46,.45,.94) both"}}>
-            <div className="plan-card-hdr">
-              <div className="plan-icon" style={{background:(p.color||"#a78bfa")+"22",color:p.color||"#a78bfa",border:"1px solid "+(p.color||"#a78bfa")+"44"}}>{p.icon||p.name[0]}</div>
-              <div style={{flex:1}}>
-                <div className="plan-card-name" style={{color:p.color||"var(--acc)"}}>{p.name}</div>
-                <div className="plan-card-sub">{p.sections?.length||0} Abschnitte · {p.sections?.reduce((a,s)=>a+s.exercises.length,0)||0} Übungen</div>
-              </div>
-              <div className="plan-actions">
-                <button className="plan-btn" onClick={()=>setEditPlan(p)}>✏️</button>
-                <button className="plan-btn del" onClick={()=>setConfirmDelete(p)}>✕</button>
-              </div>
-            </div>
-            {p.sections?.map((sec,si)=>(
-              <div key={si} style={{padding:"4px 14px 8px",borderTop:"1px solid rgba(255,255,255,.04)"}}>
-                <div style={{fontSize:".55rem",letterSpacing:"2px",color:"var(--mut)",fontWeight:800,
-                  textTransform:"uppercase",marginBottom:"4px"}}>{sec.label}</div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:"4px"}}>
-                  {sec.exercises.map((ex,ei)=>(
-                    <div key={ei} className="plan-ex-pill" style={{fontSize:".65rem",fontWeight:700,padding:"3px 8px",
-                      background:"rgba(255,255,255,.04)",borderRadius:"6px",border:"1px solid rgba(255,255,255,.06)",
-                      color:"var(--acc3)"}}>
-                      {ex.name} <span style={{color:"var(--mut)",fontWeight:600}}>{ex.sets}x</span>
-                    </div>
-                  ))}
+          <div key={p.id} style={{background:"var(--card)",border:"1px solid var(--bdr)",
+            borderRadius:20,marginBottom:8,overflow:"hidden",transition:"all .2s"}}>
+            <div style={{display:"flex",alignItems:"center",gap:14,padding:"16px"}}
+              onClick={()=>setExpandedPlan(expandedPlan===p.id?null:p.id)}>
+              {/* Color stripe */}
+              <div style={{width:4,height:40,borderRadius:2,background:p.color||"var(--acc)",flexShrink:0}}/>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontFamily:"'Montserrat',sans-serif",fontWeight:900,
+                  fontSize:".95rem",letterSpacing:".3px",marginBottom:3,
+                  color:"var(--txt)"}}>{p.name}</div>
+                <div style={{fontSize:".6rem",color:"var(--mut)",fontWeight:700,letterSpacing:".5px"}}>
+                  {p.sections?.length||0} ABSCHNITTE · {totalEx(p)} ÜBUNGEN
                 </div>
               </div>
-            ))}
+              <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                <button onClick={e=>{e.stopPropagation();setEditing(p);}}
+                  style={{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.08)",
+                    borderRadius:10,width:34,height:34,cursor:"pointer",color:"var(--mut)",
+                    display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s"}}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button onClick={e=>{e.stopPropagation();deletePlan(p.id);}}
+                  style={{background:"rgba(248,113,113,.08)",border:"1px solid rgba(248,113,113,.15)",
+                    borderRadius:10,width:34,height:34,cursor:"pointer",color:"var(--red)",
+                    display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s"}}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/>
+                    <path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4h6v2"/>
+                  </svg>
+                </button>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--mut)"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  style={{transform:expandedPlan===p.id?"rotate(180deg)":"none",transition:"transform .25s",flexShrink:0}}>
+                  <polyline points="6,9 12,15 18,9"/>
+                </svg>
+              </div>
+            </div>
+            {/* Expanded: show sections */}
+            {expandedPlan===p.id&&(
+              <div style={{borderTop:"1px solid var(--bdr)",padding:"10px 14px 14px"}}>
+                {p.sections?.map((sec,si)=>(
+                  <div key={si} style={{marginBottom:si<p.sections.length-1?10:0}}>
+                    <div style={{fontSize:".52rem",letterSpacing:"2.5px",textTransform:"uppercase",
+                      color:"rgba(255,255,255,.25)",fontWeight:800,marginBottom:7}}>{sec.label}</div>
+                    <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                      {sec.exercises?.map((ex,ei)=>(
+                        <div key={ei} style={{background:"rgba(255,255,255,.04)",
+                          border:"1px solid rgba(255,255,255,.06)",borderRadius:8,
+                          padding:"4px 10px",fontSize:".62rem",fontWeight:700,color:"var(--mut)"}}>
+                          {ex.name} <span style={{color:"var(--txt)",opacity:.5,marginLeft:2}}>{ex.sets}×</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </>}
 
-      <button className="add-plan-btn" onClick={()=>setShowNew(true)}>
-        + Neuen Plan erstellen
-      </button>
-
-      <button className="add-plan-btn" style={{marginTop:"8px",borderStyle:"solid",borderColor:"rgba(255,255,255,.08)",color:"var(--acc3)"}} onClick={()=>setShowTemplates(true)}>
-        📋 Plan-Vorlagen anzeigen
-      </button>
-
-      <div style={{fontSize:".65rem",color:"var(--mut)",textAlign:"center",marginTop:"14px",fontWeight:600,lineHeight:1.6}}>
-        Eigene Pläne erscheinen beim Tippen auf "+ Planen" oder "Ändern" im Kalender.
-      </div>
-
-      {(showNew||editPlan)&&(
-        <NewPlanModal
-          onSave={savePlan}
-          onClose={()=>{setShowNew(false);setEditPlan(null);}}
-          editPlan={editPlan}
-        />
-      )}
-
-      {showTemplates&&(
-        <TemplatesPage
-          customPlans={customPlans}
-          onSavePlans={onSavePlans}
-          onClose={()=>setShowTemplates(false)}
-        />
-      )}
-
-      {confirmDelete&&(
-        <div className="modal-bg" onClick={()=>setConfirmDelete(null)}>
-          <div className="modal" style={{paddingBottom:"32px"}}>
-            <div className="modal-handle"/>
-            <div className="modal-title" style={{fontSize:"1.1rem"}}>Plan löschen?</div>
-            <div style={{fontSize:".82rem",color:"var(--mut)",marginBottom:"20px",lineHeight:1.6,fontWeight:600}}>
-              Möchtest du <span style={{color:"var(--txt)",fontWeight:800}}>{confirmDelete.name}</span> wirklich löschen? Das kann nicht rückgängig gemacht werden.
-            </div>
-            <button onClick={()=>{deletePlan(confirmDelete.id);setConfirmDelete(null);}}
-              style={{width:"100%",background:"var(--red)",color:"#fff",border:"none",borderRadius:"14px",
-                fontFamily:"'Montserrat',sans-serif",fontSize:"1rem",fontWeight:800,letterSpacing:"2px",
-                textTransform:"uppercase",padding:"14px",cursor:"pointer",marginBottom:"10px",
-                boxShadow:"0 4px 20px rgba(248,113,113,.2)"}}>
-              JA, LÖSCHEN
+      {/* Empty state or buttons */}
+      {customPlans.length===0?(
+        <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",
+          justifyContent:"center",padding:"0 0 80px",gap:24}}>
+          {/* Visual */}
+          <div style={{position:"relative",marginBottom:8}}>
+            <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"5rem",fontWeight:900,
+              letterSpacing:"-3px",lineHeight:1,
+              background:"linear-gradient(135deg,var(--acc),rgba(255,255,255,.08))",
+              WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",
+              textAlign:"center"}}>TRAIN</div>
+            <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1rem",fontWeight:900,
+              letterSpacing:"6px",color:"var(--mut)",textTransform:"uppercase",textAlign:"center",
+              marginTop:-4}}>Dein erster Plan</div>
+          </div>
+          <div style={{fontSize:".78rem",color:"var(--mut)",textAlign:"center",lineHeight:1.6,
+            maxWidth:260,fontWeight:600}}>
+            Starte mit einer fertigen Vorlage oder baue deinen eigenen Plan von Grund auf.
+          </div>
+          {/* Buttons */}
+          <div style={{width:"100%",display:"flex",flexDirection:"column",gap:10}}>
+            <button onClick={()=>setShowTemplates(true)}
+              style={{width:"100%",background:"var(--acc)",border:"none",
+                borderRadius:18,padding:"17px",cursor:"pointer",color:"var(--acc-txt,#080a0f)",
+                fontFamily:"'Montserrat',sans-serif",fontSize:".9rem",fontWeight:900,
+                letterSpacing:"1.5px",textTransform:"uppercase",
+                boxShadow:"0 8px 32px rgba(255,255,255,.08)",
+                display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+              </svg>
+              Aus Vorlage wählen
             </button>
-            <button className="modal-cancel" onClick={()=>setConfirmDelete(null)}>Abbrechen</button>
+            <button onClick={()=>setShowNewPlan(true)}
+              style={{width:"100%",background:"rgba(255,255,255,.04)",
+                border:"1.5px solid rgba(255,255,255,.1)",
+                borderRadius:18,padding:"16px",cursor:"pointer",color:"var(--acc3)",
+                fontFamily:"'Nunito',sans-serif",fontSize:".85rem",fontWeight:800,
+                display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Eigenen Plan erstellen
+            </button>
           </div>
         </div>
+      ):(
+        <div style={{display:"flex",gap:8,marginBottom:16,marginTop:4}}>
+          <button onClick={()=>setShowTemplates(true)}
+            style={{flex:1,background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",
+              borderRadius:14,padding:"13px",cursor:"pointer",color:"var(--mut)",
+              fontFamily:"'Nunito',sans-serif",fontSize:".72rem",fontWeight:800}}>
+            Vorlage
+          </button>
+          <button onClick={()=>setShowNewPlan(true)}
+            style={{flex:2,background:"var(--acc)",border:"none",
+              borderRadius:14,padding:"13px",cursor:"pointer",color:"var(--acc-txt,#080a0f)",
+              fontFamily:"'Montserrat',sans-serif",fontSize:".78rem",fontWeight:900,
+              letterSpacing:"1px",textTransform:"uppercase"}}>
+            + Neuer Plan
+          </button>
+        </div>
       )}
+
+
+            {showNewPlan&&<NewPlanModal onSave={p=>{onSavePlans([...customPlans,p]);setShowNewPlan(false);}} onClose={()=>setShowNewPlan(false)}/>}
+      {editing&&<NewPlanModal editPlan={editing} onSave={updated=>{if(!customPlans.find(p=>p.id===updated.id)){onSavePlans([...customPlans,updated]);}else{onSavePlans(customPlans.map(p=>p.id===updated.id?updated:p));}setEditing(null);}} onClose={()=>setEditing(null)}/>}
+      {showTemplates&&<TemplatesPage customPlans={customPlans} onSavePlans={p=>{onSavePlans(p);setShowTemplates(false);}} onClose={()=>setShowTemplates(false)}/>}
     </div>
   );
 }
 
-// ── Gym Auslastung Page ───────────────────────────────────────────────────────
-const GYM_CHAINS = [
-  "McFit","FitX","clever fit","John Reed","PRIME TIME fitness",
-  "Fitness First","Holmes Place","EasyFitness","Elbgym","Meridian Spa",
-  "ARES","Mrs.Sporty","Kieser Training","Injoy","Bodystreet",
-  "PlusFit","Body + Soul","1Fit","High5","Fit One","Pfitzenmeier",
-  "Wellfit","Oyster Sports Club","FitnessLoft","Be-Fit","Gold\'s Gym",
-  "Anytime Fitness","Snap Fitness","Stadtbad","Vitafit","Aktiv Sport",
-  "Crossfit","Hammer Sport","Workout","Fit & Gesund","Sportfit",
-];
 
 function GymPage({ gymName, onSaveGym }) {
   const [input, setInput] = useState(gymName || "");
@@ -2295,7 +2888,7 @@ function GymPage({ gymName, onSaveGym }) {
 
       {!saved && (
         <div style={{ background: "var(--card)", border: "1px solid var(--bdr)", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
-          <div style={{ fontSize: "2rem", marginBottom: "8px" }}>🏋️</div>
+          <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",fontWeight:900,color:"var(--mut)",letterSpacing:"2px",marginBottom:"8px"}}>GYM</div>
           <div style={{ fontSize: ".85rem", fontWeight: 600, marginBottom: "4px", color: "var(--txt)" }}>Gym-Auslastung</div>
           <div style={{ fontSize: ".72rem", lineHeight: 1.6, color: "var(--mut)" }}>Tippe deinen Gym-Namen ein — ich suche automatisch nach echten Standorten mit Adresse.</div>
         </div>
@@ -2700,7 +3293,12 @@ function TemplatesPage({ customPlans, onSavePlans, onClose }) {
         {PLAN_TEMPLATES.map(tmpl=>(
           <div key={tmpl.id} className="tmpl-card">
             <div className="tmpl-card-hdr">
-              <div className="tmpl-icon" style={{background:tmpl.color+"22"}}>{tmpl.icon}</div>
+              <div className="tmpl-icon" style={{background:tmpl.color+"18",
+                border:"1.5px solid "+tmpl.color+"33",
+                fontFamily:"'Montserrat',sans-serif",fontSize:".95rem",fontWeight:900,
+                color:tmpl.color,letterSpacing:"0px"}}>
+                {tmpl.name.split(" ")[0].replace("/","").slice(0,3).toUpperCase()}
+              </div>
               <div>
                 <div className="tmpl-name" style={{color:tmpl.color}}>{tmpl.name}</div>
                 <div className="tmpl-sub">{tmpl.desc} · {tmpl.plans.length} Pläne</div>
@@ -2711,7 +3309,7 @@ function TemplatesPage({ customPlans, onSavePlans, onClose }) {
             </div>
             <button onClick={()=>applyTemplate(tmpl)}
               style={{marginTop:"10px",width:"100%",background:applied===tmpl.id?"var(--grn-bg)":"var(--acc)",
-                color:applied===tmpl.id?"var(--grn)":"#080a0f",border:applied===tmpl.id?"1px solid var(--grn)":"none",
+                color:applied===tmpl.id?"var(--grn)":"var(--acc-txt,#080a0f)",border:applied===tmpl.id?"1px solid var(--grn)":"none",
                 borderRadius:"10px",fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",fontWeight:800,
                 letterSpacing:"1px",padding:"10px",cursor:"pointer",textTransform:"uppercase"}}>
               {applied===tmpl.id?"✓ Übernommen":"Übernehmen"}
@@ -2725,7 +3323,7 @@ function TemplatesPage({ customPlans, onSavePlans, onClose }) {
 }
 
 // ── Onboarding Modal ─────────────────────────────────────────────────────────
-function OnboardingModal({ onSelectTemplate, onCreateOwn }) {
+function OnboardingModal({ onSelectTemplate, onCreateOwn, onCancel }) {
   const templates = PLAN_TEMPLATES.map(t => ({
     id: t.id,
     name: t.name,
@@ -2777,6 +3375,11 @@ function OnboardingModal({ onSelectTemplate, onCreateOwn }) {
             fontSize:".82rem",fontWeight:800,color:"var(--acc3)",letterSpacing:".5px",textTransform:"uppercase"}}>
           + Eigenen Plan erstellen
         </button>
+        <button onClick={onCancel||onCreateOwn}
+          style={{width:"100%",background:"none",border:"none",padding:"12px",cursor:"pointer",
+            fontFamily:"'Nunito',sans-serif",fontSize:".78rem",fontWeight:700,color:"var(--mut)",marginTop:4}}>
+          Abbrechen
+        </button>
       </div>
     </div>
   );
@@ -2792,12 +3395,11 @@ const THEMES = [
   {id:"orange",  label:"Orange", color:"#fb923c"},
   {id:"pink",    label:"Pink",   color:"#f472b6"},
   {id:"yellow",  label:"Gelb",   color:"#fbbf24"},
+  {id:"red",     label:"Rot",    color:"#f87171"},
 ];
 
-function SettingsModal({ onClose, currentTheme, onThemeChange, profilePic, onProfilePicSave, darkMode, onToggleDark, customColor, onCustomColor }) {
+function SettingsModal({ onClose, currentTheme, onThemeChange, profilePic, onProfilePicSave, darkMode, onToggleDark }) {
   const [preview, setPreview] = React.useState(profilePic||null);
-  const [localCustomColor, setLocalCustomColor] = React.useState(customColor||"#e8ff47");
-  const colorInputRef = React.useRef(null);
   const fileRef = React.useRef(null);
 
   function handleFile(e) {
@@ -2825,20 +3427,20 @@ function SettingsModal({ onClose, currentTheme, onThemeChange, profilePic, onPro
               onClick={()=>fileRef.current?.click()}>
               {preview
                 ? <img src={preview} style={{width:"100%",height:"100%",objectFit:"cover"}} alt=""/>
-                : <span style={{fontSize:"1.8rem"}}>👤</span>}
+                : <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",fontWeight:900,color:"var(--mut)"}}>T</span>}
             </div>
             <div style={{flex:1,display:"flex",flexDirection:"column",gap:"8px"}}>
               <button onClick={()=>fileRef.current?.click()}
                 style={{background:"var(--card2)",border:"1px solid var(--bdr)",color:"var(--acc3)",
                   borderRadius:"10px",padding:"9px 14px",cursor:"pointer",fontFamily:"'Nunito',sans-serif",
                   fontSize:".78rem",fontWeight:800,textAlign:"left"}}>
-                📷 Foto auswählen
+                Foto auswahlen
               </button>
               {preview&&<button onClick={()=>{setPreview(null);onProfilePicSave(null);}}
                 style={{background:"none",border:"1px solid rgba(248,113,113,.25)",color:"var(--red)",
                   borderRadius:"10px",padding:"8px 14px",cursor:"pointer",fontFamily:"'Nunito',sans-serif",
                   fontSize:".75rem",fontWeight:700,textAlign:"left"}}>
-                🗑 Bild entfernen
+                Bild entfernen
               </button>}
             </div>
             <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={handleFile}/>
@@ -2893,41 +3495,13 @@ function SettingsModal({ onClose, currentTheme, onThemeChange, profilePic, onPro
           </div>
         </div>
 
-        {/* Custom color picker */}
-        <div style={{marginTop:"12px"}}>
-          <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",
-            color:"var(--mut)",fontWeight:800,marginBottom:"8px"}}>Eigene Farbe</div>
-          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-            <label style={{position:"relative",width:44,height:44,borderRadius:"50%",
-              background:localCustomColor,
-              border:`3px solid ${currentTheme==="custom"?"#fff":"rgba(255,255,255,.15)"}`,
-              boxShadow:currentTheme==="custom"?`0 0 0 2px ${localCustomColor},0 0 16px ${localCustomColor}66`:"none",
-              flexShrink:0,overflow:"hidden",cursor:"pointer",display:"block",transition:"all .2s"}}>
-              <input
-                type="color"
-                value={localCustomColor}
-                onChange={e=>{
-                  const c=e.target.value;
-                  setLocalCustomColor(c);
-                  onThemeChange("custom");
-                  onCustomColor(c);
-                }}
-                style={{position:"absolute",width:"200%",height:"200%",top:"-50%",left:"-50%",
-                  opacity:0.01,cursor:"pointer",border:"none",padding:0}}
-              />
-            </label>
-            <div style={{flex:1}}>
-              <div style={{fontSize:".78rem",fontWeight:800,marginBottom:"4px"}}>Eigene Farbe wählen</div>
-              <div style={{fontSize:".62rem",color:"var(--mut)",fontWeight:600,lineHeight:1.4}}>Tippe auf den Kreis — öffnet den Farbwähler</div>
-            </div>
-          </div>
-        </div>
-
         <button className="modal-cancel" onClick={onClose} style={{marginTop:"16px"}}>Schließen</button>
       </div>
     </div>
   );
 }
+
+
 
 
 function Login({onLogin}) {
@@ -2986,6 +3560,20 @@ function Login({onLogin}) {
         {err&&<div className="merr">{err}</div>}
         {ok&&<div className="mok">{ok}</div>}
         <button className="pbtn" disabled={busy} onClick={submit}>{busy?"...":mode==="login"?"EINLOGGEN":"REGISTRIEREN"}</button>
+        {mode==="login"&&<button onClick={async()=>{
+          const u=username.trim().toLowerCase();
+          if(!u){setErr("Bitte zuerst Benutzernamen eingeben.");return;}
+          const rec=await dbLoad("auth_"+u);
+          if(!rec){setErr("Benutzer nicht gefunden.");return;}
+          setErr("");
+          const newPin=Math.floor(1000+Math.random()*9000).toString();
+          const hash=await hashPin(newPin);
+          await dbSave("auth_"+u,{hash});
+          setOk("Neuer PIN: "+newPin+" — bitte merken!");
+        }} style={{background:"none",border:"none",color:"var(--mut)",fontFamily:"'Nunito',sans-serif",
+          fontSize:".75rem",fontWeight:700,cursor:"pointer",marginTop:"4px",textDecoration:"underline"}}>
+          PIN vergessen?
+        </button>}
       </div>
     </div>
   );
@@ -3044,8 +3632,8 @@ function App() {
     return "default";
   });
   const [profilePic,setProfilePic]=useState(null);
-  const [customAccentColor,setCustomAccentColor]=useState("#e8ff47");
   const [showSettings,setShowSettings]=useState(false);
+  const [showWelcomeBanner,setShowWelcomeBanner]=useState(false);
   const [darkMode,setDarkMode]=useState(()=>{
     const saved=localStorage.getItem("gymlog_dark_guest");
     if(saved!==null) return JSON.parse(saved);
@@ -3084,7 +3672,6 @@ function App() {
           setHiddenDefaults(JSON.parse(localStorage.getItem("gymlog_hdef_"+u)||"[]"));
           setGymName(localStorage.getItem("gymlog_gym_"+u)||"");
           setTheme(localStorage.getItem("gymlog_theme_"+u)||"default");
-          setCustomAccentColor(localStorage.getItem("gymlog_accent_"+u)||"#e8ff47");
           setProfilePic(localStorage.getItem("gymlog_pic_"+u)||null);
           const savedDark=localStorage.getItem("gymlog_dark_"+u);
           const guestDark=localStorage.getItem("gymlog_dark_guest");
@@ -3104,7 +3691,7 @@ function App() {
     setWeekGoal(wg);setBodyWeights(bw);setTimerDuration(td);
     setStatus("app");
     const isNew=Object.keys(days||{}).length===0&&Object.keys(cex||{}).length===0;
-    if(isNew) setShowOnboarding(true);
+    if(isNew) setShowWelcomeBanner(true);
   }
   function handleLogout(){
     localStorage.removeItem("gymlog_session");
@@ -3123,7 +3710,6 @@ function App() {
   function saveHiddenDefaults(next){setHiddenDefaults(next);localStorage.setItem("gymlog_hdef_"+user,JSON.stringify(next));}
   function saveGymName(v){setGymName(v);localStorage.setItem("gymlog_gym_"+user,v);}
   function saveTheme(t){setTheme(t);localStorage.setItem("gymlog_theme_"+user,t);}
-  function saveCustomAccent(c){setCustomAccentColor(c);localStorage.setItem("gymlog_accent_"+user,c);}
   function saveProfilePic(pic){setProfilePic(pic);if(pic) localStorage.setItem("gymlog_pic_"+user,pic); else localStorage.removeItem("gymlog_pic_"+user);}
   function toggleDarkMode(){
     const next=!darkMode;setDarkMode(next);
@@ -3157,14 +3743,44 @@ function App() {
           document.body.classList.toggle("light",!darkMode);
           THEMES.forEach(t=>document.body.classList.remove("theme-"+t.id));
           if(theme!=="default") document.body.classList.add("theme-"+theme);
-            if(theme==="custom"){document.documentElement.style.setProperty("--acc",customAccentColor);document.documentElement.style.setProperty("--acc2",customAccentColor+"cc");document.documentElement.style.setProperty("--acc3",customAccentColor+"99");}
-            else{document.documentElement.style.removeProperty("--acc");document.documentElement.style.removeProperty("--acc2");document.documentElement.style.removeProperty("--acc3");}
           let m1=document.querySelector("meta[name=\"apple-mobile-web-app-capable\"]");
           if(!m1){m1=document.createElement("meta");m1.name="apple-mobile-web-app-capable";document.head.appendChild(m1);}
           m1.content="yes";
         }
       }}>
-        {showOnboarding&&<OnboardingModal onSelectTemplate={handleOnboardTemplate} onCreateOwn={handleOnboardCreateOwn}/>}
+        {/* Ambient orbs - shown on empty screens */}
+        {((view==="log"&&!dayInfo?.type)||(view==="plans"&&customPlans.length===0))&&(
+          <div className="orb-layer">
+            <div className="orb orb-1"/>
+            <div className="orb orb-2"/>
+            <div className="orb orb-3"/>
+            <div className="orb orb-4"/>
+          </div>
+        )}
+        {showOnboarding&&<OnboardingModal onSelectTemplate={handleOnboardTemplate} onCreateOwn={handleOnboardCreateOwn} onCancel={()=>setShowOnboarding(false)}/>}
+        {showWelcomeBanner&&(
+          <div style={{position:"fixed",inset:0,zIndex:800,background:"rgba(0,0,0,.6)",backdropFilter:"blur(8px)",display:"flex",alignItems:"flex-end",padding:"0 0 100px"}}
+            onClick={()=>setShowWelcomeBanner(false)}>
+            <div style={{width:"100%",background:"var(--sur)",borderRadius:"24px 24px 0 0",padding:"28px 24px 32px",boxShadow:"0 -8px 40px rgba(0,0,0,.5)"}}
+              onClick={e=>e.stopPropagation()}>
+              <div style={{width:40,height:4,background:"rgba(255,255,255,.15)",borderRadius:2,margin:"0 auto 24px"}}/>
+              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.4rem",fontWeight:900,letterSpacing:"1px",marginBottom:"8px"}}>Willkommen! 👋</div>
+              <div style={{fontSize:".82rem",color:"var(--mut)",lineHeight:1.6,marginBottom:"24px",fontWeight:600}}>
+                Tippe auf <strong style={{color:"var(--acc)"}}>+ Planen</strong> um deinen ersten Trainingstag einzurichten — oder schau dir erst die Pläne an.
+              </div>
+              <div style={{display:"flex",gap:"10px"}}>
+                <button onClick={()=>{setShowWelcomeBanner(false);setView("plans");}}
+                  style={{flex:1,background:"var(--acc)",color:"var(--acc-txt,#080a0f)",border:"none",borderRadius:"14px",padding:"13px",cursor:"pointer",fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",fontWeight:900,letterSpacing:"1px"}}>
+                  PLÄNE ANSEHEN
+                </button>
+                <button onClick={()=>setShowWelcomeBanner(false)}
+                  style={{flex:1,background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:"14px",padding:"13px",cursor:"pointer",fontFamily:"'Nunito',sans-serif",fontSize:".85rem",fontWeight:800,color:"var(--mut)"}}>
+                  Später
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <header>
           <div className="hlogo">GYM LOG</div>
           <div className="dot"/>
@@ -3193,7 +3809,7 @@ function App() {
             <div style={{padding:"12px 14px 0"}}>
               <div className="day-banner">
                 <div>
-                  <div className="day-banner-date">{isToday?"Heute":selectedDate.toLocaleDateString("de-DE",{day:"numeric",month:"short"})}</div>
+                  <div className="day-banner-date" style={{color:"var(--acc)"}}>{isToday?"Heute":selectedDate.toLocaleDateString("de-DE",{day:"numeric",month:"short"})}</div>
                   <div style={{fontSize:".63rem",color:"var(--mut)",marginTop:"2px"}}>{selectedDate.toLocaleDateString("de-DE",{weekday:"long"})}</div>
                 </div>
                 <div className="day-banner-info">
@@ -3209,7 +3825,7 @@ function App() {
                 }}>{dayInfo?.type?"Andern":"+ Planen"}</button>
               </div>
               <div className="savebar">
-                <span className={`savetxt ${saveStatus}`}>{saveStatus==="ing"?"Speichert...":"Gespeichert"}</span>
+                <span className={`savetxt ${saveStatus}`} style={{color:saveStatus==="ok"?"var(--acc)":"var(--mut)"}}>{saveStatus==="ing"?"Speichert...":"✓ Gespeichert"}</span>
               </div>
             </div>
             {planIdx!==null?(
@@ -3218,20 +3834,64 @@ function App() {
               <CustomTrainingPage plan={customPlanData} dayData={dayInfo} onUpdate={updateDayData} onChangeType={()=>setShowPicker(true)} prs={prs} onNewPR={handleNewPR} timerDuration={timerDuration}/>
             ):dayInfo?.type==="rest"?(
               <div className="rest-wrap">
-                <div style={{fontSize:"3rem"}}>💤</div>
+                <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.4rem",fontWeight:900,color:"var(--mut)",letterSpacing:"2px",marginBottom:"4px"}}>REST</div>
                 <div className="rest-title">Ruhetag</div>
                 <div style={{fontSize:".78rem",color:"var(--mut)",textAlign:"center"}}>Morgen wieder Gas geben!</div>
                 <button className="day-banner-change" style={{marginTop:"8px"}} onClick={()=>setShowPicker(true)}>Andern</button>
               </div>
             ):(
-              <div className="noday-wrap">
-                <div style={{fontSize:"2.5rem"}}>📅</div>
-                <div className="noday-title">Kein Training</div>
-                <div className="noday-sub">Wahle einen Trainingstyp oder markiere als Ruhetag.</div>
-                <button className="pbtn" style={{width:"auto",padding:"11px 28px",marginTop:"8px"}} onClick={()=>{
+              <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+                flex:1,padding:"24px 24px 100px",textAlign:"center",position:"relative"}}>
+
+
+                {/* Day name - huge */}
+                <div style={{position:"relative",marginBottom:8,width:"100%"}}>
+                  <div style={{fontFamily:"'Montserrat',sans-serif",fontWeight:900,
+                    fontSize:"clamp(3rem,18vw,5rem)",letterSpacing:"-2px",lineHeight:.85,
+                    background:"linear-gradient(160deg,var(--acc) 0%,rgba(255,255,255,.12) 80%)",
+                    WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
+                    backgroundClip:"text",userSelect:"none"}}>
+                    {new Date().toLocaleDateString("de-DE",{weekday:"long"}).toUpperCase()}
+                  </div>
+                  {/* Blur glow behind text */}
+                  <div style={{position:"absolute",inset:0,
+                    background:"radial-gradient(ellipse 60% 40% at 50% 60%,var(--acc)08,transparent)",
+                    pointerEvents:"none",zIndex:-1}}/>
+                </div>
+
+                {/* Date */}
+                <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:700,
+                  letterSpacing:"3px",textTransform:"uppercase",marginBottom:28}}>
+                  {new Date().toLocaleDateString("de-DE",{day:"numeric",month:"long",year:"numeric"})}
+                </div>
+
+                {/* Divider */}
+                <div style={{width:32,height:2,borderRadius:1,background:"rgba(255,255,255,.1)",marginBottom:28}}/>
+
+                {/* Motivational quote */}
+                <div style={{fontSize:".82rem",color:"rgba(255,255,255,.35)",fontWeight:700,
+                  letterSpacing:".5px",fontStyle:"italic",marginBottom:36,lineHeight:1.5,
+                  maxWidth:240}}>
+                  {["Kein Schmerz, kein Fortschritt.","Heute besser als gestern.","Du wirst es nicht bereuen.","Fang einfach an.","Dein zukünftiges Ich dankt dir.","Stärke kommt durch Konsequenz.","Ein Training ist besser als keins."][new Date().getDay()]}
+                </div>
+
+                {/* CTA Button */}
+                <button onClick={()=>{
                   if(customPlans.length===0) setShowOnboarding(true);
                   else setShowPicker(true);
-                }}>+ Tag planen</button>
+                }} style={{
+                  background:"var(--acc)",color:"var(--acc-txt,#080a0f)",border:"none",
+                  borderRadius:18,padding:"16px 0",cursor:"pointer",
+                  fontFamily:"'Montserrat',sans-serif",fontSize:".95rem",fontWeight:900,
+                  letterSpacing:"2px",textTransform:"uppercase",
+                  boxShadow:"0 0 40px var(--acc)33,0 8px 24px rgba(0,0,0,.3)",
+                  width:"100%",maxWidth:300,marginBottom:14,
+                  transition:"transform .15s,box-shadow .15s"}}>
+                  + TAG PLANEN
+                </button>
+                <div style={{fontSize:".62rem",color:"rgba(255,255,255,.2)",fontWeight:600,letterSpacing:"1px"}}>
+                  oder als Ruhetag markieren
+                </div>
               </div>
             )}
           </>
@@ -3248,8 +3908,6 @@ function App() {
           onProfilePicSave={saveProfilePic}
           darkMode={darkMode}
           onToggleDark={v=>{if(v!==darkMode) toggleDarkMode();}}
-          customColor={customAccentColor}
-          onCustomColor={saveCustomAccent}
         />}
       </div>
     </>
