@@ -3793,7 +3793,7 @@ function Login({onLogin}) {
   return (
     <div className="lw">
       <div className="lc">
-        <div className="logo" onTouchStart={egg.onTouchStart} onTouchEnd={egg.onTouchEnd} onTouchCancel={egg.onTouchEnd}>GYM LOG</div>
+        <div className="logo" onTouchStart={()=>{if(window._eggTimer)clearTimeout(window._eggTimer);window._eggTimer=setTimeout(()=>{window._eggFire&&window._eggFire();},2000);}} onTouchEnd={()=>clearTimeout(window._eggTimer)}>GYM LOG</div>
         <div className="logo-sub">Dein Trainingsplan</div>
         <div className="ltabs">
           <button className={`ltab${mode==="login"?" on":""}`} onClick={()=>{setMode("login");setErr("");}}>Login</button>
@@ -3879,6 +3879,10 @@ function App() {
   const [profilePic,setProfilePic]=useState(null);
   const [showSettings,setShowSettings]=useState(false);
   const egg = useEasterEgg();
+  React.useEffect(()=>{
+    window._eggFire = ()=>egg.setShow(true);
+    return ()=>{ window._eggFire=null; };
+  },[egg.setShow]);
   const [showWelcomeBanner,setShowWelcomeBanner]=useState(false);
   const [darkMode,setDarkMode]=useState(()=>{
     const saved=localStorage.getItem("gymlog_dark_guest");
