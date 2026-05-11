@@ -1,6 +1,10 @@
 <!DOCTYPE html>
+<!-- v1778404212.1741297 -->
 <html lang="de"><head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -259,7 +263,7 @@ header{background:rgba(8,10,15,.92);backdrop-filter:blur(20px);-webkit-backdrop-
 
 /* EXERCISE CARD */
 .excard{background:var(--card);border:1.5px solid var(--bdr);border-radius:18px;
-  margin-bottom:10px;overflow:hidden;transition:all .3s}
+  margin-bottom:10px;overflow:visible;transition:all .3s;animation:flowIn .4s ease both}
 .excard.all-done{border-color:rgba(134,239,172,.3);background:rgba(12,42,26,.5)}
 .excard.all-done .exname{color:var(--grn)}
 .exhdr{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 14px 7px;gap:8px}
@@ -1135,6 +1139,130 @@ button[style*="borderRadius:20"]:active{transform:scale(.93)!important;transitio
   bottom:20%;right:-12%;filter:blur(48px);
   animation:orbFloat1 22s ease-in-out infinite reverse;
 }
+
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pageIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes daySlideIn{
+  0%{opacity:0;transform:translateX(-40px);filter:blur(12px)}
+  60%{filter:blur(0)}
+  100%{opacity:1;transform:translateX(0);filter:blur(0)}
+}
+@keyframes flowIn{0%{opacity:0;transform:translateY(30px);filter:blur(8px)}60%{filter:blur(0)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes glitter{0%,100%{opacity:0;transform:scale(0) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(180deg)}}
+@keyframes crownDrop{0%{transform:translateY(-120px) rotate(-15deg);opacity:0}60%{transform:translateY(10px) rotate(5deg);opacity:1}80%{transform:translateY(-5px) rotate(-2deg)}100%{transform:translateY(0) rotate(0deg)}}
+@keyframes winklerReveal{0%{opacity:0;letter-spacing:20px}100%{opacity:1;letter-spacing:4px}}
+@keyframes ringExpand{0%{transform:scale(0);opacity:1}100%{transform:scale(3);opacity:0}}
+@keyframes goldShimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes ringDraw{
+  0%{stroke-dashoffset:384;opacity:0}
+  5%{opacity:1}
+  85%{stroke-dashoffset:0;opacity:1}
+  100%{stroke-dashoffset:0;opacity:0}
+}
+@keyframes ringDraw1{
+  0%{stroke-dashoffset:384;opacity:0}
+  4%{opacity:1}
+  65%{stroke-dashoffset:0;opacity:1}
+  80%{stroke-dashoffset:0;opacity:1}
+  100%{stroke-dashoffset:0;opacity:0}
+}
+@keyframes ringDraw2{
+  0%{stroke-dashoffset:384;opacity:0}
+  5%{opacity:1}
+  65%{stroke-dashoffset:0;opacity:1}
+  80%{stroke-dashoffset:0;opacity:1}
+  100%{stroke-dashoffset:0;opacity:0}
+}
+@keyframes ringDraw3{
+  0%{stroke-dashoffset:384;opacity:0}
+  6%{opacity:1}
+  65%{stroke-dashoffset:0;opacity:1}
+  80%{stroke-dashoffset:0;opacity:1}
+  100%{stroke-dashoffset:0;opacity:0}
+}
+@keyframes goldRingDraw{
+  0%{stroke-dashoffset:800;opacity:0}
+  5%{opacity:1}
+  80%{stroke-dashoffset:0;opacity:1}
+  95%{stroke-dashoffset:0;opacity:.6}
+  100%{stroke-dashoffset:0;opacity:0}
+}
+@keyframes goldCardGlow{
+  0%,100%{box-shadow:0 0 6px rgba(201,168,76,.12)}
+  50%{box-shadow:0 0 14px rgba(201,168,76,.25)}
+}
+@keyframes goldPulse{0%,100%{box-shadow:0 0 8px rgba(255,215,0,.3)}50%{box-shadow:0 0 24px rgba(255,215,0,.7)}}
+
+/* ── GOLD MODE 👑 ────────────────────────────────────────────────────────────*/
+body.gold-mode{
+  --acc:#c9a84c;--acc2:#e8c96b;--acc3:#a07830;
+  --acc-txt:#1a0e00;--bdr:rgba(201,168,76,.25);
+  --card:rgba(255,245,210,.06);--sur:rgba(255,240,190,.09);
+  --bg:#1a1205;--txt:#fff8e7;--mut:rgba(255,220,120,.5);
+}
+body.gold-mode::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(255,200,50,.12),transparent),
+    radial-gradient(ellipse 60% 60% at 80% 80%,rgba(200,150,20,.1),transparent),
+    linear-gradient(160deg,#1a1205 0%,#221608 40%,#1a1205 100%);
+}
+body.gold-mode .pbtn,
+body.gold-mode .cal-nav,
+body.gold-mode .icon-btn,
+body.gold-mode button:not(.bnav-btn):not(.logoutbtn):not([style*="underline"]){
+  background:linear-gradient(135deg,#c9a84c,#e8c96b,#c9a84c)!important;
+  background-size:200% auto!important;color:#1a0e00!important;
+  border:1px solid rgba(201,168,76,.3)!important;
+  animation:goldShimmer 3s linear infinite!important;
+}
+body.gold-mode .bnav-btn:not(.on){
+  background:transparent!important;animation:none!important;
+  border:none!important;box-shadow:none!important;color:rgba(201,168,76,.45)!important;
+}
+body.gold-mode .bnav-btn:not(.on) svg *{stroke:rgba(201,168,76,.45)!important}
+body.gold-mode .bnav-btn.on{
+  background:linear-gradient(135deg,#c9a84c,#e8c96b,#c9a84c)!important;
+  background-size:200% auto!important;animation:goldShimmer 3s linear infinite!important;
+  color:#1a0e00!important;border-radius:18px!important;
+  box-shadow:0 4px 16px rgba(201,168,76,.3)!important;
+}
+body.gold-mode .bnav-btn.on svg *{stroke:#1a0e00!important}
+body.gold-mode header{
+  background:rgba(26,18,5,.85)!important;backdrop-filter:blur(32px)!important;
+  border-bottom:1px solid rgba(201,168,76,.2)!important;
+}
+body.gold-mode .logo{
+  background:linear-gradient(90deg,#a07830,#e8c96b,#fff8e7,#e8c96b,#a07830)!important;
+  background-size:300% auto!important;-webkit-background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;background-clip:text!important;
+  animation:goldShimmer 2s linear infinite!important;
+}
+body.gold-mode .dot{background:#ffd700!important;box-shadow:0 0 12px #ffd700!important;}
+body.gold-mode .bnav{
+  background:rgba(26,18,5,.9)!important;backdrop-filter:blur(32px)!important;
+  border-top:1px solid rgba(201,168,76,.15)!important;
+}
+body.gold-mode .excard,body.gold-mode .plan-card,body.gold-mode .history-entry,
+body.gold-mode .statsbar,body.gold-mode .week-goal-card,body.gold-mode .streak-mini{
+  background:rgba(255,240,180,.05)!important;
+  border:1px solid rgba(201,168,76,.2)!important;
+}
+body.gold-mode input,body.gold-mode textarea{
+  background:rgba(255,240,180,.04)!important;
+  border-color:rgba(201,168,76,.25)!important;color:#fff8e7!important;animation:none!important;
+}
+body.gold-mode .logoutbtn{
+  background:linear-gradient(135deg,#c9a84c,#e8c96b,#c9a84c)!important;
+  background-size:200% auto!important;border:none!important;color:#1a0e00!important;
+  border-radius:20px!important;animation:goldShimmer 3s linear infinite!important;
+}
+.pin-forgot-btn{all:unset;color:var(--mut);font-family:'Nunito',sans-serif;
+  font-size:.75rem;font-weight:700;cursor:pointer;text-decoration:underline;
+  display:block;text-align:center;margin-top:8px;}
 </style></head><body>
 <div id="splash"><div class="sp-logo">GYM LOG</div><div class="sp-ring"></div><div class="sp-msg" id="sp-msg">Wird geladen...</div></div>
 <div id="root"></div>
@@ -1474,8 +1602,7 @@ function RestTimer({onDismiss, duration=90}) {
   );
 }
 
-function SetBlock({idx, data={}, onChange, isPR, prevWeight=null, bodyweight=false}) {
-  // bodyweight: only reps needed, weight is optional
+function SetBlock({idx, data={}, onChange, isPR, prevWeight=null, prevReps=null, bodyweight=false}) {
   const isDone = bodyweight
     ? !!(data.r&&parseFloat(data.r)>0)
     : !!(data.w&&data.r&&parseFloat(data.w)>0&&parseFloat(data.r)>0);
@@ -1485,10 +1612,21 @@ function SetBlock({idx, data={}, onChange, isPR, prevWeight=null, bodyweight=fal
       <div className="slbl">Satz {idx+1}</div>
       {!bodyweight&&<>
         <input className="si" type="number" placeholder="kg" step="0.5" value={data.w??""} onChange={e=>onChange("w",e.target.value)}/>
-        {prevWeight&&!data.w&&<div className="prev-hint">{prevWeight}kg</div>}
+        {prevWeight&&!data.w&&(
+          <div className="prev-hint" onClick={()=>onChange("w",String(prevWeight))}
+            style={{cursor:"pointer"}}>
+            {prevWeight}kg ↑
+          </div>
+        )}
         <div className="ulbl">Gewicht</div>
       </>}
       <input className="si" type="number" placeholder="Wdh" step="1" value={data.r??""} onChange={e=>onChange("r",e.target.value)}/>
+      {prevReps&&!data.r&&(
+        <div className="prev-hint" onClick={()=>onChange("r",String(prevReps))}
+          style={{cursor:"pointer"}}>
+          {prevReps} ↑
+        </div>
+      )}
       <div className="ulbl">Wdh.</div>
       {isDone&&<div className="sb-check"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="1,4.5 3.5,7 8,1.5"/></svg></div>}
       {isDone&&isPR&&<div className="pr-badge">PR</div>}
@@ -1544,23 +1682,260 @@ function AddExerciseModal({onAdd, onClose}) {
   );
 }
 
-function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, onSetComplete, prs, prevExData={}}) {
+
+// ── AUTO PROGRESSION ─────────────────────────────────────────────────────────
+function calcProgression(allDays, exId, currentOverrides={}) {
+  // Find last 3 sessions with this exercise
+  const sessions = Object.entries(allDays)
+    .sort(([a],[b])=>b.localeCompare(a)) // newest first
+    .map(([,di])=>di)
+    .filter(di=>di?.sections);
+
+  const history = [];
+  for(const di of sessions) {
+    if(history.length >= 3) break;
+    // Search all sections for this exercise
+    let found = false;
+    if(di.sections) {
+      Object.values(di.sections).forEach(sec=>{
+        if(found) return;
+        Object.values(sec).forEach(exData=>{
+          if(found) return;
+          // Check if any set has weight/reps logged
+          const sets = Object.values(exData||{}).filter(s=>s?.r&&parseFloat(s.r)>0);
+          if(sets.length > 0) {
+            const maxW = Math.max(...sets.map(s=>parseFloat(s.w)||0));
+            const avgR = sets.reduce((a,s)=>a+parseFloat(s.r),0)/sets.length;
+            if(maxW > 0 || avgR > 0) {
+              history.push({weight:maxW, reps:Math.round(avgR), sets:sets.length});
+              found = true;
+            }
+          }
+        });
+      });
+    }
+  }
+
+  if(history.length === 0) return null;
+
+  const last = history[0];
+  const allSetsCompleted = history.length >= 1;
+
+  // Progressive overload logic:
+  // If last session all sets completed at target reps → increase weight by 2.5kg
+  // If struggling (reps < target) → keep weight, suggest 1 more rep
+  const targetReps = parseInt(currentOverrides.reps) || last.reps;
+  
+  let suggestedWeight = last.weight;
+  let suggestedReps = last.reps;
+  let reason = "";
+
+  if(last.reps >= targetReps && last.weight > 0) {
+    suggestedWeight = last.weight + 2.5;
+    reason = `+2.5kg von ${last.weight}kg`;
+  } else if(last.reps < targetReps) {
+    suggestedReps = last.reps + 1;
+    reason = `+1 Wdh von ${last.reps}`;
+  } else {
+    reason = `Gleich wie letztes Mal`;
+  }
+
+  return { weight: suggestedWeight, reps: suggestedReps, reason, last };
+}
+
+
+// ── PREV SESSION BUTTON ───────────────────────────────────────────────────────
+function PrevSessionBtn({prevSets, onFillSet, onFillAll, exName}) {
+  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState(new Set());
+
+  const firstW = parseFloat(prevSets[0]?.[1]?.w)||0;
+  const firstR = parseFloat(prevSets[0]?.[1]?.r)||0;
+
+  function toggleSet(si) {
+    setSelected(prev=>{
+      const next=new Set(prev);
+      if(next.has(si)) next.delete(si); else next.add(si);
+      return next;
+    });
+  }
+
+  function getTargets() {
+    if(selected.size===0) return prevSets;
+    return prevSets.filter(([i])=>selected.has(parseInt(i)));
+  }
+
+  function fill(wOnly) {
+    onFillAll(getTargets(), wOnly);
+    setOpen(false);
+    setSelected(new Set());
+  }
+
+  return (
+    <>
+      <button onClick={()=>setOpen(true)}
+        style={{width:"100%",background:"rgba(255,255,255,.04)",
+          border:"1px solid rgba(255,255,255,.08)",borderRadius:12,
+          padding:"8px 12px",cursor:"pointer",marginBottom:8,
+          display:"flex",alignItems:"center",gap:8}}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+          stroke="var(--acc)" strokeWidth="2" strokeLinecap="round">
+          <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/>
+          <polyline points="17,6 23,6 23,12"/>
+        </svg>
+        <span style={{fontSize:".72rem",color:"var(--mut)",fontWeight:700,flex:1,textAlign:"left"}}>
+          {"Letztes Training: "}
+          {firstW>0&&<span style={{color:"var(--acc)"}}>{firstW}kg</span>}
+          {firstW>0&&firstR>0&&<span style={{color:"var(--mut)",margin:"0 3px"}}>×</span>}
+          {firstR>0&&<span style={{color:"var(--acc)"}}>{firstR} Wdh</span>}
+        </span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+          stroke="var(--mut)" strokeWidth="2" strokeLinecap="round">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+
+      {open&&(
+        <div style={{position:"fixed",inset:0,zIndex:999,
+          display:"flex",flexDirection:"column",justifyContent:"flex-end"}}
+          onClick={()=>{setOpen(false);setSelected(new Set());}}>
+          <div style={{position:"absolute",inset:0,
+            background:"rgba(0,0,0,.55)",backdropFilter:"blur(12px)",
+            WebkitBackdropFilter:"blur(12px)"}}/>
+
+          <div style={{position:"relative",zIndex:1,
+            background:"rgba(14,17,23,.97)",borderRadius:"24px 24px 0 0",
+            padding:"20px 20px 44px",boxShadow:"0 -8px 40px rgba(0,0,0,.6)"}}
+            onClick={e=>e.stopPropagation()}>
+
+            <div style={{width:36,height:4,background:"rgba(255,255,255,.15)",
+              borderRadius:2,margin:"0 auto 20px"}}/>
+
+            {/* Title */}
+            <div style={{marginBottom:16}}>
+              <div style={{fontSize:".58rem",color:"var(--mut)",fontWeight:700,
+                letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:4}}>
+                Letztes Training
+              </div>
+              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",fontWeight:900}}>
+                {exName}
+              </div>
+            </div>
+
+            {/* Hint */}
+            <div style={{fontSize:".62rem",color:"var(--mut)",fontWeight:600,
+              marginBottom:12,height:14}}>
+              {selected.size===0
+                ?"Sätze antippen zum Auswählen · Standard: alle"
+                :`${selected.size} Satz ausgewählt`}
+            </div>
+
+            {/* Sets horizontal */}
+            <div style={{display:"flex",gap:8,marginBottom:20}}>
+              {prevSets.map(([i,s])=>{
+                const si=parseInt(i);
+                const w=parseFloat(s.w)||0;
+                const r=parseFloat(s.r)||0;
+                const isSel=selected.has(si);
+                const active=selected.size===0||isSel;
+                return (
+                  <div key={i} onClick={()=>toggleSet(si)}
+                    style={{flex:1,borderRadius:14,padding:"12px 8px",
+                      display:"flex",flexDirection:"column",alignItems:"center",gap:8,
+                      cursor:"pointer",transition:"background .15s, border-color .15s",
+                      background:isSel?"rgba(52,211,153,.1)":"rgba(255,255,255,.05)",
+                      border:"1.5px solid",
+                      borderColor:isSel?"rgba(52,211,153,.4)":"rgba(255,255,255,.08)",
+                      opacity:!active?.4:1}}>
+                    {/* Checkbox dot */}
+                    <div style={{width:16,height:16,borderRadius:"50%",
+                      background:isSel?"var(--grn)":"rgba(255,255,255,.1)",
+                      border:isSel?"none":"1px solid rgba(255,255,255,.2)",
+                      display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {isSel&&<svg width="8" height="8" viewBox="0 0 14 14" fill="none"
+                        stroke="#000" strokeWidth="2.5" strokeLinecap="round">
+                        <polyline points="2,7 5.5,10.5 12,3.5"/>
+                      </svg>}
+                    </div>
+                    <div style={{fontSize:".55rem",fontWeight:800,color:"var(--mut)",letterSpacing:".5px"}}>
+                      SATZ {si+1}
+                    </div>
+                    <div style={{textAlign:"center"}}>
+                      <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",fontWeight:900,lineHeight:1}}>
+                        {w>0?w:"—"}
+                      </div>
+                      <div style={{fontSize:".55rem",color:"var(--mut)",fontWeight:700,marginTop:2}}>kg</div>
+                    </div>
+                    <div style={{textAlign:"center"}}>
+                      <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",fontWeight:900,lineHeight:1}}>
+                        {r>0?r:"—"}
+                      </div>
+                      <div style={{fontSize:".55rem",color:"var(--mut)",fontWeight:700,marginTop:2}}>Wdh</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Buttons */}
+            <div style={{display:"flex",gap:10,marginBottom:8}}>
+              {firstW>0&&(
+                <button onClick={()=>fill(true)}
+                  style={{flex:1,background:"rgba(255,255,255,.07)",
+                    border:"1px solid rgba(255,255,255,.12)",borderRadius:16,
+                    padding:"15px",cursor:"pointer",
+                    fontFamily:"'Montserrat',sans-serif",fontSize:".75rem",
+                    fontWeight:900,color:"var(--txt)",letterSpacing:".5px"}}>
+                  NUR KG
+                </button>
+              )}
+              <button onClick={()=>fill(false)}
+                style={{flex:2,background:"var(--acc)",border:"none",borderRadius:16,
+                  padding:"15px",cursor:"pointer",
+                  fontFamily:"'Montserrat',sans-serif",fontSize:".75rem",
+                  fontWeight:900,color:"var(--acc-txt,#080a0f)",letterSpacing:".5px"}}>
+                ÜBERNEHMEN
+              </button>
+            </div>
+            <button onClick={()=>{setOpen(false);setSelected(new Set());}}
+              style={{width:"100%",background:"none",border:"none",padding:"10px",
+                cursor:"pointer",color:"var(--mut)",fontFamily:"'Nunito',sans-serif",
+                fontSize:".78rem",fontWeight:700}}>
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, onSetComplete, prs, prevExData={}, allDays={}}) {
   const [showEdit,setShowEdit]=useState(false);
+  const progression = React.useMemo(()=>calcProgression(allDays, ex.id, overrides),[allDays, ex.id]);
+  const [showProg,setShowProg] = useState(true);
   const [localBW,setLocalBW]=useState(!!overrides.bodyweight);
   // Sync when overrides change from parent
   React.useEffect(()=>{ setLocalBW(!!overrides.bodyweight); },[overrides.bodyweight]);
   const isBW = localBW;
   const effSets=overrides.sets??ex.sets, effReps=overrides.reps??ex.reps;
   const isUserAdded=ex.id?.startsWith("cx_");
-  const allDone=Array.from({length:effSets},(_,i)=>{const s=exData[i]??{};return isBW?!!(s.r&&parseFloat(s.r)>0):!!(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0);}).every(Boolean);
+  const allDone=Array.from({length:effSets},(_,i)=>{const s=exData[i]??{};return isBW?!!(s.r&&parseFloat(s.r)>0):!!(s.r&&parseFloat(s.r)>0);}).every(Boolean);
 
   function handleChange(i,f,v) {
     const updated={...exData,[i]:{...exData[i],[f]:v}};
     onUpdate(updated);
     const s=updated[i];
     const bw=isBW;
-    const done=bw?(s.r&&parseFloat(s.r)>0):(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0);
+    const done=bw?!!(s.r&&parseFloat(s.r)>0):!!(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0);
     if(done) onSetComplete(ex.id,parseFloat(s.w)||parseFloat(s.r)||0);
+    // Check if ALL sets are now done
+    const allNowDone=Array.from({length:effSets},(_,j)=>{
+      const sd=updated[j]??{};
+      return bw?!!(sd.r&&parseFloat(sd.r)>0):!!(sd.r&&parseFloat(sd.r)>0);
+    }).every(Boolean);
+    if(allNowDone) onSetComplete(ex.id, parseFloat(s.w)||parseFloat(s.r)||0);
   }
 
   return (
@@ -1579,7 +1954,13 @@ function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, on
         </div>
         {/* Bodyweight toggle */}
         <div style={{padding:"0 14px 8px",display:"flex",alignItems:"center",gap:"8px"}}>
-          <button onClick={()=>{ const newBW=!isBW; setLocalBW(newBW); onEditSave({...overrides,bodyweight:newBW}); }}
+          <button onClick={()=>{ const newBW=!isBW; setLocalBW(newBW); onEditSave({...overrides,bodyweight:newBW});
+              // Re-trigger completion check for all sets that have reps
+              if(newBW) {
+                Object.entries(exData).forEach(([i,s])=>{
+                  if(s?.r&&parseFloat(s.r)>0) onSetComplete(ex.id, parseFloat(s.w)||parseFloat(s.r)||0);
+                });
+              } }}
             style={{display:"flex",alignItems:"center",gap:"6px",
               background:isBW?"rgba(var(--acc-rgb,255,255,255),.12)":"rgba(255,255,255,.04)",
               border:isBW?"1.5px solid var(--acc)":"1.5px solid rgba(255,255,255,.1)",
@@ -1600,8 +1981,66 @@ function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, on
           </button>
           {isBW&&<span style={{fontSize:".58rem",color:"var(--mut)",fontWeight:600}}>Nur Wdh. nötig · Zusatzgewicht optional</span>}
         </div>
+        {/* Progression suggestion */}
+        {showProg&&progression&&!allDone&&(
+          <div style={{margin:"0 14px 10px",padding:"10px 12px",
+            background:"linear-gradient(135deg,rgba(var(--acc-rgb,255,255,255),.08),rgba(var(--acc-rgb,255,255,255),.03))",
+            border:"1px solid rgba(255,255,255,.1)",borderRadius:14,
+            display:"flex",alignItems:"center",gap:10}}>
+            <div style={{fontSize:"1rem",flexShrink:0}}>📈</div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:".68rem",fontWeight:800,color:"var(--acc)",marginBottom:1}}>
+                Vorschlag: {progression.weight>0?progression.weight+"kg · ":""}{progression.reps} Wdh
+              </div>
+              <div style={{fontSize:".58rem",color:"var(--mut)",fontWeight:600}}>
+                {progression.reason}
+              </div>
+            </div>
+            <button onClick={()=>setShowProg(false)}
+              style={{background:"none",border:"none",color:"var(--mut)",cursor:"pointer",
+                fontSize:".75rem",padding:"2px 4px",fontFamily:"'Nunito',sans-serif"}}>
+              ✕
+            </button>
+          </div>
+        )}
+        {/* Last session button */}
+        {(()=>{
+          const prevSets = Object.entries(prevExData||{}).filter(([,s])=>s?.r&&parseFloat(s.r)>0);
+          if(prevSets.length===0) return null;
+          return <PrevSessionBtn prevSets={prevSets} exName={ex.name||ex.label||"Übung"} onFillSet={(setIdx,w,r)=>{
+            // Build one update to avoid stale state overwrites
+            const current = {...(exData[setIdx]||{})};
+            if(w!==null&&w>0) current.w=String(w);
+            if(r!==null&&r>0) current.r=String(r);
+            onUpdate({...exData,[setIdx]:current});
+          }}
+          onFillAll={(sets,wOnly)=>{
+            let updated={...exData};
+            sets.forEach(([i,s])=>{
+              const si=parseInt(i);
+              const w=parseFloat(s.w)||0;
+              const r=parseFloat(s.r)||0;
+              updated[si]={...(updated[si]||{})};
+              if(!wOnly&&r>0) updated[si].r=String(r);
+              if(w>0) updated[si].w=String(w);
+            });
+            onUpdate(updated);
+          }}/>;
+        })()}
         <div className="sgrid">
-          {Array.from({length:effSets},(_,i)=>{const s=exData[i]??{},w=parseFloat(s.w)||0,isPR=w>0&&prs[ex.id]===w;return <SetBlock key={i} idx={i} data={s} isPR={isPR} bodyweight={isBW} onChange={(f,v)=>handleChange(i,f,v)} onComplete={()=>onSetComplete(ex.id,parseFloat(s.w)||0)}/>;  })}
+          {Array.from({length:effSets},(_,i)=>{
+            const s=exData[i]??{};
+            const w=parseFloat(s.w)||0;
+            const isPR=w>0&&prs[ex.id]===w;
+            const prevSets=Object.values(prevExData||{});
+            const prevSet=prevSets[i]||prevSets[0];
+            const pw=prevSet?.w?parseFloat(prevSet.w):null;
+            const pr=prevSet?.r?parseFloat(prevSet.r):null;
+            return <SetBlock key={i} idx={i} data={s} isPR={isPR} bodyweight={isBW}
+              prevWeight={pw} prevReps={pr}
+              onChange={(f,v)=>handleChange(i,f,v)}
+              onComplete={()=>onSetComplete(ex.id,parseFloat(s.w)||0)}/>;
+          })}
         </div>
       </div>
       {showEdit&&<EditModal ex={ex} overrides={overrides} onSave={v=>{onEditSave(v);setShowEdit(false);}} onClose={()=>setShowEdit(false)}/>}
@@ -1611,6 +2050,24 @@ function ExCard({ex, exData={}, overrides={}, onUpdate, onEditSave, onDelete, on
 
 function TrainingPage({planIdx, dayData={}, customExercises={}, onUpdate, onUpdateCustom, onChangeType, prs, onNewPR, timerDuration=90, allDays={}, currentDk=''}) {
   const [showTimer,setShowTimer]=useState(false);
+  const [wSecs, setWSecs] = React.useState(()=>{
+    // Resume from saved start time if exists
+    const saved = localStorage.getItem('workout_start');
+    if(saved) return Math.floor((Date.now()-parseInt(saved))/1000);
+    const t = Date.now();
+    localStorage.setItem('workout_start', t);
+    return 0;
+  });
+  const [timerRunning, setTimerRunning] = React.useState(true);
+  React.useEffect(()=>{
+    if(!timerRunning) return;
+    const iv=setInterval(()=>{
+      const saved=localStorage.getItem('workout_start');
+      if(saved) setWSecs(Math.floor((Date.now()-parseInt(saved))/1000));
+    },1000);
+    return()=>clearInterval(iv);
+  },[timerRunning]);
+
   const [addingToSection,setAddingToSection]=useState(null);
   const [activeSec,setActiveSec]=useState(0);
   const [showConfetti,setShowConfetti]=useState(false);
@@ -1624,11 +2081,16 @@ function TrainingPage({planIdx, dayData={}, customExercises={}, onUpdate, onUpda
     .sort(([a],[b])=>b.localeCompare(a))[0]?.[1] ?? null;
   const overrides=dayData?.overrides??{};
   let total=0,done=0;
-  tab.sections.forEach((s,si)=>{const allEx=[...s.exercises,...(customExercises[`${planIdx}_${si}`]??[])];allEx.forEach((ex,ei)=>{const ov=overrides[`${si}_${ei}`]??{},effSets=ov.sets??ex.sets;total+=effSets;const ed=dayData?.sections?.[si]?.[ei]??{};for(let i=0;i<effSets;i++){const sd=ed[i]??{};if(sd.w&&sd.r&&parseFloat(sd.w)>0&&parseFloat(sd.r)>0) done++;}});});
+  tab.sections.forEach((s,si)=>{const allEx=[...s.exercises,...(customExercises[`${planIdx}_${si}`]??[])];allEx.forEach((ex,ei)=>{const ov=overrides[`${si}_${ei}`]??{},effSets=ov.sets??ex.sets;total+=effSets;const ed=dayData?.sections?.[si]?.[ei]??{};const isBWov=!!ov?.bodyweight;for(let i=0;i<effSets;i++){const sd=ed[i]??{};const setOk=isBWov?!!(sd.r&&parseFloat(sd.r)>0):!!(sd.r&&parseFloat(sd.r)>0);if(setOk) done++;}});});
+
+
   useEffect(()=>{
     if(total>0&&done===total&&prevDoneRef.current<total&&!confettiShownRef.current){
       confettiShownRef.current=true;
       setShowConfetti(true);
+      setTimerRunning(false);
+      localStorage.removeItem('workout_start');
+      onUpdate({...dayData, duration: wSecs});
     }
     prevDoneRef.current=done;
   },[done,total]);
@@ -1641,9 +2103,28 @@ function TrainingPage({planIdx, dayData={}, customExercises={}, onUpdate, onUpda
   return (
     <div className="page">
       {showConfetti&&<Confetti onDone={()=>setShowConfetti(false)}/>}
-      <div className="statsbar">
-        <div className="stat"><div className="sv">{done}</div><div className="sl">Erledigt</div></div>
-        <div className="stat"><div className="sv">{total}</div><div className="sl">Gesamt</div></div>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"center",
+          gap:6,padding:"6px 14px",marginBottom:8,
+          background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.06)",
+          borderRadius:20,width:"fit-content",margin:"0 auto 8px"}}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--acc)"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+          </svg>
+          <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:".8rem",
+            fontWeight:900,color:"var(--acc)",letterSpacing:"1px"}}>
+            {formatTime(trainElapsed)}
+          </span>
+      </div>
+      <div className="statsbar" style={{animation:"flowIn .4s ease both"}}>
+        <div className="stat">
+          <div className="sv" style={{fontFamily:"'Montserrat',sans-serif",color:"var(--grn)",fontSize:".95rem"}}>
+            {String(Math.floor(wSecs/60)).padStart(2,'0')}:{String(wSecs%60).padStart(2,'0')}
+          </div>
+          <div className="sl">Zeit</div>
+        </div>
+        <div className="stat"><div className="sv"><CountUp value={done}/></div><div className="sl">Erledigt</div></div>
+        <div className="stat"><div className="sv"><CountUp value={total}/></div><div className="sl">Gesamt</div></div>
         {done===total&&total>0&&(
           <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:"6px",
             background:"rgba(63,212,160,.1)",border:"1px solid rgba(63,212,160,.25)",
@@ -1666,7 +2147,7 @@ function TrainingPage({planIdx, dayData={}, customExercises={}, onUpdate, onUpda
           const cl2=customExercises[`${planIdx}_${i}`]??[];
           const ae2=[...s.exercises,...cl2];
           let d2=0,t2=0;
-          ae2.forEach((ex,ei)=>{const ov2=overrides[`${i}_${ei}`]??{};const es2=ov2.sets??ex.sets;const ed2=dayData?.sections?.[i]?.[ei]??{};t2+=es2;for(let j=0;j<es2;j++){const s2=ed2[j]??{};if(s2.w&&s2.r&&parseFloat(s2.w)>0&&parseFloat(s2.r)>0)d2++;}});
+          ae2.forEach((ex,ei)=>{const ov2=overrides[`${i}_${ei}`]??{};const es2=ov2.sets??ex.sets;const ed2=dayData?.sections?.[i]?.[ei]??{};t2+=es2;for(let j=0;j<es2;j++){const s2=ed2[j]??{};if(s2.r&&parseFloat(s2.r)>0)d2++;}});
           const ok2=t2>0&&d2===t2;
           return <button key={i} onClick={()=>setActiveSec(i)} style={{padding:"7px 16px",borderRadius:20,border:"none",cursor:"pointer",background:activeSec===i?"var(--acc)":ok2?"rgba(63,212,160,.15)":"rgba(255,255,255,.06)",color:activeSec===i?"var(--acc-txt,#080a0f)":ok2?"#3fd4a0":"var(--mut)",fontSize:".62rem",fontWeight:800,letterSpacing:".5px",textTransform:"uppercase",fontFamily:"'Nunito',sans-serif",transition:"all .2s"}}>{ok2?"✓ ":""}{s.label}</button>;
         })}
@@ -1766,9 +2247,11 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
           total += effSets;
           for(let i=0; i<effSets; i++) {
             const s = exData[i] ?? {};
-            if(s.w && s.r && parseFloat(s.w)>0 && parseFloat(s.r)>0) {
+            const isBW = !!ov?.bodyweight;
+            const setDone = isBW?!!(s.r&&parseFloat(s.r)>0):!!(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0);
+            if(setDone) {
               done++;
-              vol += parseFloat(s.w) * parseFloat(s.r);
+              vol += (parseFloat(s.w)||0) * (parseFloat(s.r)||0);
             }
           }
         });
@@ -1779,7 +2262,7 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
         Object.values(ex).forEach(s=>{
           if(typeof s==="object"&&s.w!==undefined){
             total++;
-            if(s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0){done++;vol+=parseFloat(s.w)*parseFloat(s.r);}
+            if(s.r&&parseFloat(s.r)>0){const sw=parseFloat(s.w)||0;const sr=parseFloat(s.r)||0;done++;vol+=sw*sr;}
           }
         });
       }));
@@ -1999,6 +2482,7 @@ function CalendarView({allDays, selectedDate, onSelectDate, customPlans=[], onDe
 
 
 function StatsPage({allDays, prs, bodyWeights, onSaveBW, weekGoal, onSetWeekGoal, timerDuration, onSetTimerDuration, customPlans=[], onSavePlans}) {
+  const [showWeeklyReview, setShowWeeklyReview] = useState(false);
   const [bwInput,setBwInput]=useState("");
   const [selectedEx,setSelectedEx]=useState("");
   const [graphExpanded,setGraphExpanded]=useState(false);
@@ -2060,7 +2544,7 @@ function StatsPage({allDays, prs, bodyWeights, onSaveBW, weekGoal, onSetWeekGoal
     <div className="stats-page">
       {/* Sub tabs */}
       <div className="stats-subtabs" style={{display:"flex",background:"var(--card)",borderRadius:"14px",padding:"4px",gap:"4px",marginBottom:"16px",border:"1px solid rgba(255,255,255,.06)"}}>
-        {[["stats","Stats"],["history","Verlauf"],["achievements","Abzeichen"]].map(([key,label])=>(
+        {[["stats","Stats"],["history","Verlauf"],["muscles","Muskeln"],["prs","Rekorde"],["achievements","Abzeichen"]].map(([key,label])=>(
           <button key={key} onClick={()=>setStatsTab(key)}
             className={statsTab===key?"stats-tab-active":"stats-tab-inactive"}
             style={{flex:1,padding:"8px",textAlign:"center",fontSize:".65rem",fontWeight:800,
@@ -2073,6 +2557,10 @@ function StatsPage({allDays, prs, bodyWeights, onSaveBW, weekGoal, onSetWeekGoal
       </div>
 
       {statsTab==="history"&&<HistoryPage allDays={allDays} customPlans={customPlans}/>}
+
+      {statsTab==="muscles"&&<MuscleMapPage allDays={allDays} customPlans={customPlans}/>}
+
+      {statsTab==="prs"&&<PRsPage prs={prs} allDays={allDays} customPlans={customPlans}/>}
 
       {statsTab==="achievements"&&(
         <div>
@@ -2154,6 +2642,7 @@ function StatsPage({allDays, prs, bodyWeights, onSaveBW, weekGoal, onSetWeekGoal
         {bwExpanded&&bwPoints.length>=2&&<GraphModal points={bwPoints} exName="Körpergewicht" color="#3fd4a0" onClose={()=>setBwExpanded(false)}/>}
 
       </>}
+      {showWeeklyReview&&<WeeklyReviewModal allDays={allDays} onClose={()=>setShowWeeklyReview(false)}/>}
     </div>
   );
 }
@@ -2570,7 +3059,23 @@ function NewPlanModal({onSave, onClose, editPlan=null}) {
 
 
 // ── Custom TrainingPage ───────────────────────────────────────────────────────
-function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNewPR, timerDuration=90}) {
+function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNewPR, timerDuration=90, allDays={}, currentDk=""}) {
+  const [wSecs, setWSecs] = React.useState(()=>{
+    const saved = localStorage.getItem('workout_start');
+    if(saved) return Math.floor((Date.now()-parseInt(saved))/1000);
+    const t = Date.now();
+    localStorage.setItem('workout_start', t);
+    return 0;
+  });
+  const [timerRunning, setTimerRunning] = React.useState(true);
+  React.useEffect(()=>{
+    if(!timerRunning) return;
+    const iv=setInterval(()=>{
+      const saved=localStorage.getItem('workout_start');
+      if(saved) setWSecs(Math.floor((Date.now()-parseInt(saved))/1000));
+    },1000);
+    return()=>clearInterval(iv);
+  },[timerRunning]);
   const [activeSec,setActiveSec]=useState(0);
   const [showTimer,setShowTimer]=useState(false);
   const [showConfetti,setShowConfetti]=useState(false);
@@ -2583,12 +3088,15 @@ function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNe
     const effSets=ov.sets??ex.sets;
     total+=effSets;
     const ed=dayData?.sections?.[si]?.[ei]??{};
-    for(let i=0;i<effSets;i++){const sd=ed[i]??{};if(sd.w&&sd.r&&parseFloat(sd.w)>0&&parseFloat(sd.r)>0) done++;}
+    for(let i=0;i<effSets;i++){const sd=ed[i]??{};if(sd.r&&parseFloat(sd.r)>0) done++;}
   });});
   useEffect(()=>{
     if(total>0&&done===total&&prevDoneRef.current<total&&!confettiShownRef.current){
       confettiShownRef.current=true;
       setShowConfetti(true);
+      setTimerRunning(false);
+      localStorage.removeItem('workout_start');
+      onUpdate({...dayData, duration: wSecs});
     }
     prevDoneRef.current=done;
   },[done,total]);
@@ -2600,8 +3108,14 @@ function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNe
     <div className="page">
       {showConfetti&&<Confetti onDone={()=>setShowConfetti(false)}/>}
       <div className="statsbar">
-        <div className="stat"><div className="sv">{done}</div><div className="sl">Erledigt</div></div>
-        <div className="stat"><div className="sv">{total}</div><div className="sl">Gesamt</div></div>
+        <div className="stat">
+          <div className="sv" style={{fontFamily:"'Montserrat',sans-serif",color:"var(--grn)",fontSize:".95rem"}}>
+            {String(Math.floor(wSecs/60)).padStart(2,'0')}:{String(wSecs%60).padStart(2,'0')}
+          </div>
+          <div className="sl">Zeit</div>
+        </div>
+        <div className="stat"><div className="sv"><CountUp value={done}/></div><div className="sl">Erledigt</div></div>
+        <div className="stat"><div className="sv"><CountUp value={total}/></div><div className="sl">Gesamt</div></div>
         {done===total&&total>0&&(
           <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:"6px",
             background:"rgba(63,212,160,.1)",border:"1px solid rgba(63,212,160,.25)",
@@ -2622,7 +3136,7 @@ function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNe
       <div style={{display:"flex",gap:6,marginBottom:16,flexWrap:"wrap"}}>
         {plan.sections.map((s,i)=>{
           let d3=0,t3=0;
-          s.exercises.forEach((ex,ei)=>{const ov3=overrides[`${i}_${ei}`]??{};const es3=ov3.sets??ex.sets;const ed3=dayData?.sections?.[i]?.[ei]??{};t3+=es3;for(let j=0;j<es3;j++){const s3=ed3[j]??{};if(s3.w&&s3.r&&parseFloat(s3.w)>0&&parseFloat(s3.r)>0)d3++;}});
+          s.exercises.forEach((ex,ei)=>{const ov3=overrides[`${i}_${ei}`]??{};const es3=ov3.sets??ex.sets;const ed3=dayData?.sections?.[i]?.[ei]??{};t3+=es3;for(let j=0;j<es3;j++){const s3=ed3[j]??{};if(s3.r&&parseFloat(s3.r)>0)d3++;}});
           const ok3=t3>0&&d3===t3;
           return <button key={i} onClick={()=>setActiveSec(i)} style={{padding:"7px 16px",borderRadius:20,border:"none",cursor:"pointer",background:activeSec===i?"var(--acc)":ok3?"rgba(63,212,160,.15)":"rgba(255,255,255,.06)",color:activeSec===i?"var(--acc-txt,#080a0f)":ok3?"#3fd4a0":"var(--mut)",fontSize:".62rem",fontWeight:800,letterSpacing:".5px",textTransform:"uppercase",fontFamily:"'Nunito',sans-serif",transition:"all .2s"}}>{ok3?"✓ ":""}{s.label}</button>;
         })}
@@ -2632,7 +3146,11 @@ function CustomTrainingPage({plan, dayData={}, onUpdate, onChangeType, prs, onNe
         return (
           <div key={si} style={{animation:"fadeSlideUp .25s ease both"}}>
             <div className="seclbl">{sec.label}</div>
-            {sec.exercises.map((ex,ei)=><ExCard key={ex.id||ei} ex={ex} exData={dayData?.sections?.[si]?.[ei]??{}} overrides={overrides[`${si}_${ei}`]??{}} prs={prs} onUpdate={v=>upEx(si,ei,v)} onEditSave={v=>saveOverride(si,ei,v)} onDelete={()=>{}} onSetComplete={handleSetComplete} onNewPR={onNewPR}/>)}
+            {sec.exercises.map((ex,ei)=>{
+              const prevDk=Object.keys(allDays).filter(k=>k<currentDk&&allDays[k]?.sections?.[si]?.[ei]).sort().reverse()[0];
+              const prevExData=prevDk?(allDays[prevDk]?.sections?.[si]?.[ei]??{}):{};
+              return <ExCard key={ex.id||ei} ex={ex} exData={dayData?.sections?.[si]?.[ei]??{}} overrides={overrides[`${si}_${ei}`]??{}} prs={prs} prevExData={prevExData} onUpdate={v=>upEx(si,ei,v)} onEditSave={v=>saveOverride(si,ei,v)} onDelete={()=>{}} onSetComplete={handleSetComplete} onNewPR={onNewPR}/>;
+            })}
             {activeSec<plan.sections.length-1&&<button onClick={()=>setActiveSec(activeSec+1)} style={{width:"100%",background:"rgba(255,255,255,.04)",border:"1.5px solid rgba(255,255,255,.08)",borderRadius:16,padding:"13px",cursor:"pointer",color:"var(--mut)",fontFamily:"'Nunito',sans-serif",fontSize:".78rem",fontWeight:800,marginTop:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>Weiter: {plan.sections[activeSec+1].label} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><polyline points="12,5 19,12 12,19"/></svg></button>}
           </div>
         );
@@ -2845,6 +3363,7 @@ function GymPage({gymName, onSaveGym}) {
   const [suggestions, setSuggestions] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [editing, setEditing] = React.useState(!gymName);
+  const [eggOpen, setEggOpen] = React.useState(false);
   const debounceRef = React.useRef(null);
 
   async function handleInput(val) {
@@ -2870,6 +3389,7 @@ function GymPage({gymName, onSaveGym}) {
   function save(name) {
     const n = (name||input).trim();
     if(!n) return;
+    if(n.toLowerCase()==="winkler") { setInput(""); setEggOpen(true); return; }
     setSaved(n); onSaveGym(n); setEditing(false); setSuggestions([]);
   }
 
@@ -3004,6 +3524,41 @@ function GymPage({gymName, onSaveGym}) {
         </a>
       )}
 
+      {/* 🥚 EASTER EGG */}
+      {eggOpen&&(
+        <div style={{position:"fixed",inset:0,zIndex:999,
+          background:"radial-gradient(ellipse at 50% 30%,rgba(180,130,0,.25),rgba(0,0,0,.98))",
+          backdropFilter:"blur(24px)",display:"flex",flexDirection:"column",
+          alignItems:"center",justifyContent:"center",padding:32,textAlign:"center",overflow:"hidden"}}
+          onClick={()=>{
+            setEggOpen(false);
+            document.body.classList.add("gold-mode");
+            const g=document.createElement("div");g.id="gold-glitter";
+            g.style.cssText="position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;";
+            for(let i=0;i<30;i++){const s=document.createElement("div");const sz=Math.random()*4+2;
+              s.style.cssText=`position:absolute;width:${sz}px;height:${sz}px;border-radius:50%;background:${Math.random()>.5?"#ffd700":"#fff8e7"};left:${Math.random()*100}%;top:${Math.random()*100}%;animation:glitter ${1+Math.random()*3}s ease-in-out infinite;animation-delay:${Math.random()*3}s;opacity:0;`;
+              g.appendChild(s);}
+            document.body.appendChild(g);
+            // gold mode stays until manually disabled
+          }}>
+          {[...Array(16)].map((_,i)=>(
+            <div key={i} style={{position:"absolute",left:(i*6.25)+"vw",top:(i%4*25+10)+"vh",
+              width:4,height:4,borderRadius:"50%",background:"#ffd700",
+              animation:`glitter ${1.5+i*.3}s ease-in-out infinite`,animationDelay:(i*.15)+"s",
+              pointerEvents:"none"}}/>
+          ))}
+          <div style={{fontSize:"6rem",animation:"crownDrop .9s cubic-bezier(.34,1.56,.64,1) both",
+            filter:"drop-shadow(0 0 30px rgba(255,215,0,.8))"}}>👑</div>
+          <div style={{width:120,height:120,borderRadius:"50%",border:"2px solid rgba(255,215,0,.6)",
+            position:"absolute",animation:"ringExpand 1.2s .3s ease-out both",pointerEvents:"none"}}/>
+          <div style={{width:180,height:180,borderRadius:"50%",border:"1px solid rgba(255,215,0,.3)",
+            position:"absolute",animation:"ringExpand 1.4s .5s ease-out both",pointerEvents:"none"}}/>
+          <div style={{fontSize:".6rem",color:"rgba(255,215,0,.35)",fontWeight:700,
+            letterSpacing:"4px",marginTop:80,animation:"fadeIn .6s 1s ease both"}}>
+            TIPPE ZUM SCHLIESSEN
+          </div>
+        </div>
+      )}
       {/* ── EMPTY STATE ── */}
       {!saved&&(
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",
@@ -3288,7 +3843,7 @@ function TrainingDetailView({ dk, di, customPlans, onBack, backLabel="Zur\u00FCc
               const effReps=ov?.reps??ex.reps;
               const exData=di.sections?.[si]?.[ei]??{};
               let exDone=0; const setDetails=[];
-              for(let i=0;i<effSets;i++){const s=exData[i]??{};const isDone=s.w&&s.r&&parseFloat(s.w)>0&&parseFloat(s.r)>0;if(isDone) exDone++;setDetails.push({...s,isDone});}
+              for(let i=0;i<effSets;i++){const s=exData[i]??{};const isDone=s.r&&parseFloat(s.r)>0;if(isDone) exDone++;setDetails.push({...s,isDone});}
               const exComplete=exDone===effSets;
               return (
                 <div key={ei} style={{background:exComplete?"rgba(63,212,160,.06)":"rgba(255,255,255,.03)",border:exComplete?"1px solid rgba(63,212,160,.18)":"1px solid rgba(255,255,255,.05)",borderRadius:"12px",padding:"10px 12px"}}>
@@ -3349,7 +3904,19 @@ function HistoryPage({ allDays, customPlans }) {
               <div style={{width:8,height:8,borderRadius:"50%",background:planColor,flexShrink:0}}/>
               <div style={{flex:1}}>
                 <div className="history-date">{new Date(dk+"T12:00:00").toLocaleDateString("de-DE",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}</div>
-                <div className="history-title" style={{color:planColor}}>{getPlanName(di.type)}</div>
+                <div style={{display:"flex",alignItems:"center",gap:8}}>
+                  <div className="history-title" style={{color:planColor}}>{getPlanName(di.type)}</div>
+                  {di.duration&&di.duration>0&&(
+                    <div style={{fontSize:".6rem",color:"var(--mut)",fontWeight:700,
+                      display:"flex",alignItems:"center",gap:3}}>
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none"
+                        stroke="var(--mut)" strokeWidth="2" strokeLinecap="round">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+                      </svg>
+                      {Math.floor(di.duration/60)}:{String(di.duration%60).padStart(2,'0')}
+                    </div>
+                  )}
+                </div>
               </div>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--mut)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             </div>
@@ -3448,61 +4015,89 @@ function TemplatesPage({ customPlans, onSavePlans, onClose }) {
 }
 
 // ── Onboarding Modal ─────────────────────────────────────────────────────────
-function OnboardingModal({ onSelectTemplate, onCreateOwn, onCancel }) {
-  const templates = PLAN_TEMPLATES.map(t => ({
-    id: t.id,
-    name: t.name,
-    icon: t.icon,
-    color: t.color,
-    desc: t.desc,
-    plans: t.plans,
-  }));
-
+function OnboardingModal({onSelectTemplate, onCreateOwn, onCancel}) {
   return (
-    <div className="onboard-bg">
-      <div className="onboard-modal">
-        <div style={{width:36,height:4,background:"rgba(255,255,255,.12)",borderRadius:2,margin:"0 auto 22px"}}/>
-        <div className="onboard-title">Willkommen! 💪</div>
-        <div className="onboard-sub">
-          Wähle einen fertigen Trainingsplan oder erstelle deinen eigenen — du kannst alles jederzeit anpassen.
+    <div className="onboard-bg" onClick={e=>e.target===e.currentTarget&&(onCancel||onCreateOwn)()}>
+      <div className="onboard-modal" style={{position:"relative",overflow:"hidden"}}
+        onTouchStart={e=>{e.currentTarget._ts=e.touches[0].clientY;}}
+        onTouchEnd={e=>{if(e.changedTouches[0].clientY-(e.currentTarget._ts||0)>80)(onCancel||onCreateOwn)();}}>
+
+        {/* Orb decoration */}
+        <div style={{position:"absolute",width:160,height:160,borderRadius:"50%",
+          background:"radial-gradient(circle,var(--acc)20,transparent 70%)",
+          top:-50,right:-40,pointerEvents:"none",filter:"blur(24px)",
+          animation:"orbFloat2 8s ease-in-out infinite"}}/>
+
+        <div style={{width:36,height:4,background:"rgba(255,255,255,.12)",borderRadius:2,
+          margin:"0 auto 20px",cursor:"pointer"}}
+          onClick={onCancel||onCreateOwn}/>
+
+        {/* Title */}
+        <div style={{marginBottom:20}}>
+          <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.4rem",fontWeight:900,
+            letterSpacing:".5px",marginBottom:4,
+            animation:"flowIn .5s ease both"}}>
+            Trainingsplan wählen
+          </div>
+          <div style={{fontSize:".62rem",color:"var(--mut)",fontWeight:700,lineHeight:1.6,
+            letterSpacing:"1px",animation:"flowIn .5s .1s ease both"}}>
+            Starte mit einer Vorlage oder baue deinen eigenen Plan.
+          </div>
         </div>
 
-        {templates.map(t => (
-          <div key={t.id} className="onboard-tmpl" onClick={() => onSelectTemplate(t)}>
-            <div className="onboard-tmpl-icon" style={{background:t.color+"22",border:"1px solid "+t.color+"33"}}>
-              {t.icon}
-            </div>
-            <div>
-              <div className="onboard-tmpl-name" style={{color:t.color}}>{t.name}</div>
-              <div className="onboard-tmpl-sub">{t.desc}</div>
-              <div style={{display:"flex",gap:"5px",marginTop:"5px",flexWrap:"wrap"}}>
-                {t.plans.map(p => (
-                  <div key={p.name} style={{fontSize:".58rem",fontWeight:700,padding:"2px 7px",
-                    background:"rgba(255,255,255,.05)",borderRadius:"5px",border:"1px solid rgba(255,255,255,.08)",
-                    color:"var(--acc3)"}}>
-                    {p.name}
-                  </div>
-                ))}
+        {/* Templates */}
+        <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16,
+          animation:"flowIn .5s .2s ease both"}}>
+          {PLAN_TEMPLATES.map(tmpl=>(
+            <div key={tmpl.id} onClick={()=>onSelectTemplate(tmpl)}
+              style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",
+                background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",
+                borderRadius:16,cursor:"pointer",transition:"all .15s"}}>
+              <div style={{width:40,height:40,borderRadius:12,flexShrink:0,
+                background:tmpl.color+"22",border:"1.5px solid "+tmpl.color+"44",
+                display:"flex",alignItems:"center",justifyContent:"center",
+                fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",fontWeight:900,
+                color:tmpl.color}}>
+                {tmpl.name.split(" ")[0].slice(0,3).toUpperCase()}
               </div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:800,fontSize:".88rem",color:tmpl.color,marginBottom:2}}>
+                  {tmpl.name}
+                </div>
+                <div style={{fontSize:".6rem",color:"var(--mut)",fontWeight:600}}>
+                  {tmpl.desc}
+                </div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="rgba(255,255,255,.2)" strokeWidth="2" strokeLinecap="round">
+                <polyline points="9,18 15,12 9,6"/>
+              </svg>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
-        <div className="onboard-or">
-          <div className="onboard-or-line"/>
-          <div className="onboard-or-text">oder</div>
-          <div className="onboard-or-line"/>
+        {/* Divider */}
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16,
+          animation:"flowIn .5s .3s ease both"}}>
+          <div style={{flex:1,height:1,background:"rgba(255,255,255,.06)"}}/>
+          <div style={{fontSize:".6rem",color:"var(--mut)",fontWeight:700,letterSpacing:"1px"}}>ODER</div>
+          <div style={{flex:1,height:1,background:"rgba(255,255,255,.06)"}}/>
         </div>
 
         <button onClick={onCreateOwn}
-          style={{width:"100%",background:"rgba(255,255,255,.05)",border:"1.5px solid rgba(255,255,255,.1)",
-            borderRadius:"16px",padding:"14px",cursor:"pointer",fontFamily:"'Nunito',sans-serif",
-            fontSize:".82rem",fontWeight:800,color:"var(--acc3)",letterSpacing:".5px",textTransform:"uppercase"}}>
+          style={{width:"100%",background:"rgba(255,255,255,.05)",
+            border:"1.5px solid rgba(255,255,255,.1)",borderRadius:16,padding:"14px",
+            cursor:"pointer",fontFamily:"'Nunito',sans-serif",fontSize:".85rem",
+            fontWeight:800,color:"var(--acc3)",letterSpacing:".5px",
+            animation:"flowIn .5s .35s ease both"}}>
           + Eigenen Plan erstellen
         </button>
+
         <button onClick={onCancel||onCreateOwn}
-          style={{width:"100%",background:"none",border:"none",padding:"12px",cursor:"pointer",
-            fontFamily:"'Nunito',sans-serif",fontSize:".78rem",fontWeight:700,color:"var(--mut)",marginTop:4}}>
+          style={{width:"100%",background:"none",border:"none",padding:"10px",
+            cursor:"pointer",fontFamily:"'Nunito',sans-serif",fontSize:".75rem",
+            fontWeight:700,color:"var(--mut)",marginTop:4,
+            animation:"flowIn .5s .4s ease both"}}>
           Abbrechen
         </button>
       </div>
@@ -3511,142 +4106,170 @@ function OnboardingModal({ onSelectTemplate, onCreateOwn, onCancel }) {
 }
 
 
-// ── SETTINGS MODAL ──────────────────────────────────────────────────────────
-const THEMES = [
-  {id:"default", label:"Weiß",   color:"#ffffff"},
-  {id:"blue",    label:"Blau",   color:"#60a5fa"},
-  {id:"green",   label:"Grün",   color:"#34d399"},
-  {id:"purple",  label:"Lila",   color:"#a78bfa"},
-  {id:"orange",  label:"Orange", color:"#fb923c"},
-  {id:"pink",    label:"Pink",   color:"#f472b6"},
-  {id:"yellow",  label:"Gelb",   color:"#fbbf24"},
-  {id:"red",     label:"Rot",    color:"#f87171"},
-];
-
-function SettingsModal({ onClose, currentTheme, onThemeChange, profilePic, onProfilePicSave, darkMode, onToggleDark }) {
-  const [preview, setPreview] = React.useState(profilePic||null);
+function SettingsModal({ onClose, currentTheme, onThemeChange, profilePic, onProfilePicSave, darkMode, onToggleDark, username="" }) {
   const fileRef = React.useRef(null);
 
-  function handleFile(e) {
+  function handlePic(e) {
     const file = e.target.files[0];
     if(!file) return;
     const reader = new FileReader();
-    reader.onload = ev => { setPreview(ev.target.result); onProfilePicSave(ev.target.result); };
+    reader.onload = ev => onProfilePicSave(ev.target.result);
     reader.readAsDataURL(file);
   }
 
+  const name = username ? username.charAt(0).toUpperCase()+username.slice(1) : "";
+  const initials = name ? name[0].toUpperCase() : "?";
+
   return (
     <div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal" style={{paddingBottom:"40px"}}>
+      <div className="modal" style={{paddingBottom:"40px",overflow:"hidden",position:"relative"}}>
+
+        {/* Decorative orb */}
+        <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",
+          background:"radial-gradient(circle,var(--acc)18,transparent 70%)",
+          top:-60,right:-60,pointerEvents:"none",filter:"blur(30px)",
+          animation:"orbFloat1 8s ease-in-out infinite"}}/>
+
         <div className="modal-handle"/>
-        <div className="modal-title">Einstellungen</div>
 
-        {/* Profile picture */}
-        <div style={{marginBottom:"24px"}}>
-          <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",
-            color:"var(--mut)",fontWeight:800,marginBottom:"12px"}}>Profilbild</div>
-          <div style={{display:"flex",alignItems:"center",gap:"16px"}}>
-            <div style={{width:64,height:64,borderRadius:"50%",overflow:"hidden",flexShrink:0,
-              background:"var(--card)",border:"2px solid var(--bdr)",
-              display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}
-              onClick={()=>fileRef.current?.click()}>
-              {preview
-                ? <img src={preview} style={{width:"100%",height:"100%",objectFit:"cover"}} alt=""/>
-                : <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",fontWeight:900,color:"var(--mut)"}}>T</span>}
+        {/* Profile header */}
+        <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:24,
+          paddingBottom:20,borderBottom:"1px solid rgba(255,255,255,.06)"}}>
+          <div onClick={()=>fileRef.current?.click()}
+            style={{width:64,height:64,borderRadius:"50%",overflow:"hidden",flexShrink:0,
+              background:"var(--acc)22",border:"2px solid var(--acc)44",cursor:"pointer",
+              display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
+            {profilePic
+              ? <img src={profilePic} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              : <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.5rem",
+                  fontWeight:900,color:"var(--acc)"}}>{initials}</span>}
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Montserrat',sans-serif",fontWeight:900,
+              fontSize:"1.1rem",marginBottom:4}}>{name||"Profil"}</div>
+            <div onClick={()=>fileRef.current?.click()}
+              style={{fontSize:".65rem",color:"var(--acc)",fontWeight:700,
+                cursor:"pointer",letterSpacing:".5px"}}>
+              Foto ändern ✦
             </div>
-            <div style={{flex:1,display:"flex",flexDirection:"column",gap:"8px"}}>
-              <button onClick={()=>fileRef.current?.click()}
-                style={{background:"var(--card2)",border:"1px solid var(--bdr)",color:"var(--acc3)",
-                  borderRadius:"10px",padding:"9px 14px",cursor:"pointer",fontFamily:"'Nunito',sans-serif",
-                  fontSize:".78rem",fontWeight:800,textAlign:"left"}}>
-                Foto auswahlen
-              </button>
-              {preview&&<button onClick={()=>{setPreview(null);onProfilePicSave(null);}}
-                style={{background:"none",border:"1px solid rgba(248,113,113,.25)",color:"var(--red)",
-                  borderRadius:"10px",padding:"8px 14px",cursor:"pointer",fontFamily:"'Nunito',sans-serif",
-                  fontSize:".75rem",fontWeight:700,textAlign:"left"}}>
-                Bild entfernen
-              </button>}
+          </div>
+          <input ref={fileRef} type="file" accept="image/*"
+            style={{display:"none"}} onChange={handlePic}/>
+        </div>
+
+        {/* Dark/Light toggle */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",
+          marginBottom:12,padding:"14px 16px",
+          background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",
+          borderRadius:16,cursor:"pointer"}}
+          onClick={()=>onToggleDark(!darkMode)}>
+          <div>
+            <div style={{fontSize:".85rem",fontWeight:800,marginBottom:2}}>
+              {darkMode?"🌙 Dark Mode":"☀️ Light Mode"}
             </div>
-            <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={handleFile}/>
+            <div style={{fontSize:".62rem",color:"var(--mut)",fontWeight:600}}>
+              Erscheinungsbild der App
+            </div>
+          </div>
+          <div style={{width:48,height:26,borderRadius:13,
+            background:darkMode?"var(--acc)":"rgba(255,255,255,.15)",
+            position:"relative",transition:"background .3s",flexShrink:0}}>
+            <div style={{position:"absolute",top:3,
+              left:darkMode?22:3,width:20,height:20,borderRadius:"50%",
+              background:"#fff",transition:"left .3s",
+              boxShadow:"0 2px 4px rgba(0,0,0,.3)"}}/>
           </div>
         </div>
 
-        {/* Dark/Light mode */}
-        <div style={{marginBottom:"24px"}}>
-          <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",
-            color:"var(--mut)",fontWeight:800,marginBottom:"12px"}}>Erscheinungsbild</div>
-          <div style={{display:"flex",gap:"8px"}}>
-            {[{id:true,label:"🌙 Dunkel"},{id:false,label:"☀️ Hell"}].map(m=>(
-              <button key={String(m.id)} onClick={()=>onToggleDark(m.id)}
-                style={{flex:1,padding:"12px",borderRadius:"12px",cursor:"pointer",
-                  border:`1.5px solid ${darkMode===m.id?"var(--acc)":"var(--bdr)"}`,
-                  background:darkMode===m.id?"rgba(255,255,255,.06)":"none",
-                  color:darkMode===m.id?"var(--acc)":"var(--mut)",
-                  fontFamily:"'Nunito',sans-serif",fontSize:".8rem",fontWeight:800,
-                  transition:"all .2s"}}>
-                {m.label}
-              </button>
+        {/* Accent color */}
+        <div style={{marginBottom:20}}>
+          <div style={{fontSize:".58rem",letterSpacing:"2px",textTransform:"uppercase",
+            color:"var(--mut)",fontWeight:800,marginBottom:12}}>Akzentfarbe</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,alignItems:"center"}}>
+            {THEMES.map(t=>(
+              <div key={t.id} onClick={()=>onThemeChange(t.id)}
+                style={{width:32,height:32,borderRadius:"50%",background:t.color,
+                  cursor:"pointer",
+                  border:`2.5px solid ${currentTheme===t.id?"#fff":"transparent"}`,
+                  boxShadow:currentTheme===t.id?`0 0 0 2px ${t.color},0 0 12px ${t.color}44`:"none",
+                  transform:currentTheme===t.id?"scale(1.15)":"scale(1)",
+                  transition:"all .2s",
+                  display:"flex",alignItems:"center",justifyContent:"center"}}>
+                {currentTheme===t.id&&<svg width="11" height="11" viewBox="0 0 14 14" fill="none"
+                  stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="2,7 5.5,10.5 12,3.5"/>
+                </svg>}
+              </div>
             ))}
+            {/* Custom color picker */}
+            <div style={{position:"relative",width:32,height:32,flexShrink:0}}>
+              <div style={{width:32,height:32,borderRadius:"50%",
+                background:!THEMES.find(t=>t.id===currentTheme)
+                  ?"linear-gradient(135deg,#f9a8d4,#a78bfa,#7dd3fc)"
+                  :"linear-gradient(135deg,#f9a8d4,#a78bfa,#7dd3fc)",
+                border:`2.5px solid ${!THEMES.find(t=>t.id===currentTheme)?"#fff":"rgba(255,255,255,.25)"}`,
+                display:"flex",alignItems:"center",justifyContent:"center"}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="rgba(255,255,255,.8)" strokeWidth="2.5"
+                  strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </div>
+              <input type="color" defaultValue="#7dd3fc"
+                onChange={e=>{
+                  const hex=e.target.value;
+                  // Apply custom color via CSS variable
+                  document.documentElement.style.setProperty('--acc',hex);
+                  document.documentElement.style.setProperty('--acc2',hex+'cc');
+                  document.documentElement.style.setProperty('--acc3',hex+'99');
+                  document.documentElement.style.setProperty('--acc-txt','#080a0f');
+                  onThemeChange('custom');
+                }}
+                style={{position:"absolute",inset:0,opacity:0,width:"100%",
+                  height:"100%",cursor:"pointer",border:"none",padding:0}}/>
+            </div>
           </div>
         </div>
 
-        {/* Color theme */}
-        <div style={{marginBottom:"8px"}}>
-          <div style={{fontSize:".6rem",letterSpacing:"2px",textTransform:"uppercase",
-            color:"var(--mut)",fontWeight:800,marginBottom:"12px"}}>Akzentfarbe</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"10px"}}>
-            {THEMES.map(t=>{
-              const isSel = currentTheme===t.id;
-              return (
-                <div key={t.id} onClick={()=>onThemeChange(t.id)}
-                  style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"6px",cursor:"pointer"}}>
-                  <div style={{
-                    width:44,height:44,borderRadius:"50%",
-                    background:t.color,
-                    border:`3px solid ${isSel?"#fff":"transparent"}`,
-                    boxShadow:isSel?`0 0 0 2px ${t.color},0 0 16px ${t.color}44`:"none",
-                    transform:isSel?"scale(1.15)":"scale(1)",
-                    transition:"all .2s",
-                    display:"flex",alignItems:"center",justifyContent:"center"
-                  }}>
-                    {isSel&&<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="2,8 6,12 14,4"/></svg>}
-                  </div>
-                  <div style={{fontSize:".58rem",fontWeight:700,
-                    color:isSel?"var(--acc)":"var(--mut)"}}>{t.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {/* Profile pic remove */}
+        {profilePic&&(
+          <button onClick={()=>onProfilePicSave(null)}
+            style={{width:"100%",background:"rgba(248,113,113,.08)",
+              border:"1px solid rgba(248,113,113,.2)",borderRadius:14,
+              padding:"11px",cursor:"pointer",color:"var(--red)",marginBottom:12,
+              fontFamily:"'Nunito',sans-serif",fontSize:".78rem",fontWeight:700}}>
+            Bild entfernen
+          </button>
+        )}
 
-        <button className="modal-cancel" onClick={onClose} style={{marginTop:"16px"}}>Schließen</button>
+        {/* Gold Mode Toggle */}
+        {(()=>{
+          const isGold = typeof document!=="undefined"&&document.body.classList.contains("gold-mode");
+          return isGold?(
+            <button onClick={()=>{
+              document.body.classList.remove("gold-mode");
+              document.getElementById("gold-glitter")?.remove();
+            }}
+              style={{width:"100%",marginBottom:10,
+                background:"linear-gradient(135deg,#c9a84c,#e8c96b,#c9a84c)",
+                backgroundSize:"200% auto",
+                border:"none",borderRadius:14,padding:"13px",cursor:"pointer",
+                fontFamily:"'Montserrat',sans-serif",fontSize:".8rem",fontWeight:900,
+                color:"#1a0e00",letterSpacing:"1px",
+                animation:"goldShimmer 3s linear infinite"}}>
+              👑 GOLD MODUS DEAKTIVIEREN
+            </button>
+          ):null;
+        })()}
+        <button className="modal-cancel" onClick={onClose} style={{marginTop:4}}>
+          Schließen
+        </button>
       </div>
     </div>
   );
 }
 
-
-
-
-
-// ── QUOTE ROTATOR ─────────────────────────────────────────────────────────────
-const ATHLETE_QUOTES = [
-  {text:"Champions aren't made in gyms. Champions are made from something deep inside them.",author:"Muhammad Ali"},
-  {text:"The pain you feel today will be the strength you feel tomorrow.",author:"Arnold Schwarzenegger"},
-  {text:"You have to believe in yourself when no one else does.",author:"Serena Williams"},
-  {text:"Success is no accident. It is hard work and perseverance.",author:"Pelé"},
-  {text:"Train like a beast, look like a beauty.",author:"Jillian Michaels"},
-  {text:"It's not about having time, it's about making time.",author:"Roger Federer"},
-  {text:"I hated every minute of training, but I said: don't quit. Suffer now and live the rest of your life as a champion.",author:"Muhammad Ali"},
-  {text:"If you have everything under control, you're not moving fast enough.",author:"Mario Andretti"},
-  {text:"Hard work beats talent when talent doesn't work hard.",author:"Tim Notke"},
-  {text:"The difference between the impossible and the possible lies in a person's determination.",author:"Tommy Lasorda"},
-  {text:"You miss 100% of the shots you don't take.",author:"Wayne Gretzky"},
-  {text:"Winning isn't everything, but wanting to win is.",author:"Vince Lombardi"},
-  {text:"I've failed over and over again in my life, and that is why I succeed.",author:"Michael Jordan"},
-  {text:"The more I practice, the luckier I get.",author:"Gary Player"},
-];
 
 function QuoteRotator() {
   const [idx, setIdx] = React.useState(()=>Math.floor(Math.random()*ATHLETE_QUOTES.length));
@@ -3749,6 +4372,587 @@ function EasterEggModal({onClose}) {
   );
 }
 
+
+
+
+function formatTime(secs) {
+  const h = Math.floor(secs/3600);
+  const m = Math.floor((secs%3600)/60);
+  const s = secs%60;
+  if(h>0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function CountUp({value, duration=800, suffix=""}) {
+  const [display, setDisplay] = React.useState(0);
+  const startRef = React.useRef(null);
+  const startValRef = React.useRef(0);
+
+  React.useEffect(()=>{
+    const target = parseFloat(value)||0;
+    const start = startValRef.current;
+    const startTime = performance.now();
+    
+    function animate(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1-progress, 3);
+      const current = start + (target - start) * eased;
+      setDisplay(Number.isInteger(target) ? Math.round(current) : Math.round(current*10)/10);
+      if(progress < 1) requestAnimationFrame(animate);
+      else startValRef.current = target;
+    }
+    requestAnimationFrame(animate);
+  }, [value]);
+
+  return <span>{display}{suffix}</span>;
+}
+
+function GreetingToast() {
+  const [visible, setVisible] = React.useState(false);
+  const [out, setOut] = React.useState(false);
+  React.useEffect(()=>{
+    const t1=setTimeout(()=>setVisible(true),600);
+    const t2=setTimeout(()=>setOut(true),3500);
+    const t3=setTimeout(()=>setVisible(false),4200);
+    return()=>{clearTimeout(t1);clearTimeout(t2);clearTimeout(t3);};
+  },[]);
+  if(!visible) return null;
+  const h=new Date().getHours();
+  const name=(()=>{try{const u=localStorage.getItem('gym_user');return u?u.charAt(0).toUpperCase()+u.slice(1):"";}catch(e){return "";}})();
+  const greeting=h<12?"Guten Morgen":h<17?"Guten Tag":h<22?"Guten Abend":"Gute Nacht";
+  const emoji=h<12?"🌅":h<17?"☀️":"🌙";
+  return (
+    <div style={{position:"fixed",top:"calc(env(safe-area-inset-top,0px) + 70px)",
+      left:"50%",zIndex:800,pointerEvents:"none",
+      opacity:out?0:1,transform:out?"translateX(-50%) translateY(-8px)":"translateX(-50%) translateY(0)",
+      transition:"opacity .5s ease, transform .5s ease"}}>
+      <div style={{background:"rgba(20,20,28,.85)",backdropFilter:"blur(20px)",
+        WebkitBackdropFilter:"blur(20px)",border:"1px solid rgba(255,255,255,.1)",
+        borderRadius:20,padding:"10px 18px",display:"flex",alignItems:"center",gap:10,
+        boxShadow:"0 8px 32px rgba(0,0,0,.4)",whiteSpace:"nowrap",
+        animation:"slideDown .5s cubic-bezier(.34,1.56,.64,1) both"}}>
+        <span style={{fontSize:"1.1rem"}}>{emoji}</span>
+        <div style={{fontFamily:"'Nunito',sans-serif",fontSize:".82rem",fontWeight:800,color:"var(--txt)"}}>
+          {greeting}{name?", "+name:""}!
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+function EasterEgg() {
+  const [eggShow,setEggShow]=React.useState(false);
+  const timerRef=React.useRef(null);
+  return (
+    <>
+      <div onTouchStart={()=>{timerRef.current=setTimeout(()=>setEggShow(true),2000);}}
+        onTouchEnd={()=>clearTimeout(timerRef.current)}
+        onTouchCancel={()=>clearTimeout(timerRef.current)}
+        style={{position:"fixed",top:0,left:0,width:120,height:60,zIndex:50,
+          background:"transparent",cursor:"default"}}/>
+      {eggShow&&(
+        <div style={{position:"fixed",inset:0,zIndex:999,
+          background:"radial-gradient(ellipse at 50% 30%,rgba(180,130,0,.25),rgba(0,0,0,.98))",
+          backdropFilter:"blur(24px)",display:"flex",flexDirection:"column",
+          alignItems:"center",justifyContent:"center",padding:32,textAlign:"center",
+          overflow:"hidden"}}
+          onClick={()=>{
+            setEggShow(false);
+            document.body.classList.add("gold-mode");
+            const glitter=document.createElement("div");
+            glitter.id="gold-glitter";
+            glitter.style.cssText="position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;";
+            for(let i=0;i<30;i++){
+              const s=document.createElement("div");
+              const size=Math.random()*4+2;
+              s.style.cssText=`position:absolute;width:${size}px;height:${size}px;border-radius:50%;background:${Math.random()>.5?"#ffd700":"#fff8e7"};left:${Math.random()*100}%;top:${Math.random()*100}%;animation:glitter ${1+Math.random()*3}s ease-in-out infinite;animation-delay:${Math.random()*3}s;opacity:0;`;
+              glitter.appendChild(s);
+            }
+            document.body.appendChild(glitter);
+            // gold mode stays until manually disabled
+          }}>
+          {[...Array(16)].map((_,i)=>(
+            <div key={i} style={{position:"absolute",
+              left:(i*6.25+Math.sin(i)*8)+"vw",top:(i%4*25+10)+"vh",
+              width:i%3===0?6:4,height:i%3===0?6:4,borderRadius:"50%",
+              background:i%2===0?"#ffd700":"#fbbf24",
+              animation:`glitter ${1.5+i*.3}s ease-in-out infinite`,
+              animationDelay:(i*.15)+"s",pointerEvents:"none"}}/>
+          ))}
+          <div style={{fontSize:"6rem",animation:"crownDrop .9s cubic-bezier(.34,1.56,.64,1) both",
+            filter:"drop-shadow(0 0 30px rgba(255,215,0,.8))"}}>👑</div>
+          <div style={{width:120,height:120,borderRadius:"50%",border:"2px solid rgba(255,215,0,.6)",
+            position:"absolute",animation:"ringExpand 1.2s .3s ease-out both",pointerEvents:"none"}}/>
+          <div style={{width:180,height:180,borderRadius:"50%",border:"1px solid rgba(255,215,0,.3)",
+            position:"absolute",animation:"ringExpand 1.4s .5s ease-out both",pointerEvents:"none"}}/>
+          <div style={{fontSize:".6rem",color:"rgba(255,215,0,.35)",fontWeight:700,
+            letterSpacing:"4px",marginTop:80,animation:"fadeIn .6s 1s ease both"}}>
+            TIPPE ZUM SCHLIESSEN
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+function WeeklyReviewModal({allDays, onClose}) {
+  // Get this week's data
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (dayOfWeek===0?6:dayOfWeek-1));
+  monday.setHours(0,0,0,0);
+
+  const weekDays = Array.from({length:7},(_,i)=>{
+    const d = new Date(monday);
+    d.setDate(monday.getDate()+i);
+    return d;
+  });
+
+  const DAYS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+  const MONTHS = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+
+  const dateKey = d => d.toISOString().slice(0,10);
+  
+  const weekData = weekDays.map((d,i)=>({
+    day: DAYS[i],
+    date: d.getDate(),
+    dk: dateKey(d),
+    entry: allDays[dateKey(d)],
+    isToday: dateKey(d)===dateKey(today),
+    isFuture: d > today,
+  }));
+
+  const trained = weekData.filter(d=>d.entry?.type&&d.entry.type!=="rest"&&!d.isFuture).length;
+  const rest = weekData.filter(d=>d.entry?.type==="rest"&&!d.isFuture).length;
+  const totalDays = weekData.filter(d=>!d.isFuture).length;
+
+  let totalVol = 0;
+  weekData.forEach(({entry})=>{
+    if(!entry?.sections) return;
+    Object.values(entry.sections).forEach(sec=>{
+      Object.values(sec).forEach(exData=>{
+        Object.values(exData||{}).forEach(s=>{
+          if(s?.w&&s?.r) totalVol+=parseFloat(s.w)*parseFloat(s.r);
+        });
+      });
+    });
+  });
+
+  const streak = (()=>{
+    let s=0;
+    const sorted = Object.keys(allDays).sort().reverse();
+    for(const dk of sorted){
+      if(allDays[dk]?.type&&allDays[dk].type!=="rest") s++;
+      else break;
+    }
+    return s;
+  })();
+
+  return (
+    <div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal" style={{paddingBottom:40}}>
+        <div className="modal-handle"/>
+        
+        {/* Header */}
+        <div style={{marginBottom:20}}>
+          <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.4rem",
+            fontWeight:900,marginBottom:4}}>Wochenrückblick</div>
+          <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:700,letterSpacing:"1px"}}>
+            {monday.getDate()}. {MONTHS[monday.getMonth()]} – {today.getDate()}. {MONTHS[today.getMonth()]}
+          </div>
+        </div>
+
+        {/* Week grid */}
+        <div style={{display:"flex",gap:6,marginBottom:20}}>
+          {weekData.map(({day,date,entry,isToday,isFuture})=>{
+            const isTraining = entry?.type&&entry.type!=="rest";
+            const isRest = entry?.type==="rest";
+            return (
+              <div key={day} style={{flex:1,textAlign:"center"}}>
+                <div style={{fontSize:".55rem",color:"var(--mut)",fontWeight:700,
+                  marginBottom:6,letterSpacing:"1px"}}>{day}</div>
+                <div style={{
+                  width:"100%",aspectRatio:"1",borderRadius:10,
+                  display:"flex",alignItems:"center",justifyContent:"center",
+                  fontSize:".7rem",fontWeight:800,
+                  background:isToday?"var(--acc)"
+                    :isTraining?"rgba(52,211,153,.2)"
+                    :isRest?"rgba(255,255,255,.04)"
+                    :isFuture?"rgba(255,255,255,.02)":"rgba(255,255,255,.05)",
+                  border:isToday?"none"
+                    :isTraining?"1px solid rgba(52,211,153,.3)"
+                    :"1px solid rgba(255,255,255,.06)",
+                  color:isToday?"var(--acc-txt,#080a0f)"
+                    :isTraining?"var(--grn)"
+                    :"var(--mut)",
+                  opacity:isFuture?.3:1
+                }}>
+                  {isTraining?"💪":isRest?"😴":date}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Stats row */}
+        <div style={{display:"flex",gap:8,marginBottom:16}}>
+          {[
+            ["🔥",trained,"Trainings","var(--acc)"],
+            ["😴",rest,"Ruhetage","var(--mut)"],
+            ["⚡",streak,"Streak","var(--grn)"],
+          ].map(([icon,val,lbl,col])=>(
+            <div key={lbl} style={{flex:1,padding:"12px 8px",textAlign:"center",
+              background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",
+              borderRadius:14}}>
+              <div style={{fontSize:".9rem",marginBottom:4}}>{icon}</div>
+              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.3rem",
+                fontWeight:900,color:col}}><CountUp value={val}/></div>
+              <div style={{fontSize:".55rem",color:"var(--mut)",fontWeight:700,
+                letterSpacing:"1px",textTransform:"uppercase"}}>{lbl}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Volume */}
+        {totalVol>0&&(
+          <div style={{padding:"14px 16px",background:"rgba(255,255,255,.03)",
+            border:"1px solid rgba(255,255,255,.06)",borderRadius:16,marginBottom:16,
+            display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{fontSize:".8rem",fontWeight:700}}>Gesamtvolumen</div>
+            <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",
+              fontWeight:900,color:"var(--acc)"}}>
+              <CountUp value={Math.round(totalVol/100)/10} suffix="t"/>
+            </div>
+          </div>
+        )}
+
+        {/* Motivation message */}
+        <div style={{textAlign:"center",padding:"12px",
+          background:"rgba(255,255,255,.02)",borderRadius:14,marginBottom:16}}>
+          <div style={{fontSize:".8rem",fontWeight:700,color:"var(--txt)"}}>
+            {trained===0?"Starte die Woche stark! 💪"
+             :trained>=5?"Legendäre Woche! Du bist ein Beast 🏆"
+             :trained>=3?"Starke Woche! Weiter so 🔥"
+             :"Gut gemacht! Jeden Tag besser ⚡"}
+          </div>
+        </div>
+
+        <button className="modal-cancel" onClick={onClose}>Schließen</button>
+      </div>
+    </div>
+  );
+}
+
+
+
+// ── PERSONAL RECORDS PAGE ────────────────────────────────────────────────────
+function PRsPage({prs, allDays, customPlans=[]}) {
+  const prList = Object.entries(prs).map(([exId,weight])=>{
+    let name=exId;
+    DEFAULT_PLAN.forEach(tab=>tab.sections.forEach(sec=>sec.exercises.forEach(ex=>{
+      if(ex.id===exId) name=ex.name;
+    })));
+    customPlans.forEach(p=>p.sections?.forEach(sec=>sec.exercises?.forEach(ex=>{
+      if(ex.id===exId) name=ex.name;
+    })));
+    let prDate=null, prReps=null;
+    Object.entries(allDays).sort(([a],[b])=>b.localeCompare(a)).forEach(([dk,di])=>{
+      if(prDate) return;
+      if(!di?.sections) return;
+      Object.values(di.sections).forEach(sec=>Object.values(sec).forEach(exData=>{
+        if(prDate) return;
+        Object.values(exData||{}).forEach(s=>{
+          if(parseFloat(s?.w)===weight){ prDate=dk; prReps=parseFloat(s?.r)||null; }
+        });
+      }));
+    });
+    return {exId,name,weight,reps:prReps,date:prDate};
+  }).filter(p=>p.weight>0).sort((a,b)=>b.weight-a.weight);
+
+  if(prList.length===0) return (
+    <div style={{textAlign:"center",padding:"48px 20px"}}>
+      <div style={{fontSize:"2.5rem",marginBottom:12}}>🏆</div>
+      <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:".9rem",
+        fontWeight:900,color:"var(--mut)",letterSpacing:"1px"}}>NOCH KEINE REKORDE</div>
+      <div style={{fontSize:".7rem",color:"var(--mut)",marginTop:6,fontWeight:600}}>
+        Trag Gewichte ein um deinen ersten PR zu setzen!
+      </div>
+    </div>
+  );
+
+  const medals=["🥇","🥈","🥉"];
+  const medalColors=["#ffd700","#c0c0c0","#cd7f32"];
+
+  return (
+    <div style={{paddingTop:8}}>
+      {/* Top 3 cards */}
+      <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16}}>
+        {prList.slice(0,3).map(({exId,name,weight,reps,date},i)=>{
+          const col=medalColors[i];
+          return (
+            <div key={exId} style={{display:"flex",alignItems:"center",gap:14,
+              padding:"16px",borderRadius:20,position:"relative",overflow:"hidden",
+              background:i===0
+                ?"linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,215,0,.04))"
+                :`linear-gradient(135deg,${col}15,${col}05)`,
+              border:i===0?"1px solid rgba(201,168,76,.25)":`1.5px solid ${col}33`,
+              animation:i===0?`flowIn .4s ease both, goldCardGlow 3s 1s ease-in-out infinite`:`flowIn .4s ${i*.1}s ease both`}}>
+              {/* Ring SVG animation */}
+              {i<3&&(()=>{
+                const col = i===0?"#c9a84c":i===1?"#a8b4c0":"#b87040";
+                const delay = i===0?".1s":i===1?".35s":".6s";
+                const r = 9.5;
+                const p = Math.round(4*(99-2*r) + 2*Math.PI*r);
+                // Arc path - A rx ry x-rot large-arc sweep x y
+                const d = `M ${r+0.5},0.5 H ${99-r+0.5} A ${r},${r} 0 0 1 ${99.5},${r+0.5} V ${99-r+0.5} A ${r},${r} 0 0 1 ${99-r+0.5},${99.5} H ${r+0.5} A ${r},${r} 0 0 1 0.5,${99-r+0.5} V ${r+0.5} A ${r},${r} 0 0 1 ${r+0.5},0.5 Z`;
+                return (
+                  <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",pointerEvents:"none"}}
+                    viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d={d} fill="none" stroke={col} strokeWidth="1"
+                      strokeDasharray={p} strokeDashoffset={p}
+                      strokeLinecap="butt"
+                      style={{
+                      animation:`${i===0?'ringDraw1':i===1?'ringDraw2':'ringDraw3'} ${i===0?3:i===1?2.65:2.4}s ${delay} cubic-bezier(.15,0,.75,1) forwards`
+                    }}/>
+                  </svg>
+                );
+              })()}
+              {/* Medal */}
+              <div style={{width:44,height:44,borderRadius:14,flexShrink:0,
+                position:"relative",
+                background:i===0
+                  ?"linear-gradient(135deg,rgba(255,215,0,.3),rgba(255,215,0,.1))"
+                  :`linear-gradient(135deg,${col}33,${col}15)`,
+                border:i===0?"1.5px solid rgba(255,215,0,.6)":`1.5px solid ${col}55`,
+                display:"flex",alignItems:"center",justifyContent:"center",
+                fontSize:"1.4rem",
+                boxShadow:i===0?"0 0 20px rgba(255,215,0,.3)":"none"}}>
+                {medals[i]}
+                {i===0&&[...Array(5)].map((_,gi)=>(
+                  <div key={gi} style={{
+                    position:"absolute",
+                    width:gi%2===0?4:3,height:gi%2===0?4:3,
+                    borderRadius:"50%",
+                    background:gi%2===0?"#ffd700":"#fff8e7",
+                    left:(10+gi*6)+"%",top:(10+gi*8)+"%",
+                    animation:`glitter ${1+gi*.4}s ${gi*.2}s ease-in-out infinite`,
+                    opacity:0,pointerEvents:"none"
+                  }}/>
+                ))}
+              </div>
+              {/* Name + date */}
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontFamily:"'Montserrat',sans-serif",fontWeight:900,
+                  fontSize:".9rem",lineHeight:1.3,marginBottom:3,
+                  wordBreak:"break-word"}}>
+                  {name}
+                </div>
+                {date&&<div style={{fontSize:".58rem",color:"var(--mut)",fontWeight:600}}>
+                  {new Date(date+"T12:00:00").toLocaleDateString("de-DE",{day:"numeric",month:"short",year:"numeric"})}
+                </div>}
+              </div>
+              {/* Weight + Reps */}
+              <div style={{textAlign:"right",flexShrink:0}}>
+                <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.6rem",
+                  fontWeight:900,color:col,lineHeight:1}}>{weight}</div>
+                <div style={{fontSize:".55rem",color:"var(--mut)",fontWeight:700}}>kg</div>
+                {reps&&<div style={{fontSize:".65rem",fontWeight:700,color:col,
+                  marginTop:3,opacity:.8}}>{reps} Wdh</div>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Rest of PRs */}
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        {prList.slice(3).map(({exId,name,weight,reps,date},i)=>(
+          <div key={exId} style={{display:"flex",alignItems:"center",gap:12,
+            padding:"12px 16px",background:"rgba(255,255,255,.04)",
+            border:"1px solid rgba(255,255,255,.07)",borderRadius:16,
+            animation:`flowIn .4s ${i*.05}s ease both`}}>
+            <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:".7rem",
+              fontWeight:900,color:"var(--mut)",width:24,textAlign:"center"}}>
+              {i+4}
+            </div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontWeight:800,fontSize:".82rem",
+                whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+                {name}
+              </div>
+              {date&&<div style={{fontSize:".58rem",color:"var(--mut)",fontWeight:600,marginTop:1}}>
+                {new Date(date+"T12:00:00").toLocaleDateString("de-DE",{day:"numeric",month:"short",year:"numeric"})}
+              </div>}
+            </div>
+            <div style={{textAlign:"right",flexShrink:0}}>
+              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.1rem",
+                fontWeight:900,color:"var(--acc)"}}>{weight}</div>
+              <div style={{fontSize:".52rem",color:"var(--mut)",fontWeight:700}}>kg</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+function getMuscleGroups(exName) {
+  const lower = (exName||"").toLowerCase();
+  return Object.entries(MUSCLE_GROUPS)
+    .filter(([,{exercises}])=>exercises.some(kw=>lower.includes(kw)))
+    .map(([key])=>key);
+}
+
+
+const MUSCLE_GROUPS = {
+  chest:    {label:"Brust",      color:"#f87171", exercises:["bench","incline","chest","pec","fly","dip"]},
+  back:     {label:"Rücken",     color:"#60a5fa", exercises:["row","pull","lat","deadlift","rdl","back"]},
+  shoulders:{label:"Schultern",  color:"#a78bfa", exercises:["press","shoulder","lateral","front","delt","ohp"]},
+  biceps:   {label:"Bizeps",     color:"#34d399", exercises:["curl","bicep","hammer"]},
+  triceps:  {label:"Trizeps",    color:"#fb923c", exercises:["tricep","pushdown","extension","skullcrusher","dip"]},
+  legs:     {label:"Beine",      color:"#fbbf24", exercises:["squat","leg","lunge","quad","calf","hamstring","glute"]},
+  core:     {label:"Core",       color:"#e879f9", exercises:["crunch","plank","ab","core","oblique","situp"]},
+  cardio:   {label:"Cardio",     color:"#2dd4bf", exercises:["cardio","run","bike","treadmill","elliptical"]},
+};
+
+function getMuscleGroups(exName) {
+  const lower=(exName||"").toLowerCase();
+  return Object.entries(MUSCLE_GROUPS)
+    .filter(([,{exercises}])=>exercises.some(kw=>lower.includes(kw)))
+    .map(([key])=>key);
+}
+
+function MuscleMapPage({allDays, customPlans=[]}) {
+  const weekStart = (()=>{
+    const d=new Date(); const day=d.getDay();
+    d.setDate(d.getDate()-(day===0?6:day-1)); d.setHours(0,0,0,0); return d;
+  })();
+  const weekKey = weekStart.toISOString().slice(0,10);
+
+  const muscleSets = {};
+  const muscleExercises = {};
+  Object.entries(MUSCLE_GROUPS).forEach(([k])=>{ muscleSets[k]=0; muscleExercises[k]=new Set(); });
+
+  Object.entries(allDays).filter(([dk])=>dk>=weekKey).forEach(([,di])=>{
+    if(!di?.sections) return;
+    if(di.type?.startsWith("custom_")) {
+      const plan=customPlans.find(p=>"custom_"+p.id===di.type);
+      plan?.sections?.forEach((sec,si)=>sec.exercises?.forEach((ex,ei)=>{
+        const sets=Object.values(di.sections?.[si]?.[ei]||{}).filter(s=>s?.r&&parseFloat(s.r)>0);
+        if(sets.length>0) getMuscleGroups(ex.name).forEach(mg=>{
+          muscleSets[mg]+=sets.length; muscleExercises[mg].add(ex.name);
+        });
+      }));
+    } else {
+      DEFAULT_PLAN.forEach((tab,ti)=>tab.sections.forEach((sec,si)=>sec.exercises.forEach((ex,ei)=>{
+        const sets=Object.values(di.sections?.[si]?.[ei]||{}).filter(s=>s?.r&&parseFloat(s.r)>0);
+        if(sets.length>0) getMuscleGroups(ex.name).forEach(mg=>{
+          muscleSets[mg]+=sets.length; muscleExercises[mg].add(ex.name);
+        });
+      })));
+    }
+  });
+
+  const maxSets=Math.max(...Object.values(muscleSets),1);
+  const trained=Object.entries(muscleSets).filter(([,v])=>v>0);
+
+  return (
+    <div style={{paddingTop:8}}>
+      {trained.length===0?(
+        <div style={{textAlign:"center",padding:"48px 20px"}}>
+          <div style={{fontSize:"2.5rem",marginBottom:12}}>💪</div>
+          <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:".9rem",
+            fontWeight:900,color:"var(--mut)",letterSpacing:"1px"}}>
+            DIESE WOCHE NOCH NICHTS
+          </div>
+          <div style={{fontSize:".7rem",color:"var(--mut)",marginTop:6,fontWeight:600}}>
+            Starte ein Training um deine Muskeln zu tracken
+          </div>
+        </div>
+      ):(
+        <>
+          {/* Top trained - big cards */}
+          <div style={{display:"flex",gap:8,marginBottom:16}}>
+            {trained.sort((a,b)=>b[1]-a[1]).slice(0,3).map(([key,sets],i)=>(
+              <div key={key} style={{flex:1,padding:"14px 10px",borderRadius:18,
+                textAlign:"center",
+                background:`linear-gradient(135deg,${MUSCLE_GROUPS[key].color}22,${MUSCLE_GROUPS[key].color}08)`,
+                border:`1.5px solid ${MUSCLE_GROUPS[key].color}33`,
+                animation:`flowIn .4s ${i*.08}s ease both`}}>
+                <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.6rem",
+                  fontWeight:900,color:MUSCLE_GROUPS[key].color,lineHeight:1}}>{sets}</div>
+                <div style={{fontSize:".5rem",color:"var(--mut)",fontWeight:800,
+                  letterSpacing:"1px",textTransform:"uppercase",marginTop:4}}>
+                  {MUSCLE_GROUPS[key].label}
+                </div>
+                <div style={{fontSize:".52rem",color:MUSCLE_GROUPS[key].color,
+                  fontWeight:600,marginTop:2,opacity:.7}}>Sätze</div>
+              </div>
+            ))}
+          </div>
+
+          {/* All groups as bars */}
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {Object.entries(MUSCLE_GROUPS).map(([key,{label,color}],i)=>{
+              const sets=muscleSets[key]||0;
+              const exNames=[...(muscleExercises[key]||new Set())];
+              const pct=sets/maxSets;
+              return (
+                <div key={key} style={{
+                  padding:"12px 14px",borderRadius:14,
+                  background:sets>0?`${color}0d`:"rgba(255,255,255,.02)",
+                  border:`1px solid ${sets>0?color+"22":"rgba(255,255,255,.05)"}`,
+                  animation:`flowIn .4s ${i*.04}s ease both`}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:sets>0?8:0}}>
+                    {/* Color dot */}
+                    <div style={{width:10,height:10,borderRadius:"50%",flexShrink:0,
+                      background:sets>0?color:"rgba(255,255,255,.15)"}}/>
+                    <div style={{flex:1,fontSize:".78rem",fontWeight:800,
+                      color:sets>0?color:"rgba(255,255,255,.25)"}}>
+                      {label}
+                    </div>
+                    <div style={{fontSize:".65rem",fontWeight:900,
+                      fontFamily:"'Montserrat',sans-serif",
+                      color:sets>0?color:"rgba(255,255,255,.2)"}}>
+                      {sets>0?sets+" Sätze":"—"}
+                    </div>
+                  </div>
+                  {sets>0&&(
+                    <>
+                      <div style={{height:5,background:"rgba(255,255,255,.06)",
+                        borderRadius:3,overflow:"hidden",marginBottom:6}}>
+                        <div style={{height:"100%",borderRadius:3,background:color,
+                          width:(pct*100)+"%",
+                          boxShadow:`0 0 6px ${color}66`,
+                          transition:"width .8s cubic-bezier(.34,1.2,.64,1)"}}/>
+                      </div>
+                      <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                        {exNames.slice(0,4).map(n=>(
+                          <span key={n} style={{fontSize:".55rem",color:color,fontWeight:700,
+                            background:color+"15",padding:"2px 7px",borderRadius:5}}>
+                            {n}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+
 function Login({onLogin}) {
   const [mode,setMode]=useState("login");
   const [username,setUsername]=useState("");
@@ -3805,7 +5009,7 @@ function Login({onLogin}) {
         {err&&<div className="merr">{err}</div>}
         {ok&&<div className="mok">{ok}</div>}
         <button className="pbtn" disabled={busy} onClick={submit}>{busy?"...":mode==="login"?"EINLOGGEN":"REGISTRIEREN"}</button>
-        {mode==="login"&&<button onClick={async()=>{
+        {mode==="login"&&<div style={{textAlign:"center"}}><span onClick={async()=>{
           const u=username.trim().toLowerCase();
           if(!u){setErr("Bitte zuerst Benutzernamen eingeben.");return;}
           const rec=await dbLoad("auth_"+u);
@@ -3818,7 +5022,7 @@ function Login({onLogin}) {
         }} style={{background:"none",border:"none",color:"var(--mut)",fontFamily:"'Nunito',sans-serif",
           fontSize:".75rem",fontWeight:700,cursor:"pointer",marginTop:"4px",textDecoration:"underline"}}>
           PIN vergessen?
-        </button>}
+        </span></div>}
       </div>
     </div>
   );
@@ -3859,6 +5063,8 @@ function SwipeNav({view, setView}) {
 }
 
 function App() {
+  const swipeRef=React.useRef({x:0,y:0});
+  const [navKey,setNavKey]=React.useState(0);
   const [status,setStatus]=useState("boot");
   const [user,setUser]=useState(null);
   const [allDays,setAllDays]=useState({});
@@ -3988,7 +5194,7 @@ function App() {
 
   return (
     <>
-      <div className="app" ref={el=>{
+      <div className="app" onTouchStart={e=>{swipeRef.current={x:e.touches[0].clientX,y:e.touches[0].clientY};}} onTouchEnd={e=>{const dx=e.changedTouches[0].clientX-swipeRef.current.x;const dy=Math.abs(e.changedTouches[0].clientY-swipeRef.current.y);if(Math.abs(dx)>60&&dy<60){const keys=NAV_ITEMS.map(n=>n.key);const cur=keys.indexOf(view);if(dx<0&&cur<keys.length-1){setView(keys[cur+1]);setNavKey(k=>k+1);}else if(dx>0&&cur>0){setView(keys[cur-1]);setNavKey(k=>k+1);}}}} ref={el=>{
         if(el){
           document.body.classList.toggle("light",!darkMode);
           THEMES.forEach(t=>document.body.classList.remove("theme-"+t.id));
@@ -4008,24 +5214,57 @@ function App() {
           </div>
         )}
         {egg.show&&<EasterEggModal onClose={()=>egg.setShow(false)}/>}
+        <EasterEgg/>
+        <GreetingToast/>
         {showOnboarding&&<OnboardingModal onSelectTemplate={handleOnboardTemplate} onCreateOwn={handleOnboardCreateOwn} onCancel={()=>setShowOnboarding(false)}/>}
         {showWelcomeBanner&&(
-          <div style={{position:"fixed",inset:0,zIndex:800,background:"rgba(0,0,0,.6)",backdropFilter:"blur(8px)",display:"flex",alignItems:"flex-end",padding:"0 0 100px"}}
-            onClick={()=>setShowWelcomeBanner(false)}>
-            <div style={{width:"100%",background:"var(--sur)",borderRadius:"24px 24px 0 0",padding:"28px 24px 32px",boxShadow:"0 -8px 40px rgba(0,0,0,.5)"}}
-              onClick={e=>e.stopPropagation()}>
-              <div style={{width:40,height:4,background:"rgba(255,255,255,.15)",borderRadius:2,margin:"0 auto 24px"}}/>
-              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.4rem",fontWeight:900,letterSpacing:"1px",marginBottom:"8px"}}>Willkommen! 👋</div>
-              <div style={{fontSize:".82rem",color:"var(--mut)",lineHeight:1.6,marginBottom:"24px",fontWeight:600}}>
-                Tippe auf <strong style={{color:"var(--acc)"}}>+ Planen</strong> um deinen ersten Trainingstag einzurichten — oder schau dir erst die Pläne an.
+          <div style={{position:"fixed",inset:0,zIndex:800,background:"var(--bg)",
+            display:"flex",flexDirection:"column",alignItems:"center",
+            justifyContent:"center",padding:"40px 32px",animation:"fadeIn .4s ease both"}}>
+            <div style={{position:"absolute",width:"80vw",height:"80vw",borderRadius:"50%",
+              background:"radial-gradient(circle,rgba(99,102,241,.2) 0%,transparent 70%)",
+              top:"-10%",left:"-20%",filter:"blur(40px)",
+              animation:"orbFloat1 8s ease-in-out infinite",pointerEvents:"none"}}/>
+            <div style={{position:"absolute",width:"70vw",height:"70vw",borderRadius:"50%",
+              background:"radial-gradient(circle,rgba(16,185,129,.15) 0%,transparent 70%)",
+              bottom:"-5%",right:"-15%",filter:"blur(36px)",
+              animation:"orbFloat2 10s ease-in-out infinite",pointerEvents:"none"}}/>
+            <div style={{textAlign:"center",position:"relative",zIndex:1,width:"100%",
+              display:"flex",flexDirection:"column",alignItems:"center"}}>
+              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"2.8rem",fontWeight:900,
+                letterSpacing:"4px",marginBottom:8,
+                background:"linear-gradient(135deg,var(--acc),rgba(255,255,255,.6))",
+                WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",
+                animation:"flowIn .8s .1s cubic-bezier(.25,.46,.45,.94) both"}}>GYM LOG</div>
+              <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:700,letterSpacing:"4px",
+                textTransform:"uppercase",marginBottom:48,
+                animation:"flowIn .8s .25s cubic-bezier(.25,.46,.45,.94) both"}}>
+                Dein persönlicher Trainingsbegleiter
               </div>
-              <div style={{display:"flex",gap:"10px"}}>
+              <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.6rem",fontWeight:900,
+                marginBottom:12,letterSpacing:".5px",
+                animation:"flowIn .8s .4s cubic-bezier(.25,.46,.45,.94) both"}}>
+                Willkommen! 👋
+              </div>
+              <div style={{fontSize:".85rem",color:"var(--mut)",lineHeight:1.7,marginBottom:40,
+                fontWeight:600,maxWidth:280,
+                animation:"flowIn .8s .55s cubic-bezier(.25,.46,.45,.94) both"}}>
+                Starte mit einem fertigen Plan oder erstelle deinen eigenen.
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:10,width:"100%",maxWidth:300,
+                animation:"flowIn .8s .7s cubic-bezier(.25,.46,.45,.94) both"}}>
                 <button onClick={()=>{setShowWelcomeBanner(false);setView("plans");}}
-                  style={{flex:1,background:"var(--acc)",color:"var(--acc-txt,#080a0f)",border:"none",borderRadius:"14px",padding:"13px",cursor:"pointer",fontFamily:"'Montserrat',sans-serif",fontSize:".85rem",fontWeight:900,letterSpacing:"1px"}}>
-                  PLÄNE ANSEHEN
+                  style={{width:"100%",background:"var(--acc)",color:"var(--acc-txt,#080a0f)",
+                    border:"none",borderRadius:18,padding:"16px",cursor:"pointer",
+                    fontFamily:"'Montserrat',sans-serif",fontSize:".95rem",fontWeight:900,
+                    letterSpacing:"1.5px",textTransform:"uppercase"}}>
+                  Pläne ansehen
                 </button>
                 <button onClick={()=>setShowWelcomeBanner(false)}
-                  style={{flex:1,background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:"14px",padding:"13px",cursor:"pointer",fontFamily:"'Nunito',sans-serif",fontSize:".85rem",fontWeight:800,color:"var(--mut)"}}>
+                  style={{width:"100%",background:"rgba(255,255,255,.06)",
+                    border:"1px solid rgba(255,255,255,.1)",borderRadius:18,padding:"15px",
+                    cursor:"pointer",fontFamily:"'Nunito',sans-serif",
+                    fontSize:".88rem",fontWeight:800,color:"var(--mut)"}}>
                   Später
                 </button>
               </div>
@@ -4042,7 +5281,7 @@ function App() {
             <div className="uav" onClick={()=>setShowSettings(true)} style={{cursor:"pointer",overflow:"hidden"}}>
               {profilePic?<img src={profilePic} style={{width:"100%",height:"100%",objectFit:"cover"}} alt=""/>:user[0].toUpperCase()}
             </div>
-            <div className="uname">{user}</div>
+            <div className="uname">{user?user.charAt(0).toUpperCase()+user.slice(1):""}</div>
             <button className="logoutbtn" onClick={handleLogout}>Logout</button>
           </div>
         </header>
@@ -4057,8 +5296,8 @@ function App() {
           <PlansPage customPlans={customPlans} onSavePlans={saveCustomPlans} hiddenDefaults={hiddenDefaults} onToggleDefault={saveHiddenDefaults}/>
         ):(
           <>
-            <div style={{padding:"12px 14px 0"}}>
-              <div className="day-banner">
+            <div key={navKey} style={{padding:"12px 14px 0"}}>
+              <div key={view} className="day-banner" style={{animation:"bannerSlideIn .7s cubic-bezier(.25,.46,.45,.94) both"}}>
                 <div>
                   <div className="day-banner-date" style={{color:"var(--acc)"}}>{isToday?"Heute":selectedDate.toLocaleDateString("de-DE",{day:"numeric",month:"short"})}</div>
                   <div style={{fontSize:".63rem",color:"var(--mut)",marginTop:"2px"}}>{selectedDate.toLocaleDateString("de-DE",{weekday:"long"})}</div>
@@ -4082,13 +5321,87 @@ function App() {
             {planIdx!==null?(
               <TrainingPage planIdx={planIdx} dayData={dayInfo} customExercises={customEx} onUpdate={updateDayData} onUpdateCustom={saveCustomEx} onChangeType={()=>setShowPicker(true)} prs={prs} onNewPR={handleNewPR} timerDuration={timerDuration} allDays={allDays} currentDk={dk}/>
             ):customPlanData?(
-              <CustomTrainingPage plan={customPlanData} dayData={dayInfo} onUpdate={updateDayData} onChangeType={()=>setShowPicker(true)} prs={prs} onNewPR={handleNewPR} timerDuration={timerDuration}/>
+              <CustomTrainingPage plan={customPlanData} dayData={dayInfo} onUpdate={updateDayData} onChangeType={()=>setShowPicker(true)} prs={prs} onNewPR={handleNewPR} timerDuration={timerDuration} allDays={allDays} currentDk={dk}/>
             ):dayInfo?.type==="rest"?(
-              <div className="rest-wrap">
-                <div style={{fontFamily:"'Montserrat',sans-serif",fontSize:"1.4rem",fontWeight:900,color:"var(--mut)",letterSpacing:"2px",marginBottom:"4px"}}>REST</div>
-                <div className="rest-title">Ruhetag</div>
-                <div style={{fontSize:".78rem",color:"var(--mut)",textAlign:"center"}}>Morgen wieder Gas geben!</div>
-                <button className="day-banner-change" style={{marginTop:"8px"}} onClick={()=>setShowPicker(true)}>Andern</button>
+              <div style={{flex:1,display:"flex",flexDirection:"column",
+                alignItems:"center",justifyContent:"center",
+                padding:"40px 24px",position:"relative",overflow:"hidden",
+                minHeight:"60vh"}}>
+
+                {/* Background orbs */}
+                <div style={{position:"absolute",width:"60vw",height:"60vw",
+                  borderRadius:"50%",top:"-10%",left:"-10%",
+                  background:"radial-gradient(circle,rgba(99,102,241,.25) 0%,transparent 70%)",
+                  filter:"blur(50px)",animation:"orbFloat1 10s ease-in-out infinite",
+                  pointerEvents:"none"}}/>
+                <div style={{position:"absolute",width:"50vw",height:"50vw",
+                  borderRadius:"50%",bottom:"5%",right:"-5%",
+                  background:"radial-gradient(circle,rgba(52,211,153,.2) 0%,transparent 70%)",
+                  filter:"blur(45px)",animation:"orbFloat2 12s ease-in-out infinite",
+                  pointerEvents:"none"}}/>
+
+                {/* Big emoji */}
+                <div style={{fontSize:"4rem",marginBottom:16,
+                  animation:"flowIn .6s ease both"}}>
+                  😴
+                </div>
+
+                {/* REST text */}
+                <div style={{fontFamily:"'Montserrat',sans-serif",
+                  fontSize:"clamp(3rem,18vw,5rem)",fontWeight:900,
+                  letterSpacing:"-2px",lineHeight:.9,marginBottom:12,
+                  background:"linear-gradient(160deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,.08) 100%)",
+                  WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
+                  backgroundClip:"text",
+                  animation:"daySlideIn .7s ease both"}}>
+                  RUHETAG
+                </div>
+
+                {/* Date */}
+                <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:700,
+                  letterSpacing:"3px",textTransform:"uppercase",marginBottom:24,
+                  animation:"flowIn .6s .2s ease both"}}>
+                  {selectedDate.toLocaleDateString("de-DE",{day:"numeric",month:"long",year:"numeric"})}
+                </div>
+
+                {/* Divider */}
+                <div style={{width:32,height:2,borderRadius:1,
+                  background:"rgba(255,255,255,.1)",marginBottom:24}}/>
+
+                {/* Motivational text */}
+                <div style={{fontSize:".85rem",color:"var(--mut)",fontWeight:600,
+                  textAlign:"center",lineHeight:1.7,maxWidth:240,marginBottom:32,
+                  animation:"flowIn .6s .35s ease both"}}>
+                  Erholung ist Training.<br/>
+                  Dein Körper wächst jetzt.
+                </div>
+
+                {/* Recovery tips */}
+                <div style={{display:"flex",gap:10,marginBottom:32,
+                  animation:"flowIn .6s .5s ease both"}}>
+                  {[["💧","Hydrieren"],["🥗","Gut essen"],["😴","Schlafen"]].map(([e,l])=>(
+                    <div key={l} style={{display:"flex",flexDirection:"column",
+                      alignItems:"center",gap:4,padding:"12px 10px",
+                      background:"rgba(255,255,255,.04)",
+                      border:"1px solid rgba(255,255,255,.07)",
+                      borderRadius:14,minWidth:64}}>
+                      <span style={{fontSize:"1.2rem"}}>{e}</span>
+                      <span style={{fontSize:".55rem",color:"var(--mut)",
+                        fontWeight:700,letterSpacing:".5px"}}>{l}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Change button */}
+                <button onClick={()=>setShowPicker(true)}
+                  style={{background:"rgba(255,255,255,.06)",
+                    border:"1px solid rgba(255,255,255,.1)",borderRadius:16,
+                    padding:"12px 24px",cursor:"pointer",
+                    fontFamily:"'Nunito',sans-serif",fontSize:".78rem",
+                    fontWeight:800,color:"var(--mut)",
+                    animation:"flowIn .6s .65s ease both"}}>
+                  Ändern
+                </button>
               </div>
             ):(
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
@@ -4112,7 +5425,8 @@ function App() {
 
                 {/* Date */}
                 <div style={{fontSize:".65rem",color:"var(--mut)",fontWeight:700,
-                  letterSpacing:"3px",textTransform:"uppercase",marginBottom:28}}>
+                  letterSpacing:"3px",textTransform:"uppercase",marginBottom:28,
+                  animation:"flowIn .6s .3s ease both"}}>
                   {new Date().toLocaleDateString("de-DE",{day:"numeric",month:"long",year:"numeric"})}
                 </div>
 
@@ -4120,7 +5434,7 @@ function App() {
                 <div style={{width:32,height:2,borderRadius:1,background:"rgba(255,255,255,.1)",marginBottom:28}}/>
 
                 {/* Rotating athlete quotes */}
-                <QuoteRotator/>
+                <div style={{animation:"flowIn .6s .5s ease both"}}><QuoteRotator/></div>
 
                 {/* CTA Button */}
                 <button onClick={()=>{
@@ -4155,11 +5469,51 @@ function App() {
           onProfilePicSave={saveProfilePic}
           darkMode={darkMode}
           onToggleDark={v=>{if(v!==darkMode) toggleDarkMode();}}
-        />}
+         username={user}/>}
       </div>
     </>
   );
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+
+const ATHLETE_QUOTES = [
+  {text:"Champions aren't made in gyms. Champions are made from something deep inside them.",author:"Muhammad Ali"},
+  {text:"The pain you feel today will be the strength you feel tomorrow.",author:"Arnold Schwarzenegger"},
+  {text:"You have to believe in yourself when no one else does.",author:"Serena Williams"},
+  {text:"Success is no accident. It is hard work and perseverance.",author:"Pelé"},
+  {text:"Hard work beats talent when talent doesn't work hard.",author:"Tim Notke"},
+  {text:"You miss 100% of the shots you don't take.",author:"Wayne Gretzky"},
+  {text:"Winning isn't everything, but wanting to win is.",author:"Vince Lombardi"},
+  {text:"I've failed over and over again in my life, and that is why I succeed.",author:"Michael Jordan"},
+  {text:"The more I practice, the luckier I get.",author:"Gary Player"},
+  {text:"It's not about having time, it's about making time.",author:"Roger Federer"},
+  {text:"Train like a beast, look like a beauty.",author:"Jillian Michaels"},
+  {text:"If you have everything under control, you're not moving fast enough.",author:"Mario Andretti"},
+];
+
+const THEMES = [
+  {id:"default", label:"Weiß",   color:"#ffffff"},
+  {id:"blue",    label:"Blau",   color:"#3b6bff"},
+  {id:"green",   label:"Grün",   color:"#10b981"},
+  {id:"purple",  label:"Lila",   color:"#8b5cf6"},
+  {id:"pink",    label:"Pink",   color:"#ec4899"},
+  {id:"orange",  label:"Orange", color:"#f97316"},
+  {id:"yellow",  label:"Gelb",   color:"#fbbf24"},
+  {id:"red",     label:"Rot",    color:"#f87171"},
+];
+
+const ACHIEVEMENTS = [
+  {id:"first_session", icon:"🏋️", name:"Erster Tag",      desc:"Erstes Training abgeschlossen"},
+  {id:"week_3",        icon:"🔥", name:"3er Streak",       desc:"3 Tage in Folge trainiert"},
+  {id:"week_7",        icon:"💪", name:"7er Streak",       desc:"7 Tage in Folge trainiert"},
+  {id:"sessions_10",   icon:"⭐", name:"10 Sessions",      desc:"10 Trainings abgeschlossen"},
+  {id:"sessions_25",   icon:"🌟", name:"25 Sessions",      desc:"25 Trainings abgeschlossen"},
+  {id:"sessions_50",   icon:"🏆", name:"50 Sessions",      desc:"50 Trainings abgeschlossen"},
+  {id:"first_pr",      icon:"🎯", name:"Erster PR",        desc:"Ersten Persönlichen Rekord gesetzt"},
+  {id:"pr_5",          icon:"💥", name:"5 PRs",            desc:"5 Persönliche Rekorde gesetzt"},
+  {id:"volume_1t",     icon:"📦", name:"1 Tonne Session",  desc:"1000kg in einer Einheit"},
+  {id:"volume_total",  icon:"🚀", name:"10 Tonnen gesamt", desc:"10000kg Gesamtvolumen"},
+];
+
 </script></body></html>
