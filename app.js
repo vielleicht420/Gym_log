@@ -10,12 +10,12 @@
   function loadState() {
     var raw = null;
     try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { /* ignore */ }
-    if (!raw) return { cards: {}, quiz: {}, history: {} };
+    if (!raw) return { cards: {}, quiz: {}, history: {}, favorites: {} };
     try {
       var parsed = JSON.parse(raw);
-      return { cards: parsed.cards || {}, quiz: parsed.quiz || {}, history: parsed.history || {} };
+      return { cards: parsed.cards || {}, quiz: parsed.quiz || {}, history: parsed.history || {}, favorites: parsed.favorites || {} };
     } catch (e) {
-      return { cards: {}, quiz: {}, history: {} };
+      return { cards: {}, quiz: {}, history: {}, favorites: {} };
     }
   }
 
@@ -44,6 +44,34 @@
     state.history = state.history || {};
     state.history[key] = (state.history[key] || 0) + 1;
     saveState();
+  }
+
+  function computeStreak() {
+    state.history = state.history || {};
+    var d = new Date();
+    var todayKey = d.toISOString().slice(0, 10);
+    if (!state.history[todayKey]) d.setDate(d.getDate() - 1);
+    var streak = 0;
+    while (state.history[d.toISOString().slice(0, 10)] > 0) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function isFavorite(id) {
+    return !!(state.favorites && state.favorites[id]);
+  }
+
+  function toggleFavorite(id) {
+    state.favorites = state.favorites || {};
+    if (state.favorites[id]) delete state.favorites[id];
+    else state.favorites[id] = true;
+    saveState();
+  }
+
+  function vibrate(ms) {
+    try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { /* ignore */ }
   }
 
   // ---------- Theme ----------
@@ -135,6 +163,10 @@
     }).sort(function (a, b) { return cardState(b.id).lapses - cardState(a.id).lapses; });
   }
 
+  function favoriteCards(topicId) {
+    return cardsForTopic(topicId).filter(function (c) { return isFavorite(c.id); });
+  }
+
   function allQuiz() {
     var out = [];
     TOPICS.forEach(function (t) {
@@ -177,6 +209,70 @@
     var m = Math.floor(totalSec / 60);
     var s = totalSec % 60;
     return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
+  function animateCount(el, target, suffix) {
+    if (!el) return;
+    var duration = 600;
+    var startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      el.textContent = Math.round(progress * target) + (suffix || "");
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // ---------- Search ----------
+  var SEARCH_INDEX = allCards().map(function (c) {
+    return { type: "card", topicTitle: c.topicTitle, primary: c.front, secondary: c.back };
+  }).concat(allQuiz().map(function (q) {
+    return { type: "quiz", topicTitle: q.topicTitle, primary: q.question, secondary: "Richtig: " + q.options[q.correct] };
+  }));
+
+  function renderSearchResults(query) {
+    var resultsEl = document.getElementById("search-results");
+    var q = query.trim().toLowerCase();
+    if (!q) {
+      resultsEl.innerHTML = '<div class="search-hint">Tippe, um in allen Karteikarten und Quizfragen zu suchen.</div>';
+      return;
+    }
+    var matches = SEARCH_INDEX.filter(function (item) {
+      return (item.primary + " " + item.secondary + " " + item.topicTitle).toLowerCase().indexOf(q) !== -1;
+    }).slice(0, 40);
+    if (!matches.length) {
+      resultsEl.innerHTML = '<div class="search-hint">Keine Treffer für „' + query + '“.</div>';
+      return;
+    }
+    resultsEl.innerHTML = matches.map(function (item) {
+      return (
+        '<div class="search-result-item">' +
+        '<div class="search-result-type">' + (item.type === "card" ? "🗂️ Karteikarte" : "❓ Quiz") + " · " + item.topicTitle + "</div>" +
+        '<div class="search-result-primary">' + item.primary + "</div>" +
+        '<div class="search-result-secondary">' + item.secondary + "</div>" +
+        "</div>"
+      );
+    }).join("");
+  }
+
+  var searchToggle = document.getElementById("search-toggle");
+  var searchOverlay = document.getElementById("search-overlay");
+  var searchInput = document.getElementById("search-input");
+  var searchClose = document.getElementById("search-close");
+
+  if (searchToggle) {
+    searchToggle.addEventListener("click", function () {
+      searchOverlay.hidden = false;
+      searchInput.value = "";
+      renderSearchResults("");
+      setTimeout(function () { searchInput.focus(); }, 50);
+    });
+    searchClose.addEventListener("click", function () { searchOverlay.hidden = true; });
+    searchOverlay.addEventListener("click", function (e) {
+      if (e.target === searchOverlay) searchOverlay.hidden = true;
+    });
+    searchInput.addEventListener("input", function () { renderSearchResults(searchInput.value); });
   }
 
   // ---------- View router ----------
@@ -239,12 +335,17 @@
     var quizAttempts = Object.values(state.quiz).reduce(function (s, q) { return s + q.attempts; }, 0);
     var quizCorrect = Object.values(state.quiz).reduce(function (s, q) { return s + q.correct; }, 0);
     var accuracy = quizAttempts > 0 ? Math.round((quizCorrect / quizAttempts) * 100) : 0;
+    var streak = computeStreak();
 
     document.getElementById("home-stats").innerHTML = [
-      statCard(due, "Fällig heute"),
+      animatedStatCard("stat-due", "Fällig heute"),
       statCard(learned + " / " + totalCards, "Karten gelernt"),
-      statCard(accuracy + "%", "Quiz-Trefferquote")
+      animatedStatCard("stat-acc", "Quiz-Trefferquote", "%"),
+      animatedStatCard("stat-streak", "Tage-Streak 🔥")
     ].join("");
+    animateCount(document.getElementById("stat-due"), due);
+    animateCount(document.getElementById("stat-acc"), accuracy, "%");
+    animateCount(document.getElementById("stat-streak"), streak);
 
     var continueBtn = document.getElementById("home-continue");
     continueBtn.textContent = due > 0 ? "▶️ Weiter lernen (" + due + " fällig)" : "▶️ Weiter lernen";
@@ -258,11 +359,12 @@
       var learnedInTopic = cardIds.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
       var pct = cardIds.length ? Math.round((learnedInTopic / cardIds.length) * 100) : 0;
       return (
-        '<div class="topic-card">' +
+        '<div class="topic-card topic-card-row">' +
+        '<div class="topic-info">' +
         "<h4>" + t.title + "</h4>" +
         '<div class="meta">' + t.cards.length + " Karteikarten · " + t.quiz.length + " Quizfragen</div>" +
-        '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + pct + '%"></div></div>' +
-        '<div class="meta" style="margin-top:6px;">' + pct + "% gelernt</div>" +
+        "</div>" +
+        '<div class="progress-ring" style="--pct:' + pct + '%"><div class="progress-ring-inner">' + pct + "%</div></div>" +
         "</div>"
       );
     }).join("");
@@ -271,6 +373,10 @@
 
   function statCard(num, label) {
     return '<div class="stat-card"><div class="num">' + num + '</div><div class="label">' + label + "</div></div>";
+  }
+
+  function animatedStatCard(id, label) {
+    return '<div class="stat-card"><div class="num" id="' + id + '">0</div><div class="label">' + label + "</div></div>";
   }
 
   // ---------- Flashcards ----------
@@ -312,6 +418,8 @@
 
     if (cardsFilter === "hard") {
       queue = hardCards(topicId);
+    } else if (cardsFilter === "fav") {
+      queue = favoriteCards(topicId);
     } else if (cardsFilter === "all") {
       queue = shuffle(cardsForTopic(topicId));
     } else {
@@ -335,6 +443,8 @@
 
     if (cardsFilter === "hard") {
       hint.textContent = remaining ? remaining + " schwierige Karte(n) übrig" : "Aktuell keine schwierigen Karten mehr – stark!";
+    } else if (cardsFilter === "fav") {
+      hint.textContent = remaining ? remaining + " Favorit(en)" : "Noch keine Favoriten markiert.";
     } else if (cardsFilter === "all") {
       hint.textContent = remaining ? remaining + " von " + cardsSession.queue.length + " übrig" : "Alle Karten durchgesehen!";
     } else {
@@ -354,13 +464,20 @@
     var card = cardsSession.queue[cardsSession.index];
     cardsSession.showingBack = false;
 
+    var hasNext1 = cardsSession.index + 1 < cardsSession.queue.length;
+    var hasNext2 = cardsSession.index + 2 < cardsSession.queue.length;
+    var stackHTML = (hasNext2 ? '<div class="stack-card stack-2"></div>' : "") + (hasNext1 ? '<div class="stack-card stack-1"></div>' : "");
+
     stage.innerHTML =
       '<div class="flashcard-wrap">' +
+      stackHTML +
       '<div class="flashcard" id="flashcard">' +
       '<div class="flashcard-inner">' +
       '<div class="flashcard-face flashcard-front">' + card.front + "</div>" +
       '<div class="flashcard-face flashcard-back">' + card.back + "</div>" +
-      "</div></div></div>" +
+      "</div></div>" +
+      '<button class="fav-btn' + (isFavorite(card.id) ? " active" : "") + '" id="fav-btn">' + (isFavorite(card.id) ? "⭐" : "☆") + "</button>" +
+      "</div>" +
       '<div class="flip-hint" id="flip-hint">Tippen zum Umdrehen · ' + card.topicTitle + "</div>" +
       '<div class="rate-row" id="rate-row">' +
       '<button class="rate-again" data-r="0"><span>😖</span>Nochmal</button>' +
@@ -372,6 +489,14 @@
     var el = document.getElementById("flashcard");
     var hint = document.getElementById("flip-hint");
     var rateRow = document.getElementById("rate-row");
+    var favBtn = document.getElementById("fav-btn");
+
+    favBtn.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      toggleFavorite(card.id);
+      favBtn.textContent = isFavorite(card.id) ? "⭐" : "☆";
+      favBtn.classList.toggle("active", isFavorite(card.id));
+    });
 
     function setFlipped(flipped) {
       cardsSession.showingBack = flipped;
@@ -381,6 +506,7 @@
     }
 
     function advance(rating) {
+      vibrate(12);
       rateCard(card.id, rating);
       cardsSession.index++;
       renderCardStage();
@@ -668,7 +794,7 @@
 
     document.getElementById("reset-progress").addEventListener("click", function () {
       if (confirm("Wirklich den gesamten Lernfortschritt zurücksetzen?")) {
-        state = { cards: {}, quiz: {}, history: {} };
+        state = { cards: {}, quiz: {}, history: {}, favorites: {} };
         saveState();
         renderProgress();
       }
@@ -698,7 +824,7 @@
         try {
           var parsed = JSON.parse(reader.result);
           if (!parsed || typeof parsed !== "object") throw new Error("invalid");
-          state = { cards: parsed.cards || {}, quiz: parsed.quiz || {}, history: parsed.history || {} };
+          state = { cards: parsed.cards || {}, quiz: parsed.quiz || {}, history: parsed.history || {}, favorites: parsed.favorites || {} };
           saveState();
           renderProgress();
         } catch (e) {

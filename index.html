@@ -15,10 +15,23 @@
 
   <header class="topbar">
     <h1><span class="logo-bubble">📚</span> Prüfungstrainer</h1>
-    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Design wechseln" title="Design wechseln">🌓</button>
+    <div class="header-actions">
+      <button class="icon-btn" id="search-toggle" type="button" aria-label="Suche" title="Suche">🔍</button>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Design wechseln" title="Design wechseln">🌓</button>
+    </div>
   </header>
 
   <main id="app"></main>
+
+  <div class="search-overlay" id="search-overlay" hidden>
+    <div class="search-box">
+      <div class="search-header">
+        <input type="text" id="search-input" placeholder="Suche nach Begriff oder §..." autocomplete="off">
+        <button class="icon-btn" id="search-close" type="button" aria-label="Schließen">✕</button>
+      </div>
+      <div class="search-results" id="search-results"></div>
+    </div>
+  </div>
 
   <nav class="tabs" id="tabs">
     <button class="tab-btn active" data-view="home">Start</button>
@@ -46,6 +59,7 @@
       <div class="filter-row" id="cards-filter-row">
         <button class="filter-btn active" data-filter="due">Fällig &amp; neu</button>
         <button class="filter-btn" data-filter="hard">Nur schwierige</button>
+        <button class="filter-btn" data-filter="fav">⭐ Favoriten</button>
         <button class="filter-btn" data-filter="all">Alle</button>
       </div>
       <p class="hint" id="cards-hint"></p>
