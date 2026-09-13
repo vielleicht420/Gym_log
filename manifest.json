@@ -1,0 +1,13 @@
+{
+  "name": "Prüfungstrainer",
+  "short_name": "Prüfung",
+  "description": "Karteikarten, Quiz und Spaced Repetition für die Abschlussprüfung.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef1f5",
+  "theme_color": "#5b7f99",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

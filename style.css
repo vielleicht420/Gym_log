@@ -24,7 +24,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg-a: #1b2024;
     --bg-b: #171b1e;
     --bg-c: #1e2220;
@@ -38,6 +38,21 @@
     --accent-contrast: #12181a;
     --shadow-soft: 0 14px 34px -18px rgba(0, 0, 0, 0.55), 0 2px 8px -2px rgba(0, 0, 0, 0.35);
   }
+}
+
+:root[data-theme="dark"] {
+  --bg-a: #1b2024;
+  --bg-b: #171b1e;
+  --bg-c: #1e2220;
+  --surface: rgba(40, 46, 50, 0.78);
+  --surface-solid: #262b2e;
+  --text: #eef1f2;
+  --muted: #9aa4aa;
+  --border: rgba(160, 175, 180, 0.16);
+  --accent-1: #7ea3bd;
+  --accent-2: #7fbba5;
+  --accent-contrast: #12181a;
+  --shadow-soft: 0 14px 34px -18px rgba(0, 0, 0, 0.55), 0 2px 8px -2px rgba(0, 0, 0, 0.35);
 }
 
 * { box-sizing: border-box; }
@@ -143,6 +158,10 @@ body {
   padding: 18px 16px 0;
   max-width: 720px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .topbar h1 {
@@ -164,6 +183,23 @@ body {
   font-size: 1.1rem;
   box-shadow: var(--shadow-soft);
 }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.theme-toggle:active { transform: scale(0.9); }
 
 .tabs {
   position: fixed;
@@ -333,6 +369,123 @@ select {
 
 .hint { color: var(--muted); font-size: 0.9rem; font-weight: 500; }
 
+.filter-row {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0 14px;
+  overflow-x: auto;
+}
+
+.filter-btn {
+  flex: 0 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.filter-btn:active { transform: scale(0.95); }
+
+.filter-btn.active {
+  background: var(--accent-grad);
+  color: var(--accent-contrast);
+  border-color: transparent;
+}
+
+.continue-btn {
+  display: block;
+  width: 100%;
+  margin: 4px 0 22px;
+  text-align: center;
+}
+
+.quiz-timer {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--accent-1);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  margin-left: 8px;
+}
+
+.quiz-option.selected-neutral {
+  border-color: var(--accent-1);
+  background: linear-gradient(135deg, rgba(91, 127, 153, 0.14), rgba(91, 153, 133, 0.08));
+}
+
+.quiz-review {
+  margin-top: 26px;
+  text-align: left;
+}
+
+.quiz-review h4 { margin: 0 0 10px; }
+
+.review-item {
+  background: var(--surface);
+  border-left: 4px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+}
+
+.review-item.review-correct { border-left-color: var(--good-2); }
+.review-item.review-wrong { border-left-color: var(--bad-2); }
+
+.review-item .review-q { font-weight: 700; margin-bottom: 6px; }
+.review-item .review-a { color: var(--muted); }
+.review-item .review-a.right-answer { color: var(--good-2); font-weight: 600; }
+
+.io-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.io-row .btn { flex: 1 1 auto; }
+
+.history-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 90px;
+  margin-top: 10px;
+}
+
+.hist-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.hist-bar {
+  width: 100%;
+  max-width: 22px;
+  background: var(--accent-grad);
+  border-radius: 8px 8px 4px 4px;
+  transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hist-label {
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
 /* ---------- flashcards ---------- */
 .flashcard-wrap {
   position: relative;
@@ -345,7 +498,14 @@ select {
   position: absolute;
   inset: 0;
   cursor: pointer;
+  touch-action: pan-y;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
+.flashcard.dragging { transition: none; }
+
+.flashcard.swipe-good .flashcard-face { box-shadow: 0 0 0 3px var(--good-2), var(--shadow-soft); }
+.flashcard.swipe-again .flashcard-face { box-shadow: 0 0 0 3px var(--bad-2), var(--shadow-soft); }
 
 .flashcard-inner {
   position: relative;

@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prüfungstrainer</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#5b7f99">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,6 +15,7 @@
 
   <header class="topbar">
     <h1><span class="logo-bubble">📚</span> Prüfungstrainer</h1>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Design wechseln" title="Design wechseln">🌓</button>
   </header>
 
   <main id="app"></main>
@@ -26,6 +31,7 @@
     <section class="view">
       <h2>Übersicht</h2>
       <div class="stat-row" id="home-stats"></div>
+      <button class="btn continue-btn" id="home-continue">▶️ Weiter lernen</button>
       <h3>Themen</h3>
       <div id="home-topics" class="topic-list"></div>
     </section>
@@ -37,6 +43,11 @@
         <h2>Karteikarten</h2>
         <select id="cards-topic-select"></select>
       </div>
+      <div class="filter-row" id="cards-filter-row">
+        <button class="filter-btn active" data-filter="due">Fällig &amp; neu</button>
+        <button class="filter-btn" data-filter="hard">Nur schwierige</button>
+        <button class="filter-btn" data-filter="all">Alle</button>
+      </div>
       <p class="hint" id="cards-hint"></p>
       <div id="cards-stage"></div>
     </section>
@@ -45,8 +56,12 @@
   <template id="tpl-quiz">
     <section class="view">
       <div class="view-header">
-        <h2>Multiple-Choice-Quiz</h2>
+        <h2>Quiz</h2>
         <select id="quiz-topic-select"></select>
+      </div>
+      <div class="filter-row" id="quiz-mode-row">
+        <button class="filter-btn active" data-mode="practice">Übung</button>
+        <button class="filter-btn" data-mode="exam">Prüfungsmodus</button>
       </div>
       <div id="quiz-stage"></div>
     </section>
@@ -56,6 +71,11 @@
     <section class="view">
       <h2>Fortschritt</h2>
       <div id="progress-stage"></div>
+      <div class="io-row">
+        <button class="btn secondary" id="export-progress">Fortschritt exportieren</button>
+        <button class="btn secondary" id="import-progress">Fortschritt importieren</button>
+        <input type="file" id="import-file" accept="application/json" hidden>
+      </div>
       <button class="btn btn-danger" id="reset-progress">Fortschritt zurücksetzen</button>
     </section>
   </template>

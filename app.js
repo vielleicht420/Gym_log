@@ -3,18 +3,19 @@
 
   var TOPICS = window.STUDY_DATA.topics;
   var STORAGE_KEY = "examTrainer:v1";
+  var THEME_KEY = "examTrainer:theme";
   var DAY_MS = 24 * 60 * 60 * 1000;
 
   // ---------- State ----------
   function loadState() {
     var raw = null;
     try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { /* ignore */ }
-    if (!raw) return { cards: {}, quiz: {} };
+    if (!raw) return { cards: {}, quiz: {}, history: {} };
     try {
       var parsed = JSON.parse(raw);
-      return { cards: parsed.cards || {}, quiz: parsed.quiz || {} };
+      return { cards: parsed.cards || {}, quiz: parsed.quiz || {}, history: parsed.history || {} };
     } catch (e) {
-      return { cards: {}, quiz: {} };
+      return { cards: {}, quiz: {}, history: {} };
     }
   }
 
@@ -36,6 +37,45 @@
       state.quiz[id] = { attempts: 0, correct: 0 };
     }
     return state.quiz[id];
+  }
+
+  function logActivity() {
+    var key = new Date().toISOString().slice(0, 10);
+    state.history = state.history || {};
+    state.history[key] = (state.history[key] || 0) + 1;
+    saveState();
+  }
+
+  // ---------- Theme ----------
+  function getThemePref() {
+    try { return localStorage.getItem(THEME_KEY) || "system"; } catch (e) { return "system"; }
+  }
+
+  function applyTheme(pref) {
+    if (pref === "light" || pref === "dark") document.documentElement.setAttribute("data-theme", pref);
+    else document.documentElement.removeAttribute("data-theme");
+  }
+
+  function updateThemeButton() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    var pref = getThemePref();
+    btn.textContent = pref === "light" ? "☀️" : pref === "dark" ? "🌙" : "🌓";
+  }
+
+  function setThemePref(pref) {
+    try { localStorage.setItem(THEME_KEY, pref); } catch (e) { /* ignore */ }
+    applyTheme(pref);
+    updateThemeButton();
+  }
+
+  applyTheme(getThemePref());
+
+  // ---------- Service worker (offline support) ----------
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () { /* offline support optional */ });
+    });
   }
 
   // ---------- Spaced repetition (simplified SM-2) ----------
@@ -63,7 +103,7 @@
       s.reps++;
     }
     s.due = Date.now() + s.interval * DAY_MS;
-    saveState();
+    logActivity();
   }
 
   function allCards() {
@@ -88,6 +128,13 @@
     }).sort(function (a, b) { return cardState(a.id).due - cardState(b.id).due; });
   }
 
+  function hardCards(topicId) {
+    return cardsForTopic(topicId).filter(function (c) {
+      var s = state.cards[c.id];
+      return s && s.lapses > 0;
+    }).sort(function (a, b) { return cardState(b.id).lapses - cardState(a.id).lapses; });
+  }
+
   function allQuiz() {
     var out = [];
     TOPICS.forEach(function (t) {
@@ -104,7 +151,7 @@
 
   function spawnConfetti(container) {
     if (!container) return;
-    var colors = ["#8b5cf6", "#ec4899", "#34d399", "#fbbf24", "#38bdf8"];
+    var colors = ["#5b7f99", "#5b9985", "#6fb98f", "#d9a552", "#7ea3bd"];
     for (var i = 0; i < 26; i++) {
       var piece = document.createElement("span");
       piece.className = "confetti-piece";
@@ -125,6 +172,13 @@
     return a;
   }
 
+  function formatTime(ms) {
+    var totalSec = Math.max(0, Math.ceil(ms / 1000));
+    var m = Math.floor(totalSec / 60);
+    var s = totalSec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
   // ---------- View router ----------
   var app = document.getElementById("app");
   var tabs = document.querySelectorAll(".tab-btn");
@@ -139,11 +193,30 @@
     });
   });
 
+  var themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    updateThemeButton();
+    themeToggle.addEventListener("click", function () {
+      var order = ["system", "light", "dark"];
+      var next = order[(order.indexOf(getThemePref()) + 1) % order.length];
+      setThemePref(next);
+    });
+  }
+
   function render() {
+    clearExamTimer();
     if (currentView === "home") renderHome();
     else if (currentView === "cards") renderCards();
     else if (currentView === "quiz") renderQuiz();
     else if (currentView === "progress") renderProgress();
+  }
+
+  function goToView(view) {
+    tabs.forEach(function (b) { b.classList.remove("active"); });
+    var btn = document.querySelector('.tab-btn[data-view="' + view + '"]');
+    if (btn) btn.classList.add("active");
+    currentView = view;
+    render();
   }
 
   function topicOptionsHTML(includeAll) {
@@ -173,6 +246,13 @@
       statCard(accuracy + "%", "Quiz-Trefferquote")
     ].join("");
 
+    var continueBtn = document.getElementById("home-continue");
+    continueBtn.textContent = due > 0 ? "▶️ Weiter lernen (" + due + " fällig)" : "▶️ Weiter lernen";
+    continueBtn.addEventListener("click", function () {
+      sessionStorage.setItem("cardsTopic", "all");
+      goToView("cards");
+    });
+
     var topicsHTML = TOPICS.map(function (t) {
       var cardIds = t.cards.map(function (c) { return c.id; });
       var learnedInTopic = cardIds.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
@@ -195,6 +275,7 @@
 
   // ---------- Flashcards ----------
   var cardsSession = null; // { queue: [...], index, showingBack }
+  var cardsFilter = "due";
 
   function renderCards() {
     var tpl = document.getElementById("tpl-cards");
@@ -206,6 +287,18 @@
     var saved = sessionStorage.getItem("cardsTopic") || "all";
     select.value = saved;
 
+    cardsFilter = "due";
+    var filterBtns = document.querySelectorAll("#cards-filter-row .filter-btn");
+    filterBtns.forEach(function (btn) {
+      btn.classList.toggle("active", btn.dataset.filter === cardsFilter);
+      btn.addEventListener("click", function () {
+        filterBtns.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        cardsFilter = btn.dataset.filter;
+        startCardsSession(select.value);
+      });
+    });
+
     select.addEventListener("change", function () {
       sessionStorage.setItem("cardsTopic", select.value);
       startCardsSession(select.value);
@@ -215,20 +308,26 @@
   }
 
   function startCardsSession(topicId) {
-    var due = dueCards(topicId);
-    var newOnes = cardsForTopic(topicId).filter(function (c) {
-      var s = state.cards[c.id];
-      return !s || s.reps === 0;
-    }).filter(function (c) { return due.indexOf(c) === -1; });
-
-    var queue = due.concat(newOnes);
-    cardsSession = { queue: queue, index: 0, showingBack: false };
-
+    var queue;
     var hint = document.getElementById("cards-hint");
-    hint.textContent = queue.length
-      ? due.length + " fällig, " + newOnes.length + " neu"
-      : "Für dieses Thema ist gerade nichts fällig.";
 
+    if (cardsFilter === "hard") {
+      queue = hardCards(topicId);
+      hint.textContent = queue.length ? queue.length + " schwierige Karte(n)" : "Aktuell keine schwierigen Karten – stark!";
+    } else if (cardsFilter === "all") {
+      queue = shuffle(cardsForTopic(topicId));
+      hint.textContent = queue.length + " Karten insgesamt";
+    } else {
+      var due = dueCards(topicId);
+      var newOnes = cardsForTopic(topicId).filter(function (c) {
+        var s = state.cards[c.id];
+        return !s || s.reps === 0;
+      }).filter(function (c) { return due.indexOf(c) === -1; });
+      queue = due.concat(newOnes);
+      hint.textContent = queue.length ? due.length + " fällig, " + newOnes.length + " neu" : "Für dieses Thema ist gerade nichts fällig.";
+    }
+
+    cardsSession = { queue: queue, index: 0, showingBack: false };
     renderCardStage();
   }
 
@@ -260,26 +359,85 @@
     var hint = document.getElementById("flip-hint");
     var rateRow = document.getElementById("rate-row");
 
-    el.addEventListener("click", function () {
-      cardsSession.showingBack = !cardsSession.showingBack;
-      el.classList.toggle("flipped", cardsSession.showingBack);
-      hint.textContent = cardsSession.showingBack ? "Wie gut wusstest du die Antwort?" : "Tippen zum Umdrehen · " + card.topicTitle;
-      rateRow.classList.toggle("visible", cardsSession.showingBack);
-    });
+    function setFlipped(flipped) {
+      cardsSession.showingBack = flipped;
+      el.classList.toggle("flipped", flipped);
+      hint.textContent = flipped ? "Wie gut wusstest du die Antwort? (oder wischen)" : "Tippen zum Umdrehen · " + card.topicTitle;
+      rateRow.classList.toggle("visible", flipped);
+    }
+
+    function advance(rating) {
+      rateCard(card.id, rating);
+      cardsSession.index++;
+      renderCardStage();
+    }
 
     rateRow.querySelectorAll("button").forEach(function (btn) {
       btn.addEventListener("click", function (ev) {
         ev.stopPropagation();
         if (!cardsSession.showingBack) return;
-        rateCard(card.id, parseInt(btn.dataset.r, 10));
-        cardsSession.index++;
-        renderCardStage();
+        advance(parseInt(btn.dataset.r, 10));
       });
     });
+
+    // Pointer-based tap (flip) + swipe (rate) handling
+    var startX = 0, startY = 0, currentX = 0, dragging = false;
+
+    el.addEventListener("pointerdown", function (e) {
+      startX = e.clientX;
+      startY = e.clientY;
+      currentX = 0;
+      dragging = true;
+      try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+      if (cardsSession.showingBack) el.classList.add("dragging");
+    });
+
+    el.addEventListener("pointermove", function (e) {
+      if (!dragging || !cardsSession.showingBack) return;
+      currentX = e.clientX - startX;
+      el.style.transform = "translateX(" + currentX + "px) rotate(" + (currentX / 18) + "deg)";
+      el.classList.toggle("swipe-good", currentX > 40);
+      el.classList.toggle("swipe-again", currentX < -40);
+    });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove("dragging", "swipe-good", "swipe-again");
+      var threshold = 90;
+
+      if (!cardsSession.showingBack) {
+        if (Math.abs(e.clientX - startX) < 8 && Math.abs(e.clientY - startY) < 8) setFlipped(true);
+        return;
+      }
+
+      if (currentX > threshold) {
+        el.style.transform = "translateX(500px) rotate(24deg)";
+        el.style.opacity = "0";
+        setTimeout(function () { advance(2); }, 260);
+      } else if (currentX < -threshold) {
+        el.style.transform = "translateX(-500px) rotate(-24deg)";
+        el.style.opacity = "0";
+        setTimeout(function () { advance(0); }, 260);
+      } else {
+        el.style.transform = "";
+        if (Math.abs(currentX) < 8) setFlipped(false);
+      }
+      currentX = 0;
+    }
+
+    el.addEventListener("pointerup", endDrag);
+    el.addEventListener("pointercancel", endDrag);
   }
 
   // ---------- Quiz ----------
-  var quizSession = null; // { questions, index, score, answered, selectedIndex }
+  var quizSession = null; // { questions, index, score, mode, answers, answered, selectedIndex, deadline }
+  var quizMode = "practice";
+  var examTimerInterval = null;
+
+  function clearExamTimer() {
+    if (examTimerInterval) { clearInterval(examTimerInterval); examTimerInterval = null; }
+  }
 
   function renderQuiz() {
     var tpl = document.getElementById("tpl-quiz");
@@ -291,17 +449,55 @@
     var saved = sessionStorage.getItem("quizTopic") || "all";
     select.value = saved;
 
-    select.addEventListener("change", function () {
-      sessionStorage.setItem("quizTopic", select.value);
-      startQuizSession(select.value);
+    quizMode = "practice";
+    var modeBtns = document.querySelectorAll("#quiz-mode-row .filter-btn");
+    modeBtns.forEach(function (btn) {
+      btn.classList.toggle("active", btn.dataset.mode === quizMode);
+      btn.addEventListener("click", function () {
+        modeBtns.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        quizMode = btn.dataset.mode;
+        startQuizSession(select.value, quizMode);
+      });
     });
 
-    startQuizSession(select.value);
+    select.addEventListener("change", function () {
+      sessionStorage.setItem("quizTopic", select.value);
+      startQuizSession(select.value, quizMode);
+    });
+
+    startQuizSession(select.value, quizMode);
   }
 
-  function startQuizSession(topicId) {
-    var questions = shuffle(quizForTopic(topicId)).slice(0, 15);
-    quizSession = { questions: questions, index: 0, score: 0, answered: false, selectedIndex: null };
+  function startQuizSession(topicId, mode) {
+    clearExamTimer();
+    var pool = shuffle(quizForTopic(topicId));
+    var questions = mode === "exam" ? pool : pool.slice(0, 15);
+    quizSession = {
+      questions: questions,
+      index: 0,
+      score: 0,
+      mode: mode || "practice",
+      answers: new Array(questions.length).fill(null),
+      answered: false,
+      selectedIndex: null,
+      deadline: mode === "exam" ? Date.now() + questions.length * 40 * 1000 : null
+    };
+
+    if (mode === "exam" && questions.length) {
+      examTimerInterval = setInterval(function () {
+        if (!quizSession || quizSession.mode !== "exam") { clearExamTimer(); return; }
+        var remaining = quizSession.deadline - Date.now();
+        var timerEl = document.getElementById("quiz-timer");
+        if (timerEl) timerEl.textContent = "⏱ " + formatTime(remaining);
+        if (remaining <= 0) {
+          clearExamTimer();
+          quizSession.index = quizSession.questions.length;
+          renderQuizStage();
+        }
+      }, 1000);
+    }
+
     renderQuizStage();
   }
 
@@ -311,40 +507,66 @@
       stage.innerHTML = '<div class="empty-state">Für dieses Thema gibt es noch keine Quizfragen.</div>';
       return;
     }
+
     if (quizSession.index >= quizSession.questions.length) {
+      clearExamTimer();
       var pct = Math.round((quizSession.score / quizSession.questions.length) * 100);
       var resultMsg = pct >= 80 ? "🎉 Stark gemacht!" : pct >= 50 ? "💪 Guter Versuch!" : "📚 Dranbleiben, du schaffst das!";
+      var reviewHTML = "";
+      if (quizSession.mode === "exam") {
+        reviewHTML = '<div class="quiz-review"><h4>Auswertung</h4>' +
+          quizSession.questions.map(function (q, i) {
+            var answered = quizSession.answers[i];
+            var correct = answered === q.correct;
+            var yourAnswer = answered === null ? "– keine Antwort –" : q.options[answered];
+            return (
+              '<div class="review-item ' + (correct ? "review-correct" : "review-wrong") + '">' +
+              '<div class="review-q">' + q.question + "</div>" +
+              '<div class="review-a">Deine Antwort: ' + yourAnswer + "</div>" +
+              (correct ? "" : '<div class="review-a right-answer">Richtig: ' + q.options[q.correct] + "</div>") +
+              "</div>"
+            );
+          }).join("") +
+          "</div>";
+      }
       stage.innerHTML =
         '<div class="quiz-result">' +
         '<div class="result-msg">' + resultMsg + "</div>" +
         '<div class="score">' + quizSession.score + " / " + quizSession.questions.length + "</div>" +
         "<div>" + pct + "% richtig</div>" +
         '<button class="btn" id="quiz-restart">Neue Runde</button>' +
-        "</div>";
+        "</div>" + reviewHTML;
       document.getElementById("quiz-restart").addEventListener("click", function () {
         var select = document.getElementById("quiz-topic-select");
-        startQuizSession(select.value);
+        startQuizSession(select.value, quizMode);
       });
       if (pct >= 80) spawnConfetti(stage.querySelector(".quiz-result"));
       return;
     }
 
     var q = quizSession.questions[quizSession.index];
+    var isExam = quizSession.mode === "exam";
     var optionsHTML = q.options.map(function (opt, i) {
       var cls = "quiz-option";
       if (quizSession.answered) {
-        if (i === q.correct) cls += " correct";
-        else if (i === quizSession.selectedIndex) cls += " wrong";
+        if (isExam) {
+          if (i === quizSession.selectedIndex) cls += " selected-neutral";
+        } else {
+          if (i === q.correct) cls += " correct";
+          else if (i === quizSession.selectedIndex) cls += " wrong";
+        }
       }
       return '<button class="' + cls + '" data-i="' + i + '" ' + (quizSession.answered ? "disabled" : "") + ">" + opt + "</button>";
     }).join("");
 
+    var timerHTML = isExam ? '<span class="quiz-timer" id="quiz-timer">⏱ ' + formatTime(quizSession.deadline - Date.now()) + "</span>" : "";
+
     stage.innerHTML =
-      '<div class="quiz-progress">Frage ' + (quizSession.index + 1) + " von " + quizSession.questions.length + " · " + q.topicTitle + "</div>" +
+      '<div class="quiz-progress">Frage ' + (quizSession.index + 1) + " von " + quizSession.questions.length + " · " + q.topicTitle + timerHTML + "</div>" +
       '<div class="quiz-question">' +
       '<div class="qtext">' + q.question + "</div>" +
       optionsHTML +
-      (quizSession.answered && q.explanation ? '<div class="quiz-explain">' + q.explanation + "</div>" : "") +
+      (!isExam && quizSession.answered && q.explanation ? '<div class="quiz-explain">' + q.explanation + "</div>" : "") +
       "</div>" +
       '<div class="quiz-footer">' +
       (quizSession.answered ? '<button class="btn" id="quiz-next">Weiter</button>' : "") +
@@ -370,23 +592,44 @@
   function answerQuiz(q, selectedIndex) {
     quizSession.answered = true;
     quizSession.selectedIndex = selectedIndex;
+    quizSession.answers[quizSession.index] = selectedIndex;
     var stat = quizStat(q.id);
     stat.attempts++;
     if (selectedIndex === q.correct) {
       quizSession.score++;
       stat.correct++;
     }
-    saveState();
+    logActivity();
     renderQuizStage();
   }
 
   // ---------- Progress ----------
+  function renderHistoryChart() {
+    var days = [];
+    for (var i = 6; i >= 0; i--) {
+      var d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push(d);
+    }
+    var dayNames = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+    var counts = days.map(function (d) {
+      var key = d.toISOString().slice(0, 10);
+      return (state.history && state.history[key]) || 0;
+    });
+    var max = Math.max(1, Math.max.apply(null, counts));
+    var bars = counts.map(function (c, i) {
+      var h = Math.round((c / max) * 100);
+      return '<div class="hist-bar-wrap"><div class="hist-bar" style="height:' + Math.max(h, 4) + '%"></div><div class="hist-label">' + dayNames[days[i].getDay()] + "</div></div>";
+    }).join("");
+    return '<div class="progress-topic"><h4>Letzte 7 Tage</h4><div class="history-chart">' + bars + "</div></div>";
+  }
+
   function renderProgress() {
     var tpl = document.getElementById("tpl-progress");
     app.innerHTML = "";
     app.appendChild(tpl.content.cloneNode(true));
 
-    var html = TOPICS.map(function (t) {
+    var html = renderHistoryChart() + TOPICS.map(function (t) {
       var cardIds = t.cards.map(function (c) { return c.id; });
       var learned = cardIds.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
       var lapses = cardIds.reduce(function (s, id) { return s + (state.cards[id] ? state.cards[id].lapses : 0); }, 0);
@@ -411,10 +654,45 @@
 
     document.getElementById("reset-progress").addEventListener("click", function () {
       if (confirm("Wirklich den gesamten Lernfortschritt zurücksetzen?")) {
-        state = { cards: {}, quiz: {} };
+        state = { cards: {}, quiz: {}, history: {} };
         saveState();
         renderProgress();
       }
+    });
+
+    document.getElementById("export-progress").addEventListener("click", function () {
+      var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "pruefungstrainer-fortschritt.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    var importInput = document.getElementById("import-file");
+    document.getElementById("import-progress").addEventListener("click", function () {
+      importInput.click();
+    });
+    importInput.addEventListener("change", function () {
+      var file = importInput.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        try {
+          var parsed = JSON.parse(reader.result);
+          if (!parsed || typeof parsed !== "object") throw new Error("invalid");
+          state = { cards: parsed.cards || {}, quiz: parsed.quiz || {}, history: parsed.history || {} };
+          saveState();
+          renderProgress();
+        } catch (e) {
+          alert("Die Datei konnte nicht gelesen werden. Bitte eine gültige Fortschritts-Datei wählen.");
+        }
+        importInput.value = "";
+      };
+      reader.readAsText(file);
     });
   }
 
