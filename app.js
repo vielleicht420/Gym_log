@@ -102,6 +102,20 @@
     return qs.filter(function (q) { return q.topicId === topicId; });
   }
 
+  function spawnConfetti(container) {
+    if (!container) return;
+    var colors = ["#8b5cf6", "#ec4899", "#34d399", "#fbbf24", "#38bdf8"];
+    for (var i = 0; i < 26; i++) {
+      var piece = document.createElement("span");
+      piece.className = "confetti-piece";
+      piece.style.left = Math.random() * 100 + "%";
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDelay = Math.random() * 0.4 + "s";
+      piece.style.transform = "rotate(" + Math.floor(Math.random() * 360) + "deg)";
+      container.appendChild(piece);
+    }
+  }
+
   function shuffle(arr) {
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
@@ -221,44 +235,47 @@
   function renderCardStage() {
     var stage = document.getElementById("cards-stage");
     if (!cardsSession || cardsSession.index >= cardsSession.queue.length) {
-      stage.innerHTML = '<div class="empty-state">🎉 Alles erledigt für jetzt!<br>Schau später wieder vorbei oder wähle ein anderes Thema.</div>';
+      stage.innerHTML = '<div class="empty-state"><span class="wiggle-emoji">🎉</span><br>Alles erledigt für jetzt!<br>Schau später wieder vorbei oder wähle ein anderes Thema.</div>';
       return;
     }
     var card = cardsSession.queue[cardsSession.index];
-    var showingBack = cardsSession.showingBack;
+    cardsSession.showingBack = false;
 
     stage.innerHTML =
       '<div class="flashcard-wrap">' +
-      '<div class="flashcard' + (showingBack ? " answer" : "") + '" id="flashcard">' +
-      (showingBack ? card.back : card.front) +
-      "</div></div>" +
-      '<div class="flip-hint">' + (showingBack ? "Wie gut wusstest du die Antwort?" : "Tippen zum Umdrehen · " + card.topicTitle) + "</div>" +
-      (showingBack
-        ? '<div class="rate-row">' +
-          '<button class="rate-again" data-r="0">Nochmal</button>' +
-          '<button class="rate-hard" data-r="1">Schwer</button>' +
-          '<button class="rate-good" data-r="2">Gut</button>' +
-          '<button class="rate-easy" data-r="3">Einfach</button>' +
-          "</div>"
-        : "");
+      '<div class="flashcard" id="flashcard">' +
+      '<div class="flashcard-inner">' +
+      '<div class="flashcard-face flashcard-front">' + card.front + "</div>" +
+      '<div class="flashcard-face flashcard-back">' + card.back + "</div>" +
+      "</div></div></div>" +
+      '<div class="flip-hint" id="flip-hint">Tippen zum Umdrehen · ' + card.topicTitle + "</div>" +
+      '<div class="rate-row" id="rate-row">' +
+      '<button class="rate-again" data-r="0"><span>😖</span>Nochmal</button>' +
+      '<button class="rate-hard" data-r="1"><span>🙁</span>Schwer</button>' +
+      '<button class="rate-good" data-r="2"><span>🙂</span>Gut</button>' +
+      '<button class="rate-easy" data-r="3"><span>🤩</span>Einfach</button>' +
+      "</div>";
 
     var el = document.getElementById("flashcard");
+    var hint = document.getElementById("flip-hint");
+    var rateRow = document.getElementById("rate-row");
+
     el.addEventListener("click", function () {
       cardsSession.showingBack = !cardsSession.showingBack;
-      renderCardStage();
+      el.classList.toggle("flipped", cardsSession.showingBack);
+      hint.textContent = cardsSession.showingBack ? "Wie gut wusstest du die Antwort?" : "Tippen zum Umdrehen · " + card.topicTitle;
+      rateRow.classList.toggle("visible", cardsSession.showingBack);
     });
 
-    if (showingBack) {
-      stage.querySelectorAll(".rate-row button").forEach(function (btn) {
-        btn.addEventListener("click", function (ev) {
-          ev.stopPropagation();
-          rateCard(card.id, parseInt(btn.dataset.r, 10));
-          cardsSession.index++;
-          cardsSession.showingBack = false;
-          renderCardStage();
-        });
+    rateRow.querySelectorAll("button").forEach(function (btn) {
+      btn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (!cardsSession.showingBack) return;
+        rateCard(card.id, parseInt(btn.dataset.r, 10));
+        cardsSession.index++;
+        renderCardStage();
       });
-    }
+    });
   }
 
   // ---------- Quiz ----------
@@ -296,16 +313,19 @@
     }
     if (quizSession.index >= quizSession.questions.length) {
       var pct = Math.round((quizSession.score / quizSession.questions.length) * 100);
+      var resultMsg = pct >= 80 ? "🎉 Stark gemacht!" : pct >= 50 ? "💪 Guter Versuch!" : "📚 Dranbleiben, du schaffst das!";
       stage.innerHTML =
         '<div class="quiz-result">' +
+        '<div class="result-msg">' + resultMsg + "</div>" +
         '<div class="score">' + quizSession.score + " / " + quizSession.questions.length + "</div>" +
         "<div>" + pct + "% richtig</div>" +
-        '<button class="btn" id="quiz-restart" style="margin-top:20px;">Neue Runde</button>' +
+        '<button class="btn" id="quiz-restart">Neue Runde</button>' +
         "</div>";
       document.getElementById("quiz-restart").addEventListener("click", function () {
         var select = document.getElementById("quiz-topic-select");
         startQuizSession(select.value);
       });
+      if (pct >= 80) spawnConfetti(stage.querySelector(".quiz-result"));
       return;
     }
 
