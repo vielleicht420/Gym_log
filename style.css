@@ -57,17 +57,25 @@
 
 * { box-sizing: border-box; }
 
-html { -webkit-tap-highlight-color: transparent; }
+html {
+  -webkit-tap-highlight-color: transparent;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 45%, var(--bg-c) 100%);
   background-attachment: fixed;
   color: var(--text);
-  padding-bottom: 110px;
-  overflow-x: hidden;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* ---------- decorative floating blobs ---------- */
@@ -155,6 +163,8 @@ body {
 .topbar {
   position: relative;
   z-index: 1;
+  flex: 0 0 auto;
+  width: 100%;
   padding: 18px 16px 0;
   max-width: 720px;
   margin: 0 auto;
@@ -247,9 +257,14 @@ body {
 main#app {
   position: relative;
   z-index: 1;
+  flex: 1 1 auto;
+  width: 100%;
   max-width: 720px;
   margin: 0 auto;
-  padding: 22px 16px 0;
+  padding: 22px 16px 110px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .view {
@@ -504,8 +519,20 @@ select {
 
 .flashcard.dragging { transition: none; }
 
-.flashcard.swipe-good .flashcard-face { box-shadow: 0 0 0 3px var(--good-2), var(--shadow-soft); }
-.flashcard.swipe-again .flashcard-face { box-shadow: 0 0 0 3px var(--bad-2), var(--shadow-soft); }
+.flashcard-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.flashcard.swipe-good .flashcard-face { box-shadow: 0 0 0 3px #22c55e, var(--shadow-soft); }
+.flashcard.swipe-good .flashcard-face::after { background: #22c55e; opacity: 0.55; }
+.flashcard.swipe-again .flashcard-face { box-shadow: 0 0 0 3px #ef4444, var(--shadow-soft); }
+.flashcard.swipe-again .flashcard-face::after { background: #ef4444; opacity: 0.55; }
 
 .flashcard-inner {
   position: relative;

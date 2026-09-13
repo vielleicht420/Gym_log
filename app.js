@@ -308,15 +308,12 @@
   }
 
   function startCardsSession(topicId) {
-    var queue;
-    var hint = document.getElementById("cards-hint");
+    var queue, dueCount = 0;
 
     if (cardsFilter === "hard") {
       queue = hardCards(topicId);
-      hint.textContent = queue.length ? queue.length + " schwierige Karte(n)" : "Aktuell keine schwierigen Karten – stark!";
     } else if (cardsFilter === "all") {
       queue = shuffle(cardsForTopic(topicId));
-      hint.textContent = queue.length + " Karten insgesamt";
     } else {
       var due = dueCards(topicId);
       var newOnes = cardsForTopic(topicId).filter(function (c) {
@@ -324,15 +321,32 @@
         return !s || s.reps === 0;
       }).filter(function (c) { return due.indexOf(c) === -1; });
       queue = due.concat(newOnes);
-      hint.textContent = queue.length ? due.length + " fällig, " + newOnes.length + " neu" : "Für dieses Thema ist gerade nichts fällig.";
+      dueCount = due.length;
     }
 
-    cardsSession = { queue: queue, index: 0, showingBack: false };
+    cardsSession = { queue: queue, index: 0, showingBack: false, dueCount: dueCount };
     renderCardStage();
+  }
+
+  function updateCardsHint() {
+    var hint = document.getElementById("cards-hint");
+    if (!hint || !cardsSession) return;
+    var remaining = cardsSession.queue.length - cardsSession.index;
+
+    if (cardsFilter === "hard") {
+      hint.textContent = remaining ? remaining + " schwierige Karte(n) übrig" : "Aktuell keine schwierigen Karten mehr – stark!";
+    } else if (cardsFilter === "all") {
+      hint.textContent = remaining ? remaining + " von " + cardsSession.queue.length + " übrig" : "Alle Karten durchgesehen!";
+    } else {
+      var remainingDue = Math.max(0, cardsSession.dueCount - cardsSession.index);
+      var remainingNew = remaining - remainingDue;
+      hint.textContent = remaining ? remainingDue + " fällig, " + remainingNew + " neu" : "Für dieses Thema ist gerade nichts fällig.";
+    }
   }
 
   function renderCardStage() {
     var stage = document.getElementById("cards-stage");
+    updateCardsHint();
     if (!cardsSession || cardsSession.index >= cardsSession.queue.length) {
       stage.innerHTML = '<div class="empty-state"><span class="wiggle-emoji">🎉</span><br>Alles erledigt für jetzt!<br>Schau später wieder vorbei oder wähle ein anderes Thema.</div>';
       return;
