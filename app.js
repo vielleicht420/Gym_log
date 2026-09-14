@@ -15,7 +15,6 @@
     list: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
     book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
     play: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
-    flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.2 3.2-3 4.4-3 8.2a3 3 0 0 0 6 0c0-1.1-.5-2.1-1-2.7.7 2 2.2 2.6 2.2 5.1a4.2 4.2 0 0 1-8.4 0c0-5.3 4.2-6.4 4.2-10.6z"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
     cross: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="7" x2="17" y2="17"/><line x1="17" y1="7" x2="7" y2="17"/></svg>',
     clock: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>'
@@ -59,19 +58,6 @@
     state.history = state.history || {};
     state.history[key] = (state.history[key] || 0) + 1;
     saveState();
-  }
-
-  function computeStreak() {
-    state.history = state.history || {};
-    var d = new Date();
-    var todayKey = d.toISOString().slice(0, 10);
-    if (!state.history[todayKey]) d.setDate(d.getDate() - 1);
-    var streak = 0;
-    while (state.history[d.toISOString().slice(0, 10)] > 0) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    }
-    return streak;
   }
 
   function isFavorite(id) {
@@ -405,17 +391,12 @@
     var quizAttempts = Object.values(state.quiz).reduce(function (s, q) { return s + q.attempts; }, 0);
     var quizCorrect = Object.values(state.quiz).reduce(function (s, q) { return s + q.correct; }, 0);
     var accuracy = quizAttempts > 0 ? Math.round((quizCorrect / quizAttempts) * 100) : 0;
-    var streak = computeStreak();
 
     document.getElementById("home-stats").innerHTML = [
-      animatedStatCard("stat-due", "Fällig heute"),
       statCard(learned + " / " + totalCards, "Karten gelernt"),
-      animatedStatCard("stat-acc", "Quiz-Trefferquote", "%"),
-      animatedStatCard("stat-streak", "Tage-Streak", "", ICONS.flame)
+      animatedStatCard("stat-acc", "Quiz-Trefferquote", "%")
     ].join("");
-    animateCount(document.getElementById("stat-due"), due);
     animateCount(document.getElementById("stat-acc"), accuracy, "%");
-    animateCount(document.getElementById("stat-streak"), streak);
 
     var continueBtn = document.getElementById("home-continue");
     continueBtn.innerHTML = ICONS.play + "<span>Weiter lernen" + (due > 0 ? " (" + due + " fällig)" : "") + "</span>";
