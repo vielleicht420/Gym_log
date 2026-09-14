@@ -6,6 +6,18 @@
   var THEME_KEY = "examTrainer:theme";
   var DAY_MS = 24 * 60 * 60 * 1000;
 
+  // ---------- Icons (no emoji, inline SVG) ----------
+  var ICONS = {
+    sun: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
+    moon: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    auto: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>',
+    star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    play: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.2 3.2-3 4.4-3 8.2a3 3 0 0 0 6 0c0-1.1-.5-2.1-1-2.7.7 2 2.2 2.6 2.2 5.1a4.2 4.2 0 0 1-8.4 0c0-5.3 4.2-6.4 4.2-10.6z"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
+    clock: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>'
+  };
+
   // ---------- State ----------
   function loadState() {
     var raw = null;
@@ -88,7 +100,7 @@
     var btn = document.getElementById("theme-toggle");
     if (!btn) return;
     var pref = getThemePref();
-    btn.textContent = pref === "light" ? "☀️" : pref === "dark" ? "🌙" : "🌓";
+    btn.innerHTML = pref === "light" ? ICONS.sun : pref === "dark" ? ICONS.moon : ICONS.auto;
   }
 
   function setThemePref(pref) {
@@ -110,6 +122,7 @@
   function rateCard(id, rating) {
     var s = cardState(id);
     s.seen++;
+    s.lastRating = rating;
     if (rating === 0) { // again
       s.reps = 0;
       s.interval = 0;
@@ -156,11 +169,11 @@
     }).sort(function (a, b) { return cardState(a.id).due - cardState(b.id).due; });
   }
 
-  function hardCards(topicId) {
+  function ratedCards(topicId, rating) {
     return cardsForTopic(topicId).filter(function (c) {
       var s = state.cards[c.id];
-      return s && s.lapses > 0;
-    }).sort(function (a, b) { return cardState(b.id).lapses - cardState(a.id).lapses; });
+      return s && s.lastRating === rating;
+    });
   }
 
   function favoriteCards(topicId) {
@@ -183,7 +196,7 @@
 
   function spawnConfetti(container) {
     if (!container) return;
-    var colors = ["#5b7f99", "#5b9985", "#6fb98f", "#d9a552", "#7ea3bd"];
+    var colors = ["#b0824f", "#8a9662", "#94ad6a", "#d7a558", "#c9806a"];
     for (var i = 0; i < 26; i++) {
       var piece = document.createElement("span");
       piece.className = "confetti-piece";
@@ -248,7 +261,7 @@
     resultsEl.innerHTML = matches.map(function (item) {
       return (
         '<div class="search-result-item">' +
-        '<div class="search-result-type">' + (item.type === "card" ? "🗂️ Karteikarte" : "❓ Quiz") + " · " + item.topicTitle + "</div>" +
+        '<div class="search-result-type">' + (item.type === "card" ? "Karteikarte" : "Quiz") + " · " + item.topicTitle + "</div>" +
         '<div class="search-result-primary">' + item.primary + "</div>" +
         '<div class="search-result-secondary">' + item.secondary + "</div>" +
         "</div>"
@@ -341,14 +354,14 @@
       animatedStatCard("stat-due", "Fällig heute"),
       statCard(learned + " / " + totalCards, "Karten gelernt"),
       animatedStatCard("stat-acc", "Quiz-Trefferquote", "%"),
-      animatedStatCard("stat-streak", "Tage-Streak 🔥")
+      animatedStatCard("stat-streak", "Tage-Streak", "", ICONS.flame)
     ].join("");
     animateCount(document.getElementById("stat-due"), due);
     animateCount(document.getElementById("stat-acc"), accuracy, "%");
     animateCount(document.getElementById("stat-streak"), streak);
 
     var continueBtn = document.getElementById("home-continue");
-    continueBtn.textContent = due > 0 ? "▶️ Weiter lernen (" + due + " fällig)" : "▶️ Weiter lernen";
+    continueBtn.innerHTML = ICONS.play + "<span>Weiter lernen" + (due > 0 ? " (" + due + " fällig)" : "") + "</span>";
     continueBtn.addEventListener("click", function () {
       sessionStorage.setItem("cardsTopic", "all");
       goToView("cards");
@@ -375,8 +388,9 @@
     return '<div class="stat-card"><div class="num">' + num + '</div><div class="label">' + label + "</div></div>";
   }
 
-  function animatedStatCard(id, label) {
-    return '<div class="stat-card"><div class="num" id="' + id + '">0</div><div class="label">' + label + "</div></div>";
+  function animatedStatCard(id, label, suffix, iconSvg) {
+    var labelHTML = iconSvg ? '<span class="label-with-icon">' + iconSvg + "<span>" + label + "</span></span>" : label;
+    return '<div class="stat-card"><div class="num" id="' + id + '">0</div><div class="label">' + labelHTML + "</div></div>";
   }
 
   // ---------- Flashcards ----------
@@ -394,7 +408,7 @@
     select.value = saved;
 
     cardsFilter = "due";
-    var filterBtns = document.querySelectorAll("#cards-filter-row .filter-btn");
+    var filterBtns = document.querySelectorAll("#cards-filter-row .filter-btn, #cards-rating-row .filter-btn");
     filterBtns.forEach(function (btn) {
       btn.classList.toggle("active", btn.dataset.filter === cardsFilter);
       btn.addEventListener("click", function () {
@@ -413,11 +427,13 @@
     startCardsSession(select.value);
   }
 
+  var RATING_FILTERS = { again: 0, hard: 1, good: 2, easy: 3 };
+
   function startCardsSession(topicId) {
     var queue, dueCount = 0;
 
-    if (cardsFilter === "hard") {
-      queue = hardCards(topicId);
+    if (RATING_FILTERS.hasOwnProperty(cardsFilter)) {
+      queue = ratedCards(topicId, RATING_FILTERS[cardsFilter]);
     } else if (cardsFilter === "fav") {
       queue = favoriteCards(topicId);
     } else if (cardsFilter === "all") {
@@ -436,13 +452,16 @@
     renderCardStage();
   }
 
+  var RATING_LABELS = { again: '„Nochmal“', hard: '„Schwer“', good: '„Gut“', easy: '„Einfach“' };
+
   function updateCardsHint() {
     var hint = document.getElementById("cards-hint");
     if (!hint || !cardsSession) return;
     var remaining = cardsSession.queue.length - cardsSession.index;
 
-    if (cardsFilter === "hard") {
-      hint.textContent = remaining ? remaining + " schwierige Karte(n) übrig" : "Aktuell keine schwierigen Karten mehr – stark!";
+    if (RATING_FILTERS.hasOwnProperty(cardsFilter)) {
+      var label = RATING_LABELS[cardsFilter];
+      hint.textContent = remaining ? remaining + " mit " + label + " bewertete Karte(n)" : "Aktuell keine Karten mit " + label + ".";
     } else if (cardsFilter === "fav") {
       hint.textContent = remaining ? remaining + " Favorit(en)" : "Noch keine Favoriten markiert.";
     } else if (cardsFilter === "all") {
@@ -458,7 +477,7 @@
     var stage = document.getElementById("cards-stage");
     updateCardsHint();
     if (!cardsSession || cardsSession.index >= cardsSession.queue.length) {
-      stage.innerHTML = '<div class="empty-state"><span class="wiggle-emoji">🎉</span><br>Alles erledigt für jetzt!<br>Schau später wieder vorbei oder wähle ein anderes Thema.</div>';
+      stage.innerHTML = '<div class="empty-state"><span class="wiggle-icon">' + ICONS.check + '</span><br>Alles erledigt für jetzt!<br>Schau später wieder vorbei oder wähle ein anderes Thema.</div>';
       return;
     }
     var card = cardsSession.queue[cardsSession.index];
@@ -476,14 +495,14 @@
       '<div class="flashcard-face flashcard-front">' + card.front + "</div>" +
       '<div class="flashcard-face flashcard-back">' + card.back + "</div>" +
       "</div></div>" +
-      '<button class="fav-btn' + (isFavorite(card.id) ? " active" : "") + '" id="fav-btn">' + (isFavorite(card.id) ? "⭐" : "☆") + "</button>" +
+      '<button class="fav-btn' + (isFavorite(card.id) ? " active" : "") + '" id="fav-btn" aria-label="Favorit">' + ICONS.star + "</button>" +
       "</div>" +
       '<div class="flip-hint" id="flip-hint">Tippen zum Umdrehen · ' + card.topicTitle + "</div>" +
       '<div class="rate-row" id="rate-row">' +
-      '<button class="rate-again" data-r="0"><span>😖</span>Nochmal</button>' +
-      '<button class="rate-hard" data-r="1"><span>🙁</span>Schwer</button>' +
-      '<button class="rate-good" data-r="2"><span>🙂</span>Gut</button>' +
-      '<button class="rate-easy" data-r="3"><span>🤩</span>Einfach</button>' +
+      '<button class="rate-again" data-r="0">Nochmal</button>' +
+      '<button class="rate-hard" data-r="1">Schwer</button>' +
+      '<button class="rate-good" data-r="2">Gut</button>' +
+      '<button class="rate-easy" data-r="3">Einfach</button>' +
       "</div>";
 
     var el = document.getElementById("flashcard");
@@ -494,7 +513,6 @@
     favBtn.addEventListener("click", function (ev) {
       ev.stopPropagation();
       toggleFavorite(card.id);
-      favBtn.textContent = isFavorite(card.id) ? "⭐" : "☆";
       favBtn.classList.toggle("active", isFavorite(card.id));
     });
 
@@ -629,7 +647,7 @@
         if (!quizSession || quizSession.mode !== "exam") { clearExamTimer(); return; }
         var remaining = quizSession.deadline - Date.now();
         var timerEl = document.getElementById("quiz-timer");
-        if (timerEl) timerEl.textContent = "⏱ " + formatTime(remaining);
+        if (timerEl) timerEl.innerHTML = ICONS.clock + "<span>" + formatTime(remaining) + "</span>";
         if (remaining <= 0) {
           clearExamTimer();
           quizSession.index = quizSession.questions.length;
@@ -651,7 +669,7 @@
     if (quizSession.index >= quizSession.questions.length) {
       clearExamTimer();
       var pct = Math.round((quizSession.score / quizSession.questions.length) * 100);
-      var resultMsg = pct >= 80 ? "🎉 Stark gemacht!" : pct >= 50 ? "💪 Guter Versuch!" : "📚 Dranbleiben, du schaffst das!";
+      var resultMsg = pct >= 80 ? "Stark gemacht!" : pct >= 50 ? "Guter Versuch!" : "Dranbleiben, du schaffst das!";
       var reviewHTML = "";
       if (quizSession.mode === "exam") {
         reviewHTML = '<div class="quiz-review"><h4>Auswertung</h4>' +
@@ -699,7 +717,7 @@
       return '<button class="' + cls + '" data-i="' + i + '" ' + (quizSession.answered ? "disabled" : "") + ">" + opt + "</button>";
     }).join("");
 
-    var timerHTML = isExam ? '<span class="quiz-timer" id="quiz-timer">⏱ ' + formatTime(quizSession.deadline - Date.now()) + "</span>" : "";
+    var timerHTML = isExam ? '<span class="quiz-timer" id="quiz-timer">' + ICONS.clock + "<span>" + formatTime(quizSession.deadline - Date.now()) + "</span></span>" : "";
 
     stage.innerHTML =
       '<div class="quiz-progress">Frage ' + (quizSession.index + 1) + " von " + quizSession.questions.length + " · " + q.topicTitle + timerHTML + "</div>" +
