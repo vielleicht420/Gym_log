@@ -1,57 +1,57 @@
 :root {
   color-scheme: light dark;
-  --bg-a: #eef1f5;
-  --bg-b: #e7ede9;
-  --bg-c: #f2efe8;
-  --surface: rgba(255, 255, 255, 0.78);
-  --surface-solid: #ffffff;
-  --text: #2b3238;
-  --muted: #7c8790;
-  --border: rgba(90, 105, 115, 0.14);
-  --accent-1: #5b7f99;
-  --accent-2: #5b9985;
+  --bg-a: #f6efe2;
+  --bg-b: #f0e6d2;
+  --bg-c: #ece0c6;
+  --surface: rgba(255, 251, 244, 0.78);
+  --surface-solid: #fffcf6;
+  --text: #362f26;
+  --muted: #8a7c66;
+  --border: rgba(120, 98, 60, 0.15);
+  --accent-1: #b0824f;
+  --accent-2: #8a9662;
   --accent-grad: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  --accent-contrast: #ffffff;
-  --good-1: #6fb98f;
-  --good-2: #4b9770;
-  --hard-1: #d9a552;
-  --hard-2: #c68a35;
-  --bad-1: #cc7a6e;
-  --bad-2: #b2564a;
+  --accent-contrast: #fffaf3;
+  --good-1: #94ad6a;
+  --good-2: #728f4c;
+  --hard-1: #d7a558;
+  --hard-2: #bb853a;
+  --bad-1: #c9806a;
+  --bad-2: #ac5843;
   --radius-lg: 26px;
   --radius-pill: 999px;
-  --shadow-soft: 0 14px 34px -18px rgba(60, 75, 85, 0.3), 0 2px 8px -2px rgba(60, 75, 85, 0.12);
+  --shadow-soft: 0 14px 34px -18px rgba(70, 55, 30, 0.28), 0 2px 8px -2px rgba(70, 55, 30, 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg-a: #1b2024;
-    --bg-b: #171b1e;
-    --bg-c: #1e2220;
-    --surface: rgba(40, 46, 50, 0.78);
-    --surface-solid: #262b2e;
-    --text: #eef1f2;
-    --muted: #9aa4aa;
-    --border: rgba(160, 175, 180, 0.16);
-    --accent-1: #7ea3bd;
-    --accent-2: #7fbba5;
-    --accent-contrast: #12181a;
+    --bg-a: #211b13;
+    --bg-b: #1c1711;
+    --bg-c: #251e15;
+    --surface: rgba(46, 39, 29, 0.78);
+    --surface-solid: #2c2419;
+    --text: #f2ead9;
+    --muted: #b3a58c;
+    --border: rgba(220, 195, 150, 0.16);
+    --accent-1: #d3a468;
+    --accent-2: #a8b57c;
+    --accent-contrast: #211a10;
     --shadow-soft: 0 14px 34px -18px rgba(0, 0, 0, 0.55), 0 2px 8px -2px rgba(0, 0, 0, 0.35);
   }
 }
 
 :root[data-theme="dark"] {
-  --bg-a: #1b2024;
-  --bg-b: #171b1e;
-  --bg-c: #1e2220;
-  --surface: rgba(40, 46, 50, 0.78);
-  --surface-solid: #262b2e;
-  --text: #eef1f2;
-  --muted: #9aa4aa;
-  --border: rgba(160, 175, 180, 0.16);
-  --accent-1: #7ea3bd;
-  --accent-2: #7fbba5;
-  --accent-contrast: #12181a;
+  --bg-a: #211b13;
+  --bg-b: #1c1711;
+  --bg-c: #251e15;
+  --surface: rgba(46, 39, 29, 0.78);
+  --surface-solid: #2c2419;
+  --text: #f2ead9;
+  --muted: #b3a58c;
+  --border: rgba(220, 195, 150, 0.16);
+  --accent-1: #d3a468;
+  --accent-2: #a8b57c;
+  --accent-contrast: #211a10;
   --shadow-soft: 0 14px 34px -18px rgba(0, 0, 0, 0.55), 0 2px 8px -2px rgba(0, 0, 0, 0.35);
 }
 
@@ -155,11 +155,26 @@ body {
   to { transform: translateY(240px) rotate(360deg); opacity: 0; }
 }
 
-.wiggle-emoji {
-  display: inline-block;
-  font-size: 2.2rem;
+.wiggle-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  color: var(--accent-1);
   animation: wiggle 1.6s ease-in-out infinite;
 }
+
+.wiggle-icon svg { width: 100%; height: 100%; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon-lg { width: 22px; height: 22px; }
+.icon-sm { width: 14px; height: 14px; }
 
 .topbar {
   position: relative;
@@ -191,9 +206,11 @@ body {
   height: 38px;
   border-radius: var(--radius-pill);
   background: var(--accent-grad);
-  font-size: 1.1rem;
+  color: var(--accent-contrast);
   box-shadow: var(--shadow-soft);
 }
+
+.logo-bubble svg { width: 19px; height: 19px; }
 
 .header-actions {
   display: flex;
@@ -211,10 +228,12 @@ body {
   border: 1px solid var(--border);
   background: var(--surface);
   backdrop-filter: blur(14px);
-  font-size: 1.05rem;
+  color: var(--text);
   cursor: pointer;
   transition: transform 0.15s ease;
 }
+
+.icon-btn svg { width: 18px; height: 18px; }
 
 .icon-btn:active { transform: scale(0.9); }
 
@@ -441,6 +460,14 @@ select {
   font-weight: 600;
 }
 
+.label-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.label-with-icon svg { width: 13px; height: 13px; }
+
 .topic-list { display: flex; flex-direction: column; gap: 12px; }
 
 .topic-card {
@@ -536,15 +563,29 @@ select {
   border-color: transparent;
 }
 
+.filter-subtitle {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 4px 0 6px;
+}
+
 .continue-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   margin: 4px 0 22px;
   text-align: center;
 }
 
 .quiz-timer {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--accent-1);
@@ -553,6 +594,7 @@ select {
   padding: 4px 12px;
   border-radius: var(--radius-pill);
   margin-left: 8px;
+  vertical-align: middle;
 }
 
 .quiz-option.selected-neutral {
@@ -666,17 +708,19 @@ select {
   border: none;
   background: var(--surface);
   backdrop-filter: blur(8px);
-  font-size: 1.15rem;
+  color: var(--muted);
   cursor: pointer;
   box-shadow: var(--shadow-soft);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 }
 
+.fav-btn svg { width: 18px; height: 18px; }
 .fav-btn:active { transform: scale(0.85); }
-.fav-btn.active { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+.fav-btn.active { background: linear-gradient(135deg, #dba84e, #c68a35); color: #fffaf3; }
+.fav-btn.active svg { fill: currentColor; }
 
 .flashcard-face::after {
   content: "";
@@ -750,10 +794,9 @@ select {
 
 .rate-row button {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 12px 4px;
+  justify-content: center;
+  padding: 13px 4px;
   border-radius: 18px;
   border: none;
   color: white;
@@ -763,7 +806,6 @@ select {
   transition: transform 0.15s ease;
 }
 
-.rate-row button span { font-size: 1.2rem; }
 .rate-row button:active { transform: scale(0.92); }
 
 .rate-again { background: linear-gradient(135deg, var(--bad-1), var(--bad-2)); }
