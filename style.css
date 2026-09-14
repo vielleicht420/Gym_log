@@ -336,6 +336,13 @@ input, textarea {
 .search-result-primary { font-weight: 700; margin-bottom: 4px; }
 .search-result-secondary { font-size: 0.85rem; color: var(--muted); }
 
+.pile-modal-title {
+  flex: 1;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0 4px;
+}
+
 .tabs {
   position: fixed;
   left: 12px;

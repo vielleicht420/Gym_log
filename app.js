@@ -496,6 +496,17 @@
     }
 
     cardsSession = { queue: queue, index: 0, showingBack: false, dueCount: dueCount };
+
+    var jumpId = sessionStorage.getItem("cardsJumpId");
+    if (jumpId) {
+      sessionStorage.removeItem("cardsJumpId");
+      var jumpIndex = -1;
+      for (var i = 0; i < queue.length; i++) {
+        if (queue[i].id === jumpId) { jumpIndex = i; break; }
+      }
+      if (jumpIndex !== -1) cardsSession.index = jumpIndex;
+    }
+
     renderCardStage();
   }
 
@@ -724,11 +735,85 @@
     }).join("") + "</div>";
 
     stage.querySelectorAll(".pile-card").forEach(function (btn) {
+      var def = PILE_DEFS.filter(function (p) { return p.key === btn.dataset.filter; })[0];
+      var pressTimer = null;
+      var longPressed = false;
+      var startX = 0, startY = 0;
+
+      function clearPress() {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+      }
+
+      btn.addEventListener("pointerdown", function (e) {
+        longPressed = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        clearPress();
+        pressTimer = setTimeout(function () {
+          longPressed = true;
+          vibrate(15);
+          openPileModal(def, topicId);
+        }, 480);
+      });
+
+      btn.addEventListener("pointermove", function (e) {
+        if (!pressTimer) return;
+        if (Math.abs(e.clientX - startX) > 10 || Math.abs(e.clientY - startY) > 10) clearPress();
+      });
+
+      btn.addEventListener("pointerup", clearPress);
+      btn.addEventListener("pointerleave", clearPress);
+      btn.addEventListener("pointercancel", clearPress);
+
       btn.addEventListener("click", function () {
+        if (longPressed) { longPressed = false; return; }
         sessionStorage.setItem("cardsFilter", btn.dataset.filter);
         sessionStorage.setItem("cardsTopic", topicId);
         goToView("cards");
       });
+    });
+  }
+
+  var pileModal = document.getElementById("pile-modal");
+  var pileModalTitle = document.getElementById("pile-modal-title");
+  var pileModalList = document.getElementById("pile-modal-list");
+  var pileModalClose = document.getElementById("pile-modal-close");
+
+  function openPileModal(def, topicId) {
+    var cards = ratedCards(topicId, def.rating);
+    pileModalTitle.textContent = def.label + " · " + cards.length + (cards.length === 1 ? " Karte" : " Karten");
+
+    if (!cards.length) {
+      pileModalList.innerHTML = '<div class="search-hint">Keine Karten in diesem Stapel.</div>';
+    } else {
+      pileModalList.innerHTML = '<div class="card-list">' + cards.map(function (c, i) {
+        return (
+          '<button class="card-list-item" data-id="' + c.id + '">' +
+          '<span class="card-list-num">' + (i + 1) + "</span>" +
+          '<span class="card-list-text">' + truncateText(c.front, 90) + "</span>" +
+          "</button>"
+        );
+      }).join("") + "</div>";
+
+      pileModalList.querySelectorAll(".card-list-item").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          pileModal.hidden = true;
+          sessionStorage.setItem("cardsFilter", def.key);
+          sessionStorage.setItem("cardsTopic", topicId);
+          sessionStorage.setItem("cardsJumpId", btn.dataset.id);
+          goToView("cards");
+        });
+      });
+    }
+
+    pileModal.hidden = false;
+  }
+
+  if (pileModalClose) {
+    pileModalClose.addEventListener("click", function () { pileModal.hidden = true; });
+    pileModal.addEventListener("click", function (e) {
+      if (e.target === pileModal) pileModal.hidden = true;
     });
   }
 
