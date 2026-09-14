@@ -17,6 +17,16 @@
     play: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
     cross: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="7" x2="17" y2="17"/><line x1="17" y1="7" x2="7" y2="17"/></svg>',
+    chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>',
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+    topic: {
+      home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>',
+      law: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="1.4"/><line x1="12" y1="5.4" x2="12" y2="19"/><line x1="4" y1="9" x2="20" y2="9"/><path d="M4 9l-3 6a3.5 3.5 0 0 0 7 0z"/><path d="M20 9l-3 6a3.5 3.5 0 0 0 7 0z"/><line x1="8" y1="21" x2="16" y2="21"/></svg>',
+      euro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12"/><path d="M4 14h9"/><path d="M18 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 5 12a7.9 7.9 0 0 0 7.8 8c2 0 3.8-.8 5.2-2"/></svg>',
+      people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      hammer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="M20.91 11.7l-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>',
+      leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-11 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>'
+    },
     clock: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>'
   };
 
@@ -99,6 +109,22 @@
   }
 
   applyTheme(getThemePref());
+
+  // ---------- Onboarding ----------
+  var ONBOARDING_KEY = "examTrainer:onboardingSeen";
+  var onboarding = document.getElementById("onboarding");
+  if (onboarding) {
+    var onboardingSeen = false;
+    try { onboardingSeen = localStorage.getItem(ONBOARDING_KEY) === "1"; } catch (e) { /* ignore */ }
+    if (!onboardingSeen) onboarding.hidden = false;
+    var onboardingStart = document.getElementById("onboarding-start");
+    if (onboardingStart) {
+      onboardingStart.addEventListener("click", function () {
+        try { localStorage.setItem(ONBOARDING_KEY, "1"); } catch (e) { /* ignore */ }
+        onboarding.hidden = true;
+      });
+    }
+  }
 
   // ---------- Service worker (offline support) ----------
   if ("serviceWorker" in navigator) {
@@ -307,6 +333,8 @@
   var tabs = document.querySelectorAll(".tab-btn");
   var tabIndicator = document.getElementById("tab-indicator");
   var currentView = "home";
+  var currentTopicDetailId = null;
+  var NAV_TAB_MAP = { home: "home", lernen: "lernen", cards: "lernen", piles: "lernen", topicDetail: "lernen", quiz: "quiz", bibliothek: "bibliothek", progress: "progress" };
 
   function moveTabIndicator(btn, animate) {
     if (!tabIndicator || !btn || !tabsNav) return;
@@ -354,15 +382,19 @@
   function render() {
     clearExamTimer();
     if (currentView === "home") renderHome();
+    else if (currentView === "lernen") renderLernen();
+    else if (currentView === "topicDetail") renderTopicDetail(currentTopicDetailId);
     else if (currentView === "cards") renderCards();
     else if (currentView === "piles") renderPiles();
     else if (currentView === "quiz") renderQuiz();
+    else if (currentView === "bibliothek") renderBibliothek();
     else if (currentView === "progress") renderProgress();
   }
 
   function goToView(view) {
     tabs.forEach(function (b) { b.classList.remove("active"); });
-    var btn = document.querySelector('.tab-btn[data-view="' + view + '"]');
+    var tabKey = NAV_TAB_MAP[view] || view;
+    var btn = document.querySelector('.tab-btn[data-view="' + tabKey + '"]');
     if (btn) {
       btn.classList.add("active");
       moveTabIndicator(btn, true);
@@ -379,56 +411,157 @@
     return html;
   }
 
+  function topicProgress(t) {
+    var ids = t.cards.map(function (c) { return c.id; });
+    var learned = ids.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
+    var pct = ids.length ? Math.round((learned / ids.length) * 100) : 0;
+    return { learned: learned, total: ids.length, pct: pct };
+  }
+
+  function openTopicCards(topicId) {
+    sessionStorage.setItem("cardsTopic", topicId);
+    sessionStorage.removeItem("cardsFilter");
+    goToView("cards");
+  }
+
+  function openTopicPiles(topicId) {
+    sessionStorage.setItem("cardsTopic", topicId);
+    goToView("piles");
+  }
+
+  function openTopicQuiz(topicId) {
+    sessionStorage.setItem("quizTopic", topicId);
+    goToView("quiz");
+  }
+
+  function goToTopicDetail(topicId) {
+    currentTopicDetailId = topicId;
+    goToView("topicDetail");
+  }
+
   // ---------- Home ----------
   function renderHome() {
     var tpl = document.getElementById("tpl-home");
     app.innerHTML = "";
     app.appendChild(tpl.content.cloneNode(true));
 
+    var hour = new Date().getHours();
+    var greeting = hour < 11 ? "Guten Morgen!" : hour < 18 ? "Hallo!" : "Guten Abend!";
+    document.getElementById("home-greeting-text").textContent = greeting;
+
+    var realTopics = TOPICS.filter(function (t) { return !t.placeholder; });
+    var totalCards = realTopics.reduce(function (s, t) { return s + t.cards.length; }, 0);
+    var learned = realTopics.reduce(function (s, t) { return s + topicProgress(t).learned; }, 0);
+    var pct = totalCards ? Math.round((learned / totalCards) * 100) : 0;
+
+    document.getElementById("home-progress-ring").style.setProperty("--pct", pct + "%");
+    animateCount(document.getElementById("home-progress-pct"), pct, "%");
+    document.getElementById("home-progress-label").textContent = learned + " / " + totalCards;
+
     var due = dueCards("all").length;
-    var totalCards = allCards().length;
-    var learned = Object.keys(state.cards).filter(function (id) { return state.cards[id].reps > 0; }).length;
-    var quizAttempts = Object.values(state.quiz).reduce(function (s, q) { return s + q.attempts; }, 0);
-    var quizCorrect = Object.values(state.quiz).reduce(function (s, q) { return s + q.correct; }, 0);
-    var accuracy = quizAttempts > 0 ? Math.round((quizCorrect / quizAttempts) * 100) : 0;
-
-    document.getElementById("home-stats").innerHTML = [
-      statCard(learned + " / " + totalCards, "Karten gelernt"),
-      animatedStatCard("stat-acc", "Quiz-Trefferquote", "%")
-    ].join("");
-    animateCount(document.getElementById("stat-acc"), accuracy, "%");
-
     var continueBtn = document.getElementById("home-continue");
     continueBtn.innerHTML = ICONS.play + "<span>Weiter lernen" + (due > 0 ? " (" + due + " fällig)" : "") + "</span>";
     continueBtn.addEventListener("click", function () {
-      sessionStorage.setItem("cardsTopic", "all");
-      goToView("cards");
+      var target = realTopics[0];
+      if (target) openTopicCards(target.id);
+      else goToView("lernen");
     });
 
-    var topicsHTML = TOPICS.map(function (t) {
-      var cardIds = t.cards.map(function (c) { return c.id; });
-      var learnedInTopic = cardIds.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
-      var pct = cardIds.length ? Math.round((learnedInTopic / cardIds.length) * 100) : 0;
+    document.getElementById("home-see-all").addEventListener("click", function () {
+      goToView("lernen");
+    });
+
+    var gridTopics = TOPICS.slice(0, 4);
+    document.getElementById("home-topics").innerHTML = gridTopics.map(function (t) {
+      var prog = topicProgress(t);
       return (
-        '<div class="topic-card topic-card-row">' +
-        '<div class="topic-info">' +
-        "<h4>" + t.title + "</h4>" +
-        '<div class="meta">' + t.cards.length + " Karteikarten · " + t.quiz.length + " Quizfragen</div>" +
-        "</div>" +
-        '<div class="progress-ring" style="--pct:' + pct + '%"><div class="progress-ring-inner">' + pct + "%</div></div>" +
-        "</div>"
+        '<button class="home-topic-card' + (t.placeholder ? " placeholder" : "") + '" data-id="' + t.id + '" type="button">' +
+        '<span class="home-topic-icon">' + (t.placeholder ? ICONS.lock : ICONS.topic[t.icon]) + "</span>" +
+        '<div class="home-topic-title">' + t.title + "</div>" +
+        '<div class="home-topic-progress-track"><div class="home-topic-progress-fill" style="width:' + prog.pct + '%"></div></div>' +
+        '<div class="home-topic-pct">' + prog.pct + "%</div>" +
+        "</button>"
       );
     }).join("");
-    document.getElementById("home-topics").innerHTML = topicsHTML;
+    document.querySelectorAll(".home-topic-card").forEach(function (btn) {
+      btn.addEventListener("click", function () { goToTopicDetail(btn.dataset.id); });
+    });
   }
 
-  function statCard(num, label) {
-    return '<div class="stat-card"><div class="num">' + num + '</div><div class="label">' + label + "</div></div>";
+  // ---------- Lernen (topic list + topic detail) ----------
+  function renderLernen() {
+    var tpl = document.getElementById("tpl-lernen");
+    app.innerHTML = "";
+    app.appendChild(tpl.content.cloneNode(true));
+
+    var list = document.getElementById("lernen-list");
+    list.innerHTML = TOPICS.map(function (t) {
+      var prog = topicProgress(t);
+      return (
+        '<button class="topic-card topic-card-row' + (t.placeholder ? " locked" : "") + '" data-id="' + t.id + '" type="button">' +
+        '<span class="topic-card-icon">' + (t.placeholder ? ICONS.lock : ICONS.topic[t.icon]) + "</span>" +
+        '<div class="topic-info">' +
+        "<h4>" + t.title + "</h4>" +
+        '<div class="meta">' + (t.placeholder ? "Bald verfügbar" : (t.cards.length + " Karteikarten · " + t.quiz.length + " Quizfragen")) + "</div>" +
+        "</div>" +
+        '<div class="progress-ring" style="--pct:' + prog.pct + '%"><div class="progress-ring-inner">' + prog.pct + "%</div></div>" +
+        "</button>"
+      );
+    }).join("");
+
+    list.querySelectorAll(".topic-card").forEach(function (btn) {
+      btn.addEventListener("click", function () { goToTopicDetail(btn.dataset.id); });
+    });
   }
 
-  function animatedStatCard(id, label, suffix, iconSvg) {
-    var labelHTML = iconSvg ? '<span class="label-with-icon">' + iconSvg + "<span>" + label + "</span></span>" : label;
-    return '<div class="stat-card"><div class="num" id="' + id + '">0</div><div class="label">' + labelHTML + "</div></div>";
+  function renderTopicDetail(topicId) {
+    var t = TOPICS.filter(function (x) { return x.id === topicId; })[0];
+    var tpl = document.getElementById("tpl-topic-detail");
+    app.innerHTML = "";
+    app.appendChild(tpl.content.cloneNode(true));
+
+    document.getElementById("topic-detail-back").addEventListener("click", function () { goToView("lernen"); });
+
+    if (!t) {
+      document.getElementById("topic-detail-title").textContent = "Thema nicht gefunden";
+      return;
+    }
+
+    document.getElementById("topic-detail-icon").innerHTML = t.placeholder ? ICONS.lock : ICONS.topic[t.icon];
+    document.getElementById("topic-detail-title").textContent = t.title;
+    document.getElementById("topic-detail-desc").textContent = t.description || "";
+
+    var body = document.getElementById("topic-detail-body");
+
+    if (t.placeholder) {
+      document.getElementById("topic-detail-meta").textContent = "Bald verfügbar";
+      body.innerHTML = '<div class="topic-detail-placeholder">' + ICONS.lock + '<br><br>Noch kein Skript für dieses Thema hinterlegt.<br>Sobald die Unterlagen da sind, entstehen hier Karteikarten und Quizfragen.</div>';
+      return;
+    }
+
+    var prog = topicProgress(t);
+    document.getElementById("topic-detail-meta").textContent = t.cards.length + " Karteikarten · " + t.quiz.length + " Quizfragen · " + prog.pct + "% gelernt";
+
+    body.innerHTML =
+      '<button class="topic-action" id="topic-action-cards" type="button">' +
+      '<span class="topic-action-icon">' + ICONS.topic.home + "</span>" +
+      '<span class="topic-action-info"><strong>Karteikarten</strong><span>' + t.cards.length + " Karten zum Üben</span></span>" +
+      '<span class="topic-action-chevron">' + ICONS.chevron + "</span>" +
+      "</button>" +
+      '<button class="topic-action" id="topic-action-piles" type="button">' +
+      '<span class="topic-action-icon">' + ICONS.list + "</span>" +
+      '<span class="topic-action-info"><strong>Stapel</strong><span>Karten nach letzter Bewertung</span></span>' +
+      '<span class="topic-action-chevron">' + ICONS.chevron + "</span>" +
+      "</button>" +
+      '<button class="topic-action" id="topic-action-quiz" type="button">' +
+      '<span class="topic-action-icon">' + ICONS.check + "</span>" +
+      '<span class="topic-action-info"><strong>Quiz</strong><span>' + t.quiz.length + " Fragen zum Testen</span></span>" +
+      '<span class="topic-action-chevron">' + ICONS.chevron + "</span>" +
+      "</button>";
+
+    document.getElementById("topic-action-cards").addEventListener("click", function () { openTopicCards(t.id); });
+    document.getElementById("topic-action-piles").addEventListener("click", function () { openTopicPiles(t.id); });
+    document.getElementById("topic-action-quiz").addEventListener("click", function () { openTopicQuiz(t.id); });
   }
 
   // ---------- Flashcards ----------
@@ -851,6 +984,26 @@
     });
   }
 
+  // ---------- Bibliothek ----------
+  function renderBibliothek() {
+    var tpl = document.getElementById("tpl-bibliothek");
+    app.innerHTML = "";
+    app.appendChild(tpl.content.cloneNode(true));
+
+    var list = document.getElementById("bibliothek-list");
+    list.innerHTML = TOPICS.map(function (t) {
+      return (
+        '<div class="topic-card topic-card-row">' +
+        '<span class="topic-card-icon">' + (t.placeholder ? ICONS.lock : ICONS.topic[t.icon]) + "</span>" +
+        '<div class="topic-info">' +
+        "<h4>" + t.title + "</h4>" +
+        '<div class="meta">' + (t.source ? t.source : "Noch kein Skript hinterlegt") + "</div>" +
+        "</div>" +
+        "</div>"
+      );
+    }).join("");
+  }
+
   // ---------- Quiz ----------
   var quizSession = null; // { questions, index, score, mode, answers, answered, selectedIndex, deadline }
   var quizMode = "practice";
@@ -1136,9 +1289,9 @@
     app.innerHTML = "";
     app.appendChild(tpl.content.cloneNode(true));
 
-    var html = renderHistoryChart() + TOPICS.map(function (t) {
+    var html = renderHistoryChart() + TOPICS.filter(function (t) { return !t.placeholder; }).map(function (t) {
       var cardIds = t.cards.map(function (c) { return c.id; });
-      var learned = cardIds.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
+      var prog = topicProgress(t);
       var lapses = cardIds.reduce(function (s, id) { return s + (state.cards[id] ? state.cards[id].lapses : 0); }, 0);
 
       var quizIds = t.quiz.map(function (q) { return q.id; });
@@ -1149,8 +1302,8 @@
       return (
         '<div class="progress-topic">' +
         "<h4>" + t.title + "</h4>" +
-        '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + Math.round((learned / cardIds.length) * 100) + '%"></div></div>' +
-        '<div class="progress-metric"><span>Karteikarten gelernt</span><span>' + learned + " / " + cardIds.length + "</span></div>" +
+        '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + prog.pct + '%"></div></div>' +
+        '<div class="progress-metric"><span>Karteikarten gelernt</span><span>' + prog.learned + " / " + cardIds.length + "</span></div>" +
         '<div class="progress-metric"><span>Fehlversuche (Nochmal)</span><span>' + lapses + "</span></div>" +
         '<div class="progress-metric"><span>Quiz-Trefferquote</span><span>' + (acc === null ? "–" : acc + "%") + "</span></div>" +
         "</div>"

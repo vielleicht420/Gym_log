@@ -5,12 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 <title>Prüfungstrainer</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#b0824f">
+<meta name="theme-color" content="#1f8a56">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="onboarding" id="onboarding" hidden>
+    <div class="onboarding-hero" aria-hidden="true">
+      <svg viewBox="0 0 200 120" class="onboarding-skyline">
+        <rect x="10" y="55" width="30" height="55" rx="3"/>
+        <rect x="46" y="30" width="34" height="80" rx="3"/>
+        <rect x="86" y="45" width="28" height="65" rx="3"/>
+        <rect x="120" y="18" width="36" height="92" rx="3"/>
+        <rect x="162" y="50" width="28" height="60" rx="3"/>
+        <line x1="0" y1="110" x2="200" y2="110"/>
+        <line x1="53" y1="42" x2="53" y2="98" class="onboarding-window"/>
+        <line x1="63" y1="42" x2="63" y2="98" class="onboarding-window"/>
+        <line x1="73" y1="42" x2="73" y2="98" class="onboarding-window"/>
+        <line x1="127" y1="30" x2="127" y2="98" class="onboarding-window"/>
+        <line x1="137" y1="30" x2="137" y2="98" class="onboarding-window"/>
+        <line x1="147" y1="30" x2="147" y2="98" class="onboarding-window"/>
+      </svg>
+    </div>
+    <div class="onboarding-body">
+      <h1>Dein Wissen.<br>Deine Zukunft.</h1>
+      <p class="onboarding-sub">Lerne heute, was morgen zählt.</p>
+      <div class="onboarding-features">
+        <div class="onboarding-feature">
+          <span class="onboarding-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></span>
+          <div>
+            <strong>Für deine Abschlussprüfung</strong>
+            <span>Praxisnah. Verständlich. Effizient.</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn onboarding-btn" id="onboarding-start" type="button">Los geht's<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      <div class="onboarding-tagline">Prüfungstrainer · Wissen, das bleibt</div>
+    </div>
+  </div>
+
   <div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <header class="topbar">
@@ -59,17 +93,17 @@
       <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
       <span>Start</span>
     </button>
-    <button class="tab-btn" data-view="cards">
-      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="8" width="12" height="9" rx="2"/><path d="M9 8V6a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1"/></svg>
-      <span>Karteikarten</span>
-    </button>
-    <button class="tab-btn" data-view="piles">
-      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-      <span>Stapel</span>
+    <button class="tab-btn" data-view="lernen">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-5-2-8-1v13c3-1 6-.5 8 1 2-1.5 5-2 8-1V5c-3-1-6-.5-8 1z"/><line x1="12" y1="6" x2="12" y2="19"/></svg>
+      <span>Lernen</span>
     </button>
     <button class="tab-btn" data-view="quiz">
       <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><path d="M12 17h.01"/></svg>
       <span>Quiz</span>
+    </button>
+    <button class="tab-btn" data-view="bibliothek">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="4" height="16" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="16" y="2" width="4" height="18" rx="1"/></svg>
+      <span>Bibliothek</span>
     </button>
     <button class="tab-btn" data-view="progress">
       <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="13" width="3" height="5" fill="currentColor" stroke="none"/><rect x="12" y="9" width="3" height="9" fill="currentColor" stroke="none"/><rect x="17" y="5" width="3" height="13" fill="currentColor" stroke="none"/></svg>
@@ -79,11 +113,53 @@
 
   <template id="tpl-home">
     <section class="view">
-      <h2>Übersicht</h2>
-      <div class="stat-row" id="home-stats"></div>
+      <div class="home-greeting">
+        <h2 id="home-greeting-text">Hallo!</h2>
+        <p class="home-greeting-sub">Schön, dass du da bist.</p>
+      </div>
+      <div class="home-tip">
+        <span class="home-tip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
+        <p>Jeder Schritt bringt dich näher an deinen Abschluss.</p>
+      </div>
+      <div class="progress-card">
+        <div class="progress-card-title">Dein Lernfortschritt</div>
+        <div class="progress-card-row">
+          <div class="progress-ring-lg" id="home-progress-ring"><div class="progress-ring-lg-inner" id="home-progress-pct">0%</div></div>
+          <div class="progress-card-info">
+            <div class="progress-card-num" id="home-progress-label">0 / 0</div>
+            <div class="progress-card-sub">Karten gelernt</div>
+          </div>
+        </div>
+      </div>
       <button class="btn continue-btn" id="home-continue">Weiter lernen</button>
-      <h3>Themen</h3>
-      <div id="home-topics" class="topic-list"></div>
+      <div class="home-section-header">
+        <h3>Deine Lernbereiche</h3>
+        <button type="button" class="home-see-all" id="home-see-all">Alle anzeigen ›</button>
+      </div>
+      <div id="home-topics" class="home-topic-grid"></div>
+    </section>
+  </template>
+
+  <template id="tpl-lernen">
+    <section class="view">
+      <h2>Themen</h2>
+      <p class="hint">Wähle ein Thema und starte deine Lerneinheit.</p>
+      <div id="lernen-list" class="topic-list"></div>
+    </section>
+  </template>
+
+  <template id="tpl-topic-detail">
+    <section class="view">
+      <button class="back-link" id="topic-detail-back" type="button">‹ Themen</button>
+      <div class="topic-detail-header">
+        <span class="topic-detail-icon" id="topic-detail-icon"></span>
+        <div>
+          <h2 id="topic-detail-title"></h2>
+          <p id="topic-detail-desc"></p>
+        </div>
+      </div>
+      <div class="topic-detail-meta" id="topic-detail-meta"></div>
+      <div id="topic-detail-body"></div>
     </section>
   </template>
 
@@ -145,6 +221,14 @@
         </optgroup>
       </select>
       <div id="quiz-stage"></div>
+    </section>
+  </template>
+
+  <template id="tpl-bibliothek">
+    <section class="view">
+      <h2>Bibliothek</h2>
+      <p class="hint">Quellen der Lerninhalte je Thema.</p>
+      <div id="bibliothek-list" class="topic-list"></div>
     </section>
   </template>
 

@@ -2,14 +2,27 @@
 // Neue Themen einfach als weiteres Objekt in `topics` ergänzen –
 // die App (app.js) liest diese Liste automatisch ein.
 //
+// icon: Schlüssel in ICONS.topic (app.js) für die Kachel-/Listen-Icons.
+// placeholder: true = noch kein Skript hinterlegt, Karten/Quiz sind leer.
 // scriptPage/scriptExcerpt: Seitenzahl und wörtliches Zitat aus dem
 // Original-Skript (Skript_Grundstücksrecht_Dr._Roth_Lehrwoche_2026.pdf),
 // für den "Im Skript nachlesen"-Button auf den Karteikarten.
 window.STUDY_DATA = {
   topics: [
     {
+      id: "immobilienwirtschaft",
+      title: "Immobilienwirtschaft",
+      description: "Grundlagen, Märkte, Akteure und Zusammenhänge der Immobilienwirtschaft.",
+      icon: "home",
+      placeholder: true,
+      cards: [],
+      quiz: []
+    },
+    {
       id: "grundstuecksrecht",
-      title: "Grundstücksrecht",
+      title: "Recht",
+      description: "Grundstücksrecht",
+      icon: "law",
       source: "Skript Dr. Roth / Abitz – Lehrwoche Elfershausen 2026",
       cards: [
         { id: "gr-01", front: "Was ist gem. § 93 BGB ein „wesentlicher Bestandteil einer Sache“?", back: "Bestandteile, die nicht voneinander getrennt werden können, ohne dass einer von beiden zerstört oder in seinem Wesen verändert wird. Wesentliche Bestandteile können nicht Gegenstand besonderer Rechte sein.", scriptPage: "7", scriptExcerpt: "- § 93 BGB – „wesentlicher Bestandteil einer Sache“:\n\nBestandteile einer Sache, die voneinander nicht getrennt werden können, ohne dass der eine oder der andere zerstört oder in seinem Wesen verändert wird (wesentliche Bestanteile), können nicht Gegenstand besonderer Rechte sein …" },
@@ -105,6 +118,42 @@ window.STUDY_DATA = {
         { id: "gq-29", question: "In welchen zwei Fällen kann ausnahmsweise separates Eigentum an einzelnen Wohnungen bestehen?", options: ["Bei Miete und Pacht", "Bei Wohnungseigentum (WEG) und Erbbaurecht", "Bei Nießbrauch und Reallast", "Bei Hypothek und Grundschuld"], correct: 1 },
         { id: "gq-30", question: "Wer trägt beim Grundstücksverkauf nach § 436 BGB grundsätzlich bereits bautechnisch begonnene Erschließungsbeiträge?", options: ["Der Käufer", "Der Notar", "Der Verkäufer", "Die Gemeinde"], correct: 2 }
       ]
+    },
+    {
+      id: "kaufmaennisches-handeln",
+      title: "Kaufmännisches Handeln",
+      description: "Kalkulation, Finanzierung und betriebswirtschaftliche Grundlagen.",
+      icon: "euro",
+      placeholder: true,
+      cards: [],
+      quiz: []
+    },
+    {
+      id: "kunden-vertrieb",
+      title: "Kunden & Vertrieb",
+      description: "Kundenberatung, Vermarktung und Vertriebsprozesse.",
+      icon: "people",
+      placeholder: true,
+      cards: [],
+      quiz: []
+    },
+    {
+      id: "bauen-technik",
+      title: "Bauen & Technische Grundlagen",
+      description: "Baukonstruktion, Bautechnik und technische Grundbegriffe.",
+      icon: "hammer",
+      placeholder: true,
+      cards: [],
+      quiz: []
+    },
+    {
+      id: "oekologie-nachhaltigkeit",
+      title: "Ökologie & Nachhaltigkeit",
+      description: "Energieeffizienz, Nachhaltigkeit und ökologische Aspekte.",
+      icon: "leaf",
+      placeholder: true,
+      cards: [],
+      quiz: []
     }
   ]
 };
