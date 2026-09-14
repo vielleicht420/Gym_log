@@ -576,11 +576,25 @@
       renderCardStage();
     }
 
+    var isAdvancing = false;
+
+    function flyIntoButton(btn, rating) {
+      var cardRect = el.getBoundingClientRect();
+      var btnRect = btn.getBoundingClientRect();
+      var dx = (btnRect.left + btnRect.width / 2) - (cardRect.left + cardRect.width / 2);
+      var dy = (btnRect.top + btnRect.height / 2) - (cardRect.top + cardRect.height / 2);
+      el.classList.add("sucked");
+      el.style.transform = "translate(" + dx + "px, " + dy + "px) scale(0.1) rotate(" + (dx / 20) + "deg)";
+      el.style.opacity = "0";
+      setTimeout(function () { advance(rating); }, 300);
+    }
+
     rateRow.querySelectorAll("button").forEach(function (btn) {
       btn.addEventListener("click", function (ev) {
         ev.stopPropagation();
-        if (!cardsSession.showingBack) return;
-        advance(parseInt(btn.dataset.r, 10));
+        if (!cardsSession.showingBack || isAdvancing) return;
+        isAdvancing = true;
+        flyIntoButton(btn, parseInt(btn.dataset.r, 10));
       });
     });
 
