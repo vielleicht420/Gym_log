@@ -767,15 +767,6 @@ select {
 .review-item .review-a { color: var(--muted); }
 .review-item .review-a.right-answer { color: var(--good-2); font-weight: 600; }
 
-.io-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 22px;
-}
-
-.io-row .btn { flex: 1 1 auto; }
-
 .history-chart {
   display: flex;
   align-items: flex-end;

@@ -1047,40 +1047,6 @@
       }
     });
 
-    document.getElementById("export-progress").addEventListener("click", function () {
-      var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = "pruefungstrainer-fortschritt.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-
-    var importInput = document.getElementById("import-file");
-    document.getElementById("import-progress").addEventListener("click", function () {
-      importInput.click();
-    });
-    importInput.addEventListener("change", function () {
-      var file = importInput.files[0];
-      if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function () {
-        try {
-          var parsed = JSON.parse(reader.result);
-          if (!parsed || typeof parsed !== "object") throw new Error("invalid");
-          state = { cards: parsed.cards || {}, quiz: parsed.quiz || {}, history: parsed.history || {}, favorites: parsed.favorites || {} };
-          saveState();
-          renderProgress();
-        } catch (e) {
-          alert("Die Datei konnte nicht gelesen werden. Bitte eine gültige Fortschritts-Datei wählen.");
-        }
-        importInput.value = "";
-      };
-      reader.readAsText(file);
-    });
   }
 
   // ---------- Init ----------
