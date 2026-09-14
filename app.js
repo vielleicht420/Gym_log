@@ -485,7 +485,14 @@
 
     var hasNext1 = cardsSession.index + 1 < cardsSession.queue.length;
     var hasNext2 = cardsSession.index + 2 < cardsSession.queue.length;
-    var stackHTML = (hasNext2 ? '<div class="stack-card stack-2"></div>' : "") + (hasNext1 ? '<div class="stack-card stack-1"></div>' : "");
+
+    function truncateText(str, n) {
+      return str.length > n ? str.slice(0, n).trim() + "…" : str;
+    }
+
+    var stackHTML =
+      (hasNext2 ? '<div class="stack-card stack-2" id="stack-2"><div class="stack-card-text">' + truncateText(cardsSession.queue[cardsSession.index + 2].front, 60) + "</div></div>" : "") +
+      (hasNext1 ? '<div class="stack-card stack-1" id="stack-1"><div class="stack-card-text">' + truncateText(cardsSession.queue[cardsSession.index + 1].front, 60) + "</div></div>" : "");
 
     stage.innerHTML =
       '<div class="flashcard-wrap">' +
@@ -509,6 +516,15 @@
     var hint = document.getElementById("flip-hint");
     var rateRow = document.getElementById("rate-row");
     var favBtn = document.getElementById("fav-btn");
+    var wrap = document.querySelector(".flashcard-wrap");
+    var stack1El = document.getElementById("stack-1");
+    var stack2El = document.getElementById("stack-2");
+
+    function jumpTo(newIndex) {
+      if (newIndex < 0 || newIndex >= cardsSession.queue.length) return;
+      cardsSession.index = newIndex;
+      renderCardStage();
+    }
 
     favBtn.addEventListener("click", function (ev) {
       ev.stopPropagation();
@@ -538,8 +554,29 @@
       });
     });
 
-    // Pointer-based tap (flip) + swipe (rate) handling
+    // Pointer-based tap (flip) + swipe (rate) + long-press (fan out stack) handling
     var startX = 0, startY = 0, currentX = 0, dragging = false;
+    var longPressTimer = null;
+    var longPressActive = false;
+
+    function clearLongPressTimer() {
+      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+    }
+
+    function collapseFan() {
+      longPressActive = false;
+      wrap.classList.remove("fanned");
+      if (stack1El) stack1El.classList.remove("fan-hover");
+      if (stack2El) stack2El.classList.remove("fan-hover");
+    }
+
+    function triggerFan() {
+      longPressTimer = null;
+      if (cardsSession.showingBack || !hasNext1) return;
+      longPressActive = true;
+      vibrate(8);
+      wrap.classList.add("fanned");
+    }
 
     el.addEventListener("pointerdown", function (e) {
       startX = e.clientX;
@@ -548,9 +585,19 @@
       dragging = true;
       try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
       if (cardsSession.showingBack) el.classList.add("dragging");
+      else if (hasNext1) longPressTimer = setTimeout(triggerFan, 420);
     });
 
     el.addEventListener("pointermove", function (e) {
+      if (longPressActive) {
+        var target = document.elementFromPoint(e.clientX, e.clientY);
+        if (stack1El) stack1El.classList.toggle("fan-hover", stack1El.contains(target));
+        if (stack2El) stack2El.classList.toggle("fan-hover", stack2El.contains(target));
+        return;
+      }
+      if (longPressTimer && (Math.abs(e.clientX - startX) > 10 || Math.abs(e.clientY - startY) > 10)) {
+        clearLongPressTimer();
+      }
       if (!dragging || !cardsSession.showingBack) return;
       currentX = e.clientX - startX;
       el.style.transform = "translateX(" + currentX + "px) rotate(" + (currentX / 18) + "deg)";
@@ -559,6 +606,19 @@
     });
 
     function endDrag(e) {
+      clearLongPressTimer();
+
+      if (longPressActive) {
+        dragging = false;
+        var target = document.elementFromPoint(e.clientX, e.clientY);
+        var toIndex = null;
+        if (stack1El && stack1El.contains(target)) toIndex = cardsSession.index + 1;
+        else if (stack2El && stack2El.contains(target)) toIndex = cardsSession.index + 2;
+        collapseFan();
+        if (toIndex !== null) jumpTo(toIndex);
+        return;
+      }
+
       if (!dragging) return;
       dragging = false;
       el.classList.remove("dragging", "swipe-good", "swipe-again");
