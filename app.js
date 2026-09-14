@@ -12,6 +12,7 @@
     moon: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
     auto: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>',
     star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    list: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
     play: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
     flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.2 3.2-3 4.4-3 8.2a3 3 0 0 0 6 0c0-1.1-.5-2.1-1-2.7.7 2 2.2 2.6 2.2 5.1a4.2 4.2 0 0 1-8.4 0c0-5.3 4.2-6.4 4.2-10.6z"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
@@ -217,6 +218,10 @@
     return a;
   }
 
+  function truncateText(str, n) {
+    return str.length > n ? str.slice(0, n).trim() + "…" : str;
+  }
+
   function formatTime(ms) {
     var totalSec = Math.max(0, Math.ceil(ms / 1000));
     var m = Math.floor(totalSec / 60);
@@ -396,6 +401,7 @@
   // ---------- Flashcards ----------
   var cardsSession = null; // { queue: [...], index, showingBack }
   var cardsFilter = "due";
+  var cardsListView = false;
 
   function renderCards() {
     var tpl = document.getElementById("tpl-cards");
@@ -408,6 +414,19 @@
     select.value = saved;
 
     cardsFilter = "due";
+    cardsListView = false;
+
+    var listToggle = document.getElementById("cards-list-toggle");
+    if (listToggle) {
+      listToggle.innerHTML = ICONS.list;
+      listToggle.classList.toggle("active", cardsListView);
+      listToggle.addEventListener("click", function () {
+        cardsListView = !cardsListView;
+        listToggle.classList.toggle("active", cardsListView);
+        renderCardStage();
+      });
+    }
+
     var filterBtns = document.querySelectorAll("#cards-filter-row .filter-btn, #cards-rating-row .filter-btn");
     filterBtns.forEach(function (btn) {
       btn.classList.toggle("active", btn.dataset.filter === cardsFilter);
@@ -473,9 +492,40 @@
     }
   }
 
+  function renderCardList(stage) {
+    if (!cardsSession.queue.length) {
+      stage.innerHTML = '<div class="empty-state">Keine Karten in dieser Auswahl.</div>';
+      return;
+    }
+    stage.innerHTML = '<div class="card-list">' + cardsSession.queue.map(function (c, i) {
+      return (
+        '<button class="card-list-item' + (i === cardsSession.index ? " current" : "") + '" data-i="' + i + '">' +
+        '<span class="card-list-num">' + (i + 1) + "</span>" +
+        '<span class="card-list-text">' + truncateText(c.front, 90) + "</span>" +
+        "</button>"
+      );
+    }).join("") + "</div>";
+
+    stage.querySelectorAll(".card-list-item").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        cardsSession.index = parseInt(btn.dataset.i, 10);
+        cardsListView = false;
+        var listToggle = document.getElementById("cards-list-toggle");
+        if (listToggle) listToggle.classList.remove("active");
+        renderCardStage();
+      });
+    });
+  }
+
   function renderCardStage() {
     var stage = document.getElementById("cards-stage");
     updateCardsHint();
+
+    if (cardsListView) {
+      renderCardList(stage);
+      return;
+    }
+
     if (!cardsSession || cardsSession.index >= cardsSession.queue.length) {
       stage.innerHTML = '<div class="empty-state"><span class="wiggle-icon">' + ICONS.check + '</span><br>Alles erledigt für jetzt!<br>Schau später wieder vorbei oder wähle ein anderes Thema.</div>';
       return;
@@ -485,14 +535,7 @@
 
     var hasNext1 = cardsSession.index + 1 < cardsSession.queue.length;
     var hasNext2 = cardsSession.index + 2 < cardsSession.queue.length;
-
-    function truncateText(str, n) {
-      return str.length > n ? str.slice(0, n).trim() + "…" : str;
-    }
-
-    var stackHTML =
-      (hasNext2 ? '<div class="stack-card stack-2" id="stack-2"><div class="stack-card-text">' + truncateText(cardsSession.queue[cardsSession.index + 2].front, 60) + "</div></div>" : "") +
-      (hasNext1 ? '<div class="stack-card stack-1" id="stack-1"><div class="stack-card-text">' + truncateText(cardsSession.queue[cardsSession.index + 1].front, 60) + "</div></div>" : "");
+    var stackHTML = (hasNext2 ? '<div class="stack-card stack-2"></div>' : "") + (hasNext1 ? '<div class="stack-card stack-1"></div>' : "");
 
     stage.innerHTML =
       '<div class="flashcard-wrap">' +
@@ -516,15 +559,6 @@
     var hint = document.getElementById("flip-hint");
     var rateRow = document.getElementById("rate-row");
     var favBtn = document.getElementById("fav-btn");
-    var wrap = document.querySelector(".flashcard-wrap");
-    var stack1El = document.getElementById("stack-1");
-    var stack2El = document.getElementById("stack-2");
-
-    function jumpTo(newIndex) {
-      if (newIndex < 0 || newIndex >= cardsSession.queue.length) return;
-      cardsSession.index = newIndex;
-      renderCardStage();
-    }
 
     favBtn.addEventListener("click", function (ev) {
       ev.stopPropagation();
@@ -554,29 +588,8 @@
       });
     });
 
-    // Pointer-based tap (flip) + swipe (rate) + long-press (fan out stack) handling
+    // Pointer-based tap (flip) + swipe (rate) handling
     var startX = 0, startY = 0, currentX = 0, dragging = false;
-    var longPressTimer = null;
-    var longPressActive = false;
-
-    function clearLongPressTimer() {
-      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-    }
-
-    function collapseFan() {
-      longPressActive = false;
-      wrap.classList.remove("fanned");
-      if (stack1El) stack1El.classList.remove("fan-hover");
-      if (stack2El) stack2El.classList.remove("fan-hover");
-    }
-
-    function triggerFan() {
-      longPressTimer = null;
-      if (cardsSession.showingBack || !hasNext1) return;
-      longPressActive = true;
-      vibrate(8);
-      wrap.classList.add("fanned");
-    }
 
     el.addEventListener("pointerdown", function (e) {
       startX = e.clientX;
@@ -585,19 +598,9 @@
       dragging = true;
       try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
       if (cardsSession.showingBack) el.classList.add("dragging");
-      else if (hasNext1) longPressTimer = setTimeout(triggerFan, 420);
     });
 
     el.addEventListener("pointermove", function (e) {
-      if (longPressActive) {
-        var target = document.elementFromPoint(e.clientX, e.clientY);
-        if (stack1El) stack1El.classList.toggle("fan-hover", stack1El.contains(target));
-        if (stack2El) stack2El.classList.toggle("fan-hover", stack2El.contains(target));
-        return;
-      }
-      if (longPressTimer && (Math.abs(e.clientX - startX) > 10 || Math.abs(e.clientY - startY) > 10)) {
-        clearLongPressTimer();
-      }
       if (!dragging || !cardsSession.showingBack) return;
       currentX = e.clientX - startX;
       el.style.transform = "translateX(" + currentX + "px) rotate(" + (currentX / 18) + "deg)";
@@ -606,19 +609,6 @@
     });
 
     function endDrag(e) {
-      clearLongPressTimer();
-
-      if (longPressActive) {
-        dragging = false;
-        var target = document.elementFromPoint(e.clientX, e.clientY);
-        var toIndex = null;
-        if (stack1El && stack1El.contains(target)) toIndex = cardsSession.index + 1;
-        else if (stack2El && stack2El.contains(target)) toIndex = cardsSession.index + 2;
-        collapseFan();
-        if (toIndex !== null) jumpTo(toIndex);
-        return;
-      }
-
       if (!dragging) return;
       dragging = false;
       el.classList.remove("dragging", "swipe-good", "swipe-again");
