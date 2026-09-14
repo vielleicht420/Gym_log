@@ -196,6 +196,13 @@
     return qs.filter(function (q) { return q.topicId === topicId; });
   }
 
+  function wrongQuizQuestions(topicId) {
+    return quizForTopic(topicId).filter(function (q) {
+      var s = state.quiz[q.id];
+      return s && s.lastCorrect === false;
+    });
+  }
+
   function spawnConfetti(container) {
     if (!container) return;
     var colors = ["#b0824f", "#8a9662", "#94ad6a", "#d7a558", "#c9806a"];
@@ -886,18 +893,34 @@
       });
     });
 
+    updateWrongCount();
+
     select.addEventListener("change", function () {
       sessionStorage.setItem("quizTopic", select.value);
+      updateWrongCount();
       startQuizSession(select.value, quizMode);
     });
 
     startQuizSession(select.value, quizMode);
   }
 
+  function updateWrongCount() {
+    var btn = document.querySelector('#quiz-mode-row .filter-btn[data-mode="wrong"]');
+    var select = document.getElementById("quiz-topic-select");
+    if (!btn || !select) return;
+    var count = wrongQuizQuestions(select.value).length;
+    btn.textContent = "Falsch beantwortet" + (count ? " (" + count + ")" : "");
+  }
+
   function startQuizSession(topicId, mode) {
     clearExamTimer();
-    var pool = shuffle(quizForTopic(topicId));
-    var questions = mode === "exam" ? pool : pool.slice(0, 15);
+    var questions;
+    if (mode === "wrong") {
+      questions = shuffle(wrongQuizQuestions(topicId));
+    } else {
+      var pool = shuffle(quizForTopic(topicId));
+      questions = mode === "exam" ? pool : pool.slice(0, 15);
+    }
     quizSession = {
       questions: questions,
       index: 0,
@@ -929,7 +952,10 @@
   function renderQuizStage() {
     var stage = document.getElementById("quiz-stage");
     if (!quizSession || quizSession.questions.length === 0) {
-      stage.innerHTML = '<div class="empty-state">Für dieses Thema gibt es noch keine Quizfragen.</div>';
+      var emptyMsg = quizSession && quizSession.mode === "wrong"
+        ? "Aktuell nichts zu wiederholen – du hast gerade keine offenen falsch beantworteten Fragen in diesem Thema."
+        : "Für dieses Thema gibt es noch keine Quizfragen.";
+      stage.innerHTML = '<div class="empty-state">' + emptyMsg + "</div>";
       return;
     }
 
@@ -1020,11 +1046,13 @@
     quizSession.answers[quizSession.index] = selectedIndex;
     var stat = quizStat(q.id);
     stat.attempts++;
-    if (selectedIndex === q.correct) {
+    stat.lastCorrect = selectedIndex === q.correct;
+    if (stat.lastCorrect) {
       quizSession.score++;
       stat.correct++;
     }
     logActivity();
+    updateWrongCount();
     renderQuizStage();
   }
 
