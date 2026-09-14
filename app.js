@@ -892,15 +892,11 @@
 
     quizMode = "practice";
     quizListView = false;
-    var modeBtns = document.querySelectorAll("#quiz-mode-row .filter-btn");
-    modeBtns.forEach(function (btn) {
-      btn.classList.toggle("active", btn.dataset.mode === quizMode);
-      btn.addEventListener("click", function () {
-        modeBtns.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        quizMode = btn.dataset.mode;
-        startQuizSession(select.value, quizMode);
-      });
+    var modeSelect = document.getElementById("quiz-mode-select");
+    modeSelect.value = quizMode;
+    modeSelect.addEventListener("change", function () {
+      quizMode = modeSelect.value;
+      startQuizSession(select.value, quizMode);
     });
 
     var listToggle = document.getElementById("quiz-list-toggle");
@@ -928,15 +924,15 @@
   function updateModeCounts() {
     var select = document.getElementById("quiz-topic-select");
     if (!select) return;
-    var wrongBtn = document.querySelector('#quiz-mode-row .filter-btn[data-mode="wrong"]');
-    var rightBtn = document.querySelector('#quiz-mode-row .filter-btn[data-mode="right"]');
-    if (wrongBtn) {
+    var wrongOption = document.getElementById("quiz-mode-wrong-option");
+    var rightOption = document.getElementById("quiz-mode-right-option");
+    if (wrongOption) {
       var wrongCount = wrongQuizQuestions(select.value).length;
-      wrongBtn.textContent = "Falsch beantwortet" + (wrongCount ? " (" + wrongCount + ")" : "");
+      wrongOption.textContent = "Falsch beantwortet" + (wrongCount ? " (" + wrongCount + ")" : "");
     }
-    if (rightBtn) {
+    if (rightOption) {
       var rightCount = rightQuizQuestions(select.value).length;
-      rightBtn.textContent = "Richtig beantwortet" + (rightCount ? " (" + rightCount + ")" : "");
+      rightOption.textContent = "Richtig beantwortet" + (rightCount ? " (" + rightCount + ")" : "");
     }
   }
 

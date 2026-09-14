@@ -134,12 +134,16 @@
           <select id="quiz-topic-select"></select>
         </div>
       </div>
-      <div class="filter-row" id="quiz-mode-row">
-        <button class="filter-btn active" data-mode="practice">Übung</button>
-        <button class="filter-btn" data-mode="exam">Prüfungsmodus</button>
-        <button class="filter-btn" data-mode="wrong">Falsch beantwortet</button>
-        <button class="filter-btn" data-mode="right">Richtig beantwortet</button>
-      </div>
+      <select id="quiz-mode-select" class="filter-select">
+        <optgroup label="Modus">
+          <option value="practice">Übung</option>
+          <option value="exam">Prüfungsmodus</option>
+        </optgroup>
+        <optgroup label="Wiederholen">
+          <option value="wrong" id="quiz-mode-wrong-option">Falsch beantwortet</option>
+          <option value="right" id="quiz-mode-right-option">Richtig beantwortet</option>
+        </optgroup>
+      </select>
       <div id="quiz-stage"></div>
     </section>
   </template>
