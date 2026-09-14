@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 <title>Prüfungstrainer</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#5b7f99">
+<meta name="theme-color" content="#b0824f">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
 <link rel="stylesheet" href="style.css">
@@ -14,10 +14,10 @@
   <div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <header class="topbar">
-    <h1><span class="logo-bubble">📚</span> Prüfungstrainer</h1>
+    <h1><span class="logo-bubble"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> Prüfungstrainer</h1>
     <div class="header-actions">
-      <button class="icon-btn" id="search-toggle" type="button" aria-label="Suche" title="Suche">🔍</button>
-      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Design wechseln" title="Design wechseln">🌓</button>
+      <button class="icon-btn" id="search-toggle" type="button" aria-label="Suche" title="Suche"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Design wechseln" title="Design wechseln"></button>
     </div>
   </header>
 
@@ -27,7 +27,7 @@
     <div class="search-box">
       <div class="search-header">
         <input type="text" id="search-input" placeholder="Suche nach Begriff oder §..." autocomplete="off">
-        <button class="icon-btn" id="search-close" type="button" aria-label="Schließen">✕</button>
+        <button class="icon-btn" id="search-close" type="button" aria-label="Schließen"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
       </div>
       <div class="search-results" id="search-results"></div>
     </div>
@@ -44,7 +44,7 @@
     <section class="view">
       <h2>Übersicht</h2>
       <div class="stat-row" id="home-stats"></div>
-      <button class="btn continue-btn" id="home-continue">▶️ Weiter lernen</button>
+      <button class="btn continue-btn" id="home-continue">Weiter lernen</button>
       <h3>Themen</h3>
       <div id="home-topics" class="topic-list"></div>
     </section>
@@ -58,9 +58,15 @@
       </div>
       <div class="filter-row" id="cards-filter-row">
         <button class="filter-btn active" data-filter="due">Fällig &amp; neu</button>
-        <button class="filter-btn" data-filter="hard">Nur schwierige</button>
-        <button class="filter-btn" data-filter="fav">⭐ Favoriten</button>
+        <button class="filter-btn" data-filter="fav">Favoriten</button>
         <button class="filter-btn" data-filter="all">Alle</button>
+      </div>
+      <p class="filter-subtitle">Nach letzter Bewertung</p>
+      <div class="filter-row" id="cards-rating-row">
+        <button class="filter-btn" data-filter="again">Nochmal</button>
+        <button class="filter-btn" data-filter="hard">Schwer</button>
+        <button class="filter-btn" data-filter="good">Gut</button>
+        <button class="filter-btn" data-filter="easy">Einfach</button>
       </div>
       <p class="hint" id="cards-hint"></p>
       <div id="cards-stage"></div>
