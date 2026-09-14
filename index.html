@@ -36,6 +36,7 @@
   <nav class="tabs" id="tabs">
     <button class="tab-btn active" data-view="home">Start</button>
     <button class="tab-btn" data-view="cards">Karteikarten</button>
+    <button class="tab-btn" data-view="piles">Stapel</button>
     <button class="tab-btn" data-view="quiz">Quiz</button>
     <button class="tab-btn" data-view="progress">Fortschritt</button>
   </nav>
@@ -74,6 +75,17 @@
       </select>
       <p class="hint" id="cards-hint"></p>
       <div id="cards-stage"></div>
+    </section>
+  </template>
+
+  <template id="tpl-piles">
+    <section class="view">
+      <div class="view-header">
+        <h2>Stapel</h2>
+        <select id="piles-topic-select"></select>
+      </div>
+      <p class="hint">Karten nach letzter Bewertung. Tippe auf einen Stapel, um ihn anzusehen.</p>
+      <div id="piles-stage"></div>
     </section>
   </template>
 

@@ -321,6 +321,7 @@
     clearExamTimer();
     if (currentView === "home") renderHome();
     else if (currentView === "cards") renderCards();
+    else if (currentView === "piles") renderPiles();
     else if (currentView === "quiz") renderQuiz();
     else if (currentView === "progress") renderProgress();
   }
@@ -413,7 +414,9 @@
     var saved = sessionStorage.getItem("cardsTopic") || "all";
     select.value = saved;
 
-    cardsFilter = "due";
+    var pendingFilter = sessionStorage.getItem("cardsFilter");
+    sessionStorage.removeItem("cardsFilter");
+    cardsFilter = pendingFilter || "due";
     cardsListView = false;
 
     var listToggle = document.getElementById("cards-list-toggle");
@@ -646,6 +649,58 @@
 
     el.addEventListener("pointerup", endDrag);
     el.addEventListener("pointercancel", endDrag);
+  }
+
+  // ---------- Piles (cards grouped by last rating) ----------
+  var PILE_DEFS = [
+    { key: "again", rating: 0, label: "Nochmal", cls: "pile-again" },
+    { key: "hard", rating: 1, label: "Schwer", cls: "pile-hard" },
+    { key: "good", rating: 2, label: "Gut", cls: "pile-good" },
+    { key: "easy", rating: 3, label: "Einfach", cls: "pile-easy" }
+  ];
+
+  function renderPiles() {
+    var tpl = document.getElementById("tpl-piles");
+    app.innerHTML = "";
+    app.appendChild(tpl.content.cloneNode(true));
+
+    var select = document.getElementById("piles-topic-select");
+    select.innerHTML = topicOptionsHTML(true);
+    var saved = sessionStorage.getItem("cardsTopic") || "all";
+    select.value = saved;
+
+    select.addEventListener("change", function () {
+      sessionStorage.setItem("cardsTopic", select.value);
+      renderPilesStage(select.value);
+    });
+
+    renderPilesStage(select.value);
+  }
+
+  function renderPilesStage(topicId) {
+    var stage = document.getElementById("piles-stage");
+    stage.innerHTML = '<div class="pile-list">' + PILE_DEFS.map(function (p) {
+      var count = ratedCards(topicId, p.rating).length;
+      var countLabel = count === 1 ? "Karte" : "Karten";
+      return (
+        '<button class="pile-card ' + p.cls + '" data-filter="' + p.key + '" type="button">' +
+        '<span class="pile-tab">' + p.label + "</span>" +
+        '<div class="pile-body">' +
+        '<span class="pile-count">' + count + "</span>" +
+        '<span class="pile-count-label">' + countLabel + "</span>" +
+        "</div>" +
+        '<div class="pile-stack" aria-hidden="true"><span class="pile-stack-card"></span><span class="pile-stack-card"></span></div>' +
+        "</button>"
+      );
+    }).join("") + "</div>";
+
+    stage.querySelectorAll(".pile-card").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        sessionStorage.setItem("cardsFilter", btn.dataset.filter);
+        sessionStorage.setItem("cardsTopic", topicId);
+        goToView("cards");
+      });
+    });
   }
 
   // ---------- Quiz ----------
