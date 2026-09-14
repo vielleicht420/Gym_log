@@ -844,6 +844,10 @@ select {
   font-weight: 800;
 }
 
+.card-list-num svg { width: 14px; height: 14px; }
+.card-list-num.correct { background: var(--good-1); }
+.card-list-num.wrong { background: var(--bad-1); }
+
 .card-list-text {
   flex: 1;
   min-width: 0;

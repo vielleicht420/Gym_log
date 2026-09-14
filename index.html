@@ -129,12 +129,16 @@
     <section class="view">
       <div class="view-header">
         <h2>Quiz</h2>
-        <select id="quiz-topic-select"></select>
+        <div class="view-header-actions">
+          <button class="icon-btn" id="quiz-list-toggle" type="button" aria-label="Liste anzeigen" title="Liste anzeigen"></button>
+          <select id="quiz-topic-select"></select>
+        </div>
       </div>
       <div class="filter-row" id="quiz-mode-row">
         <button class="filter-btn active" data-mode="practice">Übung</button>
         <button class="filter-btn" data-mode="exam">Prüfungsmodus</button>
         <button class="filter-btn" data-mode="wrong">Falsch beantwortet</button>
+        <button class="filter-btn" data-mode="right">Richtig beantwortet</button>
       </div>
       <div id="quiz-stage"></div>
     </section>

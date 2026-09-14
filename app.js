@@ -17,6 +17,7 @@
     play: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
     flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.2 3.2-3 4.4-3 8.2a3 3 0 0 0 6 0c0-1.1-.5-2.1-1-2.7.7 2 2.2 2.6 2.2 5.1a4.2 4.2 0 0 1-8.4 0c0-5.3 4.2-6.4 4.2-10.6z"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
+    cross: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="7" x2="17" y2="17"/><line x1="17" y1="7" x2="7" y2="17"/></svg>',
     clock: '<svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>'
   };
 
@@ -200,6 +201,13 @@
     return quizForTopic(topicId).filter(function (q) {
       var s = state.quiz[q.id];
       return s && s.lastCorrect === false;
+    });
+  }
+
+  function rightQuizQuestions(topicId) {
+    return quizForTopic(topicId).filter(function (q) {
+      var s = state.quiz[q.id];
+      return s && s.lastCorrect === true;
     });
   }
 
@@ -865,6 +873,7 @@
   // ---------- Quiz ----------
   var quizSession = null; // { questions, index, score, mode, answers, answered, selectedIndex, deadline }
   var quizMode = "practice";
+  var quizListView = false;
   var examTimerInterval = null;
 
   function clearExamTimer() {
@@ -882,6 +891,7 @@
     select.value = saved;
 
     quizMode = "practice";
+    quizListView = false;
     var modeBtns = document.querySelectorAll("#quiz-mode-row .filter-btn");
     modeBtns.forEach(function (btn) {
       btn.classList.toggle("active", btn.dataset.mode === quizMode);
@@ -893,23 +903,41 @@
       });
     });
 
-    updateWrongCount();
+    var listToggle = document.getElementById("quiz-list-toggle");
+    if (listToggle) {
+      listToggle.innerHTML = ICONS.list;
+      listToggle.classList.toggle("active", quizListView);
+      listToggle.addEventListener("click", function () {
+        quizListView = !quizListView;
+        listToggle.classList.toggle("active", quizListView);
+        renderQuizStage();
+      });
+    }
+
+    updateModeCounts();
 
     select.addEventListener("change", function () {
       sessionStorage.setItem("quizTopic", select.value);
-      updateWrongCount();
+      updateModeCounts();
       startQuizSession(select.value, quizMode);
     });
 
     startQuizSession(select.value, quizMode);
   }
 
-  function updateWrongCount() {
-    var btn = document.querySelector('#quiz-mode-row .filter-btn[data-mode="wrong"]');
+  function updateModeCounts() {
     var select = document.getElementById("quiz-topic-select");
-    if (!btn || !select) return;
-    var count = wrongQuizQuestions(select.value).length;
-    btn.textContent = "Falsch beantwortet" + (count ? " (" + count + ")" : "");
+    if (!select) return;
+    var wrongBtn = document.querySelector('#quiz-mode-row .filter-btn[data-mode="wrong"]');
+    var rightBtn = document.querySelector('#quiz-mode-row .filter-btn[data-mode="right"]');
+    if (wrongBtn) {
+      var wrongCount = wrongQuizQuestions(select.value).length;
+      wrongBtn.textContent = "Falsch beantwortet" + (wrongCount ? " (" + wrongCount + ")" : "");
+    }
+    if (rightBtn) {
+      var rightCount = rightQuizQuestions(select.value).length;
+      rightBtn.textContent = "Richtig beantwortet" + (rightCount ? " (" + rightCount + ")" : "");
+    }
   }
 
   function startQuizSession(topicId, mode) {
@@ -917,6 +945,8 @@
     var questions;
     if (mode === "wrong") {
       questions = shuffle(wrongQuizQuestions(topicId));
+    } else if (mode === "right") {
+      questions = shuffle(rightQuizQuestions(topicId));
     } else {
       var pool = shuffle(quizForTopic(topicId));
       questions = mode === "exam" ? pool : pool.slice(0, 15);
@@ -949,13 +979,60 @@
     renderQuizStage();
   }
 
+  function quizEmptyMessage() {
+    if (quizSession && quizSession.mode === "wrong") return "Aktuell nichts zu wiederholen – du hast gerade keine offenen falsch beantworteten Fragen in diesem Thema.";
+    if (quizSession && quizSession.mode === "right") return "Noch keine richtig beantworteten Fragen in diesem Thema.";
+    return "Für dieses Thema gibt es noch keine Quizfragen.";
+  }
+
+  function renderQuizList(stage) {
+    if (!quizSession.questions.length) {
+      stage.innerHTML = '<div class="empty-state">' + quizEmptyMessage() + "</div>";
+      return;
+    }
+
+    stage.innerHTML = '<div class="card-list">' + quizSession.questions.map(function (q, i) {
+      var answered = quizSession.answers[i];
+      var statusClass = "";
+      var numContent = String(i + 1);
+      if (answered !== null) {
+        if (answered === q.correct) { statusClass = " correct"; numContent = ICONS.check; }
+        else { statusClass = " wrong"; numContent = ICONS.cross; }
+      }
+      return (
+        '<button class="card-list-item' + (i === quizSession.index ? " current" : "") + '" data-i="' + i + '">' +
+        '<span class="card-list-num' + statusClass + '">' + numContent + "</span>" +
+        '<span class="card-list-text">' + truncateText(q.question, 90) + "</span>" +
+        "</button>"
+      );
+    }).join("") + "</div>";
+
+    stage.querySelectorAll(".card-list-item").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var i = parseInt(btn.dataset.i, 10);
+        quizSession.index = i;
+        var answered = quizSession.answers[i];
+        quizSession.answered = answered !== null;
+        quizSession.selectedIndex = answered;
+        quizListView = false;
+        var listToggle = document.getElementById("quiz-list-toggle");
+        if (listToggle) listToggle.classList.remove("active");
+        renderQuizStage();
+      });
+    });
+  }
+
   function renderQuizStage() {
     var stage = document.getElementById("quiz-stage");
-    if (!quizSession || quizSession.questions.length === 0) {
-      var emptyMsg = quizSession && quizSession.mode === "wrong"
-        ? "Aktuell nichts zu wiederholen – du hast gerade keine offenen falsch beantworteten Fragen in diesem Thema."
-        : "Für dieses Thema gibt es noch keine Quizfragen.";
-      stage.innerHTML = '<div class="empty-state">' + emptyMsg + "</div>";
+    if (!quizSession) return;
+
+    if (quizListView) {
+      renderQuizList(stage);
+      return;
+    }
+
+    if (quizSession.questions.length === 0) {
+      stage.innerHTML = '<div class="empty-state">' + quizEmptyMessage() + "</div>";
       return;
     }
 
@@ -1052,7 +1129,7 @@
       stat.correct++;
     }
     logActivity();
-    updateWrongCount();
+    updateModeCounts();
     renderQuizStage();
   }
 
