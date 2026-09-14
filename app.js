@@ -295,16 +295,42 @@
 
   // ---------- View router ----------
   var app = document.getElementById("app");
+  var tabsNav = document.getElementById("tabs");
   var tabs = document.querySelectorAll(".tab-btn");
+  var tabIndicator = document.getElementById("tab-indicator");
   var currentView = "home";
+
+  function moveTabIndicator(btn, animate) {
+    if (!tabIndicator || !btn || !tabsNav) return;
+    var navRect = tabsNav.getBoundingClientRect();
+    var btnRect = btn.getBoundingClientRect();
+    if (!animate) tabIndicator.style.transition = "none";
+    tabIndicator.style.width = btnRect.width + "px";
+    tabIndicator.style.transform = "translateX(" + (btnRect.left - navRect.left) + "px)";
+    if (!animate) {
+      tabIndicator.getBoundingClientRect(); // force reflow before re-enabling transition
+      tabIndicator.style.transition = "";
+    }
+  }
 
   tabs.forEach(function (btn) {
     btn.addEventListener("click", function () {
       tabs.forEach(function (b) { b.classList.remove("active"); });
       btn.classList.add("active");
       currentView = btn.dataset.view;
+      moveTabIndicator(btn, true);
       render();
     });
+  });
+
+  moveTabIndicator(document.querySelector(".tab-btn.active"), false);
+
+  var resizeTimeout = null;
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function () {
+      moveTabIndicator(document.querySelector(".tab-btn.active"), false);
+    }, 120);
   });
 
   var themeToggle = document.getElementById("theme-toggle");
@@ -329,7 +355,10 @@
   function goToView(view) {
     tabs.forEach(function (b) { b.classList.remove("active"); });
     var btn = document.querySelector('.tab-btn[data-view="' + view + '"]');
-    if (btn) btn.classList.add("active");
+    if (btn) {
+      btn.classList.add("active");
+      moveTabIndicator(btn, true);
+    }
     currentView = view;
     render();
   }
