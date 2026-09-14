@@ -54,7 +54,10 @@
     <section class="view">
       <div class="view-header">
         <h2>Karteikarten</h2>
-        <select id="cards-topic-select"></select>
+        <div class="view-header-actions">
+          <button class="icon-btn" id="cards-list-toggle" type="button" aria-label="Liste anzeigen" title="Liste anzeigen"></button>
+          <select id="cards-topic-select"></select>
+        </div>
       </div>
       <div class="filter-row" id="cards-filter-row">
         <button class="filter-btn active" data-filter="due">Fällig &amp; neu</button>
