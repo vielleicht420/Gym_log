@@ -59,18 +59,19 @@
           <select id="cards-topic-select"></select>
         </div>
       </div>
-      <div class="filter-row" id="cards-filter-row">
-        <button class="filter-btn active" data-filter="due">Fällig &amp; neu</button>
-        <button class="filter-btn" data-filter="fav">Favoriten</button>
-        <button class="filter-btn" data-filter="all">Alle</button>
-      </div>
-      <p class="filter-subtitle">Nach letzter Bewertung</p>
-      <div class="filter-row" id="cards-rating-row">
-        <button class="filter-btn" data-filter="again">Nochmal</button>
-        <button class="filter-btn" data-filter="hard">Schwer</button>
-        <button class="filter-btn" data-filter="good">Gut</button>
-        <button class="filter-btn" data-filter="easy">Einfach</button>
-      </div>
+      <select id="cards-filter-select" class="filter-select">
+        <optgroup label="Status">
+          <option value="due">Fällig &amp; neu</option>
+          <option value="fav">Favoriten</option>
+          <option value="all">Alle</option>
+        </optgroup>
+        <optgroup label="Nach letzter Bewertung">
+          <option value="again">Nochmal</option>
+          <option value="hard">Schwer</option>
+          <option value="good">Gut</option>
+          <option value="easy">Einfach</option>
+        </optgroup>
+      </select>
       <p class="hint" id="cards-hint"></p>
       <div id="cards-stage"></div>
     </section>
