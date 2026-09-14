@@ -427,15 +427,11 @@
       });
     }
 
-    var filterBtns = document.querySelectorAll("#cards-filter-row .filter-btn, #cards-rating-row .filter-btn");
-    filterBtns.forEach(function (btn) {
-      btn.classList.toggle("active", btn.dataset.filter === cardsFilter);
-      btn.addEventListener("click", function () {
-        filterBtns.forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        cardsFilter = btn.dataset.filter;
-        startCardsSession(select.value);
-      });
+    var filterSelect = document.getElementById("cards-filter-select");
+    filterSelect.value = cardsFilter;
+    filterSelect.addEventListener("change", function () {
+      cardsFilter = filterSelect.value;
+      startCardsSession(select.value);
     });
 
     select.addEventListener("change", function () {
