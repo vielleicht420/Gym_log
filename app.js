@@ -13,6 +13,7 @@
     auto: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>',
     star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
     list: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
     play: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
     flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.2 3.2-3 4.4-3 8.2a3 3 0 0 0 6 0c0-1.1-.5-2.1-1-2.7.7 2 2.2 2.6 2.2 5.1a4.2 4.2 0 0 1-8.4 0c0-5.3 4.2-6.4 4.2-10.6z"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
@@ -220,6 +221,12 @@
 
   function truncateText(str, n) {
     return str.length > n ? str.slice(0, n).trim() + "…" : str;
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
   }
 
   function formatTime(ms) {
@@ -585,6 +592,7 @@
       '<div class="flashcard-face flashcard-back">' + card.back + "</div>" +
       "</div></div>" +
       '<button class="fav-btn' + (isFavorite(card.id) ? " active" : "") + '" id="fav-btn" aria-label="Favorit">' + ICONS.star + "</button>" +
+      (card.scriptExcerpt ? '<button class="script-btn" id="script-btn" aria-label="Im Skript nachlesen" title="Im Skript nachlesen">' + ICONS.book + "</button>" : "") +
       "</div>" +
       '<div class="flip-hint" id="flip-hint">Tippen zum Umdrehen · ' + card.topicTitle + "</div>" +
       '<div class="rate-row" id="rate-row">' +
@@ -604,6 +612,14 @@
       toggleFavorite(card.id);
       favBtn.classList.toggle("active", isFavorite(card.id));
     });
+
+    var scriptBtn = document.getElementById("script-btn");
+    if (scriptBtn) {
+      scriptBtn.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        openScriptModal(card);
+      });
+    }
 
     function setFlipped(flipped) {
       cardsSession.showingBack = flipped;
@@ -689,6 +705,28 @@
 
     el.addEventListener("pointerup", endDrag);
     el.addEventListener("pointercancel", endDrag);
+  }
+
+  // ---------- Skript-Nachschlagen ----------
+  var scriptModal = document.getElementById("script-modal");
+  var scriptModalTitle = document.getElementById("script-modal-title");
+  var scriptModalBody = document.getElementById("script-modal-body");
+  var scriptModalClose = document.getElementById("script-modal-close");
+
+  function openScriptModal(card) {
+    if (!scriptModal || !card.scriptExcerpt) return;
+    scriptModalTitle.textContent = "Skript · Seite " + card.scriptPage;
+    scriptModalBody.innerHTML =
+      '<div class="script-source">' + escapeHtml(card.topicTitle || "") + "</div>" +
+      '<div class="script-excerpt">' + escapeHtml(card.scriptExcerpt).replace(/\n/g, "<br>") + "</div>";
+    scriptModal.hidden = false;
+  }
+
+  if (scriptModalClose) {
+    scriptModalClose.addEventListener("click", function () { scriptModal.hidden = true; });
+    scriptModal.addEventListener("click", function (e) {
+      if (e.target === scriptModal) scriptModal.hidden = true;
+    });
   }
 
   // ---------- Piles (cards grouped by last rating) ----------
