@@ -334,7 +334,8 @@
   var tabIndicator = document.getElementById("tab-indicator");
   var currentView = "home";
   var currentTopicDetailId = null;
-  var NAV_TAB_MAP = { home: "home", lernen: "lernen", cards: "lernen", piles: "lernen", topicDetail: "lernen", quiz: "quiz", bibliothek: "bibliothek", progress: "progress" };
+  var currentScriptTopicId = null;
+  var NAV_TAB_MAP = { home: "home", lernen: "lernen", cards: "lernen", piles: "lernen", topicDetail: "lernen", quiz: "quiz", bibliothek: "bibliothek", scriptReader: "bibliothek", progress: "progress" };
 
   function moveTabIndicator(btn, animate) {
     if (!tabIndicator || !btn || !tabsNav) return;
@@ -388,6 +389,7 @@
     else if (currentView === "piles") renderPiles();
     else if (currentView === "quiz") renderQuiz();
     else if (currentView === "bibliothek") renderBibliothek();
+    else if (currentView === "scriptReader") renderScriptReader(currentScriptTopicId);
     else if (currentView === "progress") renderProgress();
   }
 
@@ -992,13 +994,51 @@
 
     var list = document.getElementById("bibliothek-list");
     list.innerHTML = TOPICS.map(function (t) {
+      var hasScript = window.SCRIPT_TEXTS && window.SCRIPT_TEXTS[t.id];
+      var tag = hasScript ? "button" : "div";
       return (
-        '<div class="topic-card topic-card-row">' +
+        "<" + tag + ' class="topic-card topic-card-row' + (hasScript ? "" : " locked") + '"' + (hasScript ? ' data-id="' + t.id + '" type="button"' : "") + ">" +
         '<span class="topic-card-icon">' + (t.placeholder ? ICONS.lock : ICONS.topic[t.icon]) + "</span>" +
         '<div class="topic-info">' +
         "<h4>" + t.title + "</h4>" +
         '<div class="meta">' + (t.source ? t.source : "Noch kein Skript hinterlegt") + "</div>" +
         "</div>" +
+        (hasScript ? '<span class="topic-action-chevron">' + ICONS.chevron + "</span>" : "") +
+        "</" + tag + ">"
+      );
+    }).join("");
+
+    list.querySelectorAll(".topic-card[data-id]").forEach(function (btn) {
+      btn.addEventListener("click", function () { goToScriptReader(btn.dataset.id); });
+    });
+  }
+
+  function goToScriptReader(topicId) {
+    currentScriptTopicId = topicId;
+    goToView("scriptReader");
+  }
+
+  function renderScriptReader(topicId) {
+    var t = TOPICS.filter(function (x) { return x.id === topicId; })[0];
+    var pages = window.SCRIPT_TEXTS && window.SCRIPT_TEXTS[topicId];
+    var tpl = document.getElementById("tpl-script-reader");
+    app.innerHTML = "";
+    app.appendChild(tpl.content.cloneNode(true));
+
+    document.getElementById("script-reader-back").addEventListener("click", function () { goToView("bibliothek"); });
+    document.getElementById("script-reader-title").textContent = t ? t.title : "Skript";
+    document.getElementById("script-reader-source").textContent = t && t.source ? t.source : "";
+
+    var body = document.getElementById("script-reader-body");
+    if (!pages || !pages.length) {
+      body.innerHTML = '<div class="empty-state">Für dieses Thema liegt noch kein Skript vor.</div>';
+      return;
+    }
+    body.innerHTML = pages.map(function (p) {
+      return (
+        '<div class="script-page">' +
+        '<div class="script-page-num">Seite ' + p.page + "</div>" +
+        '<div class="script-excerpt">' + escapeHtml(p.text).replace(/\n/g, "<br>") + "</div>" +
         "</div>"
       );
     }).join("");

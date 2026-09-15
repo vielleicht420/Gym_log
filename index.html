@@ -227,8 +227,17 @@
   <template id="tpl-bibliothek">
     <section class="view">
       <h2>Bibliothek</h2>
-      <p class="hint">Quellen der Lerninhalte je Thema.</p>
+      <p class="hint">Quellen der Lerninhalte je Thema. Skript antippen zum Nachlesen.</p>
       <div id="bibliothek-list" class="topic-list"></div>
+    </section>
+  </template>
+
+  <template id="tpl-script-reader">
+    <section class="view">
+      <button class="back-link" id="script-reader-back" type="button">‹ Bibliothek</button>
+      <h2 id="script-reader-title"></h2>
+      <p class="hint" id="script-reader-source"></p>
+      <div id="script-reader-body"></div>
     </section>
   </template>
 
@@ -241,6 +250,7 @@
   </template>
 
   <script src="data.js"></script>
+  <script src="scripts.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

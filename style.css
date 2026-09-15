@@ -1301,6 +1301,18 @@ select {
   color: var(--text);
 }
 
+.script-page { margin-bottom: 18px; }
+
+.script-page-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--accent-1);
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
 .flashcard-face::after {
   content: "";
   position: absolute;
