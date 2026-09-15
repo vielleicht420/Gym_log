@@ -45,6 +45,22 @@
     </div>
   </div>
 
+  <div class="book-reader" id="book-reader" hidden>
+    <div class="book-topbar">
+      <button class="icon-btn" id="book-close" type="button" aria-label="Schließen"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+      <div class="book-title" id="book-title"></div>
+      <div class="book-page-indicator" id="book-page-indicator"></div>
+    </div>
+    <div class="book-stage" id="book-stage">
+      <div class="book-page" id="book-page-under"></div>
+      <div class="book-page" id="book-page-top"></div>
+    </div>
+    <div class="book-nav">
+      <button class="book-nav-btn" id="book-prev" type="button" aria-label="Vorherige Seite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"/></svg></button>
+      <button class="book-nav-btn" id="book-next" type="button" aria-label="Nächste Seite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
+    </div>
+  </div>
+
   <div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <header class="topbar">
@@ -229,15 +245,6 @@
       <h2>Bibliothek</h2>
       <p class="hint">Quellen der Lerninhalte je Thema. Skript antippen zum Nachlesen.</p>
       <div id="bibliothek-list" class="topic-list"></div>
-    </section>
-  </template>
-
-  <template id="tpl-script-reader">
-    <section class="view">
-      <button class="back-link" id="script-reader-back" type="button">‹ Bibliothek</button>
-      <h2 id="script-reader-title"></h2>
-      <p class="hint" id="script-reader-source"></p>
-      <div id="script-reader-body"></div>
     </section>
   </template>
 

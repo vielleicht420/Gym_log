@@ -1301,17 +1301,110 @@ select {
   color: var(--text);
 }
 
-.script-page { margin-bottom: 18px; }
+/* ---------- book reader (fullscreen script pager) ---------- */
+.book-reader {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-a);
+  animation: popIn 0.25s ease;
+}
 
-.script-page-num {
+.book-reader[hidden] { display: none; }
+
+.book-topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: calc(12px + env(safe-area-inset-top)) 14px 10px;
+}
+
+.book-title {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.92rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-page-indicator {
+  flex: 0 0 auto;
+  min-width: 50px;
+  text-align: right;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.book-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  margin: 0 16px 10px;
+  perspective: 1500px;
+}
+
+.book-page {
+  position: absolute;
+  inset: 0;
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+  padding: 22px 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+#book-page-top { z-index: 2; }
+#book-page-under { z-index: 1; }
+
+.book-page-num-label {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--accent-1);
-  margin-bottom: 6px;
-  padding-left: 2px;
+  margin-bottom: 10px;
 }
+
+.book-nav {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 20px calc(16px + env(safe-area-inset-bottom));
+}
+
+.book-nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.book-nav-btn:active { transform: scale(0.9); }
+.book-nav-btn:disabled { opacity: 0.3; }
+.book-nav-btn svg { width: 20px; height: 20px; }
 
 .flashcard-face::after {
   content: "";

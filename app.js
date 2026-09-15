@@ -334,8 +334,7 @@
   var tabIndicator = document.getElementById("tab-indicator");
   var currentView = "home";
   var currentTopicDetailId = null;
-  var currentScriptTopicId = null;
-  var NAV_TAB_MAP = { home: "home", lernen: "lernen", cards: "lernen", piles: "lernen", topicDetail: "lernen", quiz: "quiz", bibliothek: "bibliothek", scriptReader: "bibliothek", progress: "progress" };
+  var NAV_TAB_MAP = { home: "home", lernen: "lernen", cards: "lernen", piles: "lernen", topicDetail: "lernen", quiz: "quiz", bibliothek: "bibliothek", progress: "progress" };
 
   function moveTabIndicator(btn, animate) {
     if (!tabIndicator || !btn || !tabsNav) return;
@@ -389,7 +388,6 @@
     else if (currentView === "piles") renderPiles();
     else if (currentView === "quiz") renderQuiz();
     else if (currentView === "bibliothek") renderBibliothek();
-    else if (currentView === "scriptReader") renderScriptReader(currentScriptTopicId);
     else if (currentView === "progress") renderProgress();
   }
 
@@ -1009,40 +1007,134 @@
     }).join("");
 
     list.querySelectorAll(".topic-card[data-id]").forEach(function (btn) {
-      btn.addEventListener("click", function () { goToScriptReader(btn.dataset.id); });
+      btn.addEventListener("click", function () { openBookReader(btn.dataset.id); });
     });
   }
 
-  function goToScriptReader(topicId) {
-    currentScriptTopicId = topicId;
-    goToView("scriptReader");
+  // ---------- Book reader (fullscreen page-turning script viewer) ----------
+  var bookReaderEl = document.getElementById("book-reader");
+  var bookPages = null;
+  var bookIndex = 0;
+  var bookAnimating = false;
+
+  function bookPageHTML(p) {
+    return '<div class="book-page-num-label">Seite ' + p.page + "</div><div>" + escapeHtml(p.text).replace(/\n/g, "<br>") + "</div>";
   }
 
-  function renderScriptReader(topicId) {
+  function renderBookPageInto(el, p) {
+    el.innerHTML = bookPageHTML(p);
+    el.scrollTop = 0;
+  }
+
+  function updateBookChrome() {
+    document.getElementById("book-page-indicator").textContent = (bookIndex + 1) + " / " + bookPages.length;
+    document.getElementById("book-prev").disabled = bookIndex === 0;
+    document.getElementById("book-next").disabled = bookIndex === bookPages.length - 1;
+  }
+
+  function openBookReader(topicId) {
     var t = TOPICS.filter(function (x) { return x.id === topicId; })[0];
-    var pages = window.SCRIPT_TEXTS && window.SCRIPT_TEXTS[topicId];
-    var tpl = document.getElementById("tpl-script-reader");
-    app.innerHTML = "";
-    app.appendChild(tpl.content.cloneNode(true));
-
-    document.getElementById("script-reader-back").addEventListener("click", function () { goToView("bibliothek"); });
-    document.getElementById("script-reader-title").textContent = t ? t.title : "Skript";
-    document.getElementById("script-reader-source").textContent = t && t.source ? t.source : "";
-
-    var body = document.getElementById("script-reader-body");
-    if (!pages || !pages.length) {
-      body.innerHTML = '<div class="empty-state">Für dieses Thema liegt noch kein Skript vor.</div>';
-      return;
-    }
-    body.innerHTML = pages.map(function (p) {
-      return (
-        '<div class="script-page">' +
-        '<div class="script-page-num">Seite ' + p.page + "</div>" +
-        '<div class="script-excerpt">' + escapeHtml(p.text).replace(/\n/g, "<br>") + "</div>" +
-        "</div>"
-      );
-    }).join("");
+    bookPages = window.SCRIPT_TEXTS && window.SCRIPT_TEXTS[topicId];
+    if (!bookPages || !bookPages.length) return;
+    bookIndex = 0;
+    document.getElementById("book-title").textContent = t ? t.title : "Skript";
+    var top = document.getElementById("book-page-top");
+    var under = document.getElementById("book-page-under");
+    top.style.transition = "none";
+    top.style.transform = "none";
+    under.innerHTML = "";
+    renderBookPageInto(top, bookPages[0]);
+    updateBookChrome();
+    bookReaderEl.hidden = false;
   }
+
+  function closeBookReader() {
+    bookReaderEl.hidden = true;
+  }
+
+  function flipBookPage(dir, underAlreadyRendered) {
+    if (bookAnimating) return;
+    var targetIndex = bookIndex + (dir === "next" ? 1 : -1);
+    if (targetIndex < 0 || targetIndex >= bookPages.length) return;
+    bookAnimating = true;
+    var top = document.getElementById("book-page-top");
+    var under = document.getElementById("book-page-under");
+    if (!underAlreadyRendered) renderBookPageInto(under, bookPages[targetIndex]);
+    top.style.transformOrigin = dir === "next" ? "left center" : "right center";
+    top.style.transition = "transform 0.42s cubic-bezier(0.45, 0, 0.2, 1)";
+    void top.offsetWidth; // force reflow so the transition picks up the new origin
+    top.style.transform = "rotateY(" + (dir === "next" ? "-180deg" : "180deg") + ")";
+    top.addEventListener("transitionend", function handler() {
+      top.removeEventListener("transitionend", handler);
+      top.style.transition = "none";
+      top.style.transform = "none";
+      bookIndex = targetIndex;
+      renderBookPageInto(top, bookPages[bookIndex]);
+      updateBookChrome();
+      bookAnimating = false;
+    }, { once: true });
+  }
+
+  function springBackBookPage() {
+    bookAnimating = true;
+    var top = document.getElementById("book-page-top");
+    top.style.transition = "transform 0.3s cubic-bezier(0.45, 0, 0.2, 1)";
+    top.style.transform = "none";
+    top.addEventListener("transitionend", function handler() {
+      top.removeEventListener("transitionend", handler);
+      top.style.transition = "none";
+      bookAnimating = false;
+    }, { once: true });
+  }
+
+  document.getElementById("book-close").addEventListener("click", closeBookReader);
+  document.getElementById("book-prev").addEventListener("click", function () { flipBookPage("prev", false); });
+  document.getElementById("book-next").addEventListener("click", function () { flipBookPage("next", false); });
+
+  (function setupBookSwipe() {
+    var stage = document.getElementById("book-stage");
+    var startX = 0, dragging = false, dragDir = null;
+
+    stage.addEventListener("pointerdown", function (e) {
+      if (bookAnimating) return;
+      startX = e.clientX;
+      dragging = true;
+      dragDir = null;
+      try { stage.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    });
+
+    stage.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - startX;
+      var top = document.getElementById("book-page-top");
+      if (!dragDir) {
+        if (Math.abs(dx) < 10) return;
+        var wantDir = dx < 0 ? "next" : "prev";
+        var targetIndex = bookIndex + (wantDir === "next" ? 1 : -1);
+        if (targetIndex < 0 || targetIndex >= bookPages.length) { dragDir = "blocked"; return; }
+        dragDir = wantDir;
+        renderBookPageInto(document.getElementById("book-page-under"), bookPages[targetIndex]);
+        top.style.transition = "none";
+        top.style.transformOrigin = dragDir === "next" ? "left center" : "right center";
+      }
+      if (dragDir === "blocked") return;
+      var deg = Math.max(-170, Math.min(170, (dx / 220) * 170));
+      top.style.transform = "rotateY(" + deg + "deg)";
+    });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      if (!dragDir || dragDir === "blocked") { dragDir = null; return; }
+      var dx = e.clientX - startX;
+      if (Math.abs(dx) > 70) flipBookPage(dragDir, true);
+      else springBackBookPage();
+      dragDir = null;
+    }
+
+    stage.addEventListener("pointerup", endDrag);
+    stage.addEventListener("pointercancel", endDrag);
+  })();
 
   // ---------- Quiz ----------
   var quizSession = null; // { questions, index, score, mode, answers, answered, selectedIndex, deadline }
