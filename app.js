@@ -1,5 +1,5 @@
 /* =========================================================
-   Winkfried Immobilien — App Logic
+   Winfried Immobilien — App Logic
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -441,10 +441,10 @@ const LEGAL_CONTENT = {
   impressum: {
     title: 'Impressum',
     html: `
-      <p><strong>Winkfried Immobilien GmbH</strong><br>
+      <p><strong>Winfried Immobilien GmbH</strong><br>
       Maximilianstraße 12, 80539 München</p>
       <p>Vertreten durch: Tim Winkler und Maximilian Seyfried (Geschäftsführung)</p>
-      <p>Telefon: +49 89 123 456 78<br>E-Mail: info@winkfried-immobilien.de</p>
+      <p>Telefon: +49 89 123 456 78<br>E-Mail: info@winfried-immobilien.de</p>
       <p>Registergericht: Amtsgericht München · HRB (Beispiel)<br>
       USt-IdNr.: DE 000000000 (Beispiel)</p>
       <p>Diese Inhalte dienen als Platzhalter für eine Demo-Website und
@@ -460,7 +460,7 @@ const LEGAL_CONTENT = {
       zur Bearbeitung Ihrer Anfrage verwendet und nicht an Dritte weitergegeben.</p>
       <p>Diese Website verwendet keine Tracking- oder Analyse-Cookies. Für
       Auskunft, Berichtigung oder Löschung Ihrer Daten kontaktieren Sie uns
-      unter info@winkfried-immobilien.de.</p>
+      unter info@winfried-immobilien.de.</p>
       <p>Diese Inhalte dienen als Platzhalter für eine Demo-Website.</p>
     `,
   },

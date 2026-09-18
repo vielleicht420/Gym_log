@@ -1,4 +1,4 @@
-# Winkfried Immobilien
+# Winfried Immobilien
 
 Eine moderne, hochwertige Website für ein fiktives Immobilienmakler-Unternehmen.
 Statische Website ohne Build-Schritt – läuft komplett im Browser.
