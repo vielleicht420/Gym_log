@@ -3,61 +3,541 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prüfungstrainer</title>
+<title>Steigenberger Immobilien &ndash; Ihr Makler für exklusive Immobilien</title>
+<meta name="description" content="Steigenberger Immobilien: professionelle Vermittlung, Bewertung und Beratung rund um Kauf, Verkauf und Vermietung von Wohn- und Gewerbeimmobilien.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2314213d'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Georgia,serif' fill='%23c9a24b' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <h1>📚 Prüfungstrainer</h1>
-    <nav class="tabs" id="tabs">
-      <button class="tab-btn active" data-view="home">Start</button>
-      <button class="tab-btn" data-view="cards">Karteikarten</button>
-      <button class="tab-btn" data-view="quiz">Quiz</button>
-      <button class="tab-btn" data-view="progress">Fortschritt</button>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark">S</span>
+      <span class="logo-text">STEIGENBERGER<br><small>IMMOBILIEN</small></span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#leistungen">Leistungen</a>
+      <a href="#immobilien">Immobilien</a>
+      <a href="#ueber-uns">Über uns</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#team">Team</a>
+      <a href="#faq">FAQ</a>
+      <a href="#kontakt">Kontakt</a>
     </nav>
-  </header>
 
-  <main id="app"></main>
+    <div class="header-actions">
+      <a href="#kontakt" class="btn btn-outline header-cta">Kostenlose Bewertung</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
 
-  <template id="tpl-home">
-    <section class="view">
-      <h2>Übersicht</h2>
-      <div class="stat-row" id="home-stats"></div>
-      <h3>Themen</h3>
-      <div id="home-topics" class="topic-list"></div>
-    </section>
-  </template>
+<main id="top">
 
-  <template id="tpl-cards">
-    <section class="view">
-      <div class="view-header">
-        <h2>Karteikarten</h2>
-        <select id="cards-topic-select"></select>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="eyebrow reveal">Immobilienmakler &middot; seit 2010</p>
+      <h1 class="reveal">Ihre Immobilie<br>in <span class="accent-text">besten Händen.</span></h1>
+      <p class="hero-sub reveal">Steigenberger Immobilien begleitet Sie beim Kauf, Verkauf und der Vermietung
+        von Wohn- und Gewerbeimmobilien &ndash; diskret, transparent und mit einem
+        Gespür für den richtigen Preis.</p>
+      <div class="hero-actions reveal">
+        <a href="#kontakt" class="btn btn-primary">Kostenlose Immobilienbewertung</a>
+        <a href="#immobilien" class="btn btn-ghost">Angebote ansehen</a>
       </div>
-      <p class="hint" id="cards-hint"></p>
-      <div id="cards-stage"></div>
-    </section>
-  </template>
 
-  <template id="tpl-quiz">
-    <section class="view">
-      <div class="view-header">
-        <h2>Multiple-Choice-Quiz</h2>
-        <select id="quiz-topic-select"></select>
+      <form class="hero-search reveal" id="heroSearch">
+        <div class="field">
+          <label for="searchType">Anliegen</label>
+          <select id="searchType">
+            <option value="kaufen">Kaufen</option>
+            <option value="mieten">Mieten</option>
+            <option value="verkaufen">Verkaufen</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="searchLocation">Ort / Region</label>
+          <input type="text" id="searchLocation" placeholder="z. B. München, Starnberg …">
+        </div>
+        <div class="field">
+          <label for="searchBudget">Budget bis</label>
+          <select id="searchBudget">
+            <option value="">Beliebig</option>
+            <option value="300000">300.000 €</option>
+            <option value="500000">500.000 €</option>
+            <option value="800000">800.000 €</option>
+            <option value="1500000">1.500.000 €</option>
+            <option value="999999999">Über 1.500.000 €</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary search-submit">Suchen</button>
+      </form>
+    </div>
+
+    <div class="hero-stats container reveal">
+      <div class="stat">
+        <span class="stat-num" data-count="15">0</span><span class="stat-suffix">+</span>
+        <p>Jahre Erfahrung</p>
       </div>
-      <div id="quiz-stage"></div>
-    </section>
-  </template>
+      <div class="stat">
+        <span class="stat-num" data-count="480">0</span><span class="stat-suffix">+</span>
+        <p>Vermittelte Immobilien</p>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="98">0</span><span class="stat-suffix">%</span>
+        <p>Kundenzufriedenheit</p>
+      </div>
+      <div class="stat">
+        <span class="stat-num" data-count="21">0</span>
+        <p>Tage &oslash; bis Verkauf</p>
+      </div>
+    </div>
+  </section>
 
-  <template id="tpl-progress">
-    <section class="view">
-      <h2>Fortschritt</h2>
-      <div id="progress-stage"></div>
-      <button class="btn btn-danger" id="reset-progress">Fortschritt zurücksetzen</button>
-    </section>
-  </template>
+  <!-- LOGOS / TRUST -->
+  <section class="trustbar">
+    <div class="container trustbar-inner">
+      <p>Empfohlen &amp; ausgezeichnet</p>
+      <div class="trust-items">
+        <span>★★★★★ 4.9/5 Google</span>
+        <span>Immobilienscout24 Käufersiegel</span>
+        <span>Mitglied IVD</span>
+        <span>TÜV-geprüfte Beratung</span>
+      </div>
+    </div>
+  </section>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <!-- LEISTUNGEN -->
+  <section id="leistungen" class="section">
+    <div class="container">
+      <p class="eyebrow center reveal">Leistungen</p>
+      <h2 class="section-title center reveal">Alles aus einer Hand</h2>
+      <p class="section-sub center reveal">Von der ersten Einschätzung bis zur Schlüsselübergabe &ndash;
+        wir begleiten Sie durch den gesamten Immobilienprozess.</p>
+
+      <div class="grid services-grid">
+        <article class="card service-card reveal">
+          <div class="icon-box">
+            <svg viewBox="0 0 48 48"><path d="M6 24 24 8l18 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22v16h24V22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 38v-9h8v9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Verkauf</h3>
+          <p>Zielgerichtetes Marketing, professionelle Exposés und ein qualifiziertes Käufernetzwerk
+            für den bestmöglichen Verkaufspreis.</p>
+        </article>
+
+        <article class="card service-card reveal">
+          <div class="icon-box">
+            <svg viewBox="0 0 48 48"><rect x="8" y="10" width="32" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M8 18h32" stroke="currentColor" stroke-width="2.5"/><path d="M16 26h6M26 26h6M16 32h6M26 32h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Vermietung</h3>
+          <p>Sorgfältige Mieterauswahl, Bonitätsprüfung und rechtssichere Vertragsgestaltung
+            für einen reibungslosen Mietstart.</p>
+        </article>
+
+        <article class="card service-card reveal">
+          <div class="icon-box">
+            <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 15v9l6 5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Immobilienbewertung</h3>
+          <p>Marktgerechte, kostenlose Wertermittlung auf Basis aktueller Vergleichsdaten
+            und lokaler Marktkenntnis.</p>
+        </article>
+
+        <article class="card service-card reveal">
+          <div class="icon-box">
+            <svg viewBox="0 0 48 48"><path d="M24 6c9 6 16 6 16 6v12c0 10-7 16-16 18C15 40 8 34 8 24V12s7 0 16-6Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M18 24l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Beratung &amp; Finanzierung</h3>
+          <p>Unabhängige Beratung zu Finanzierung, Fördermitteln und rechtlichen Rahmenbedingungen
+            über unser Partnernetzwerk.</p>
+        </article>
+
+        <article class="card service-card reveal">
+          <div class="icon-box">
+            <svg viewBox="0 0 48 48"><path d="M8 40V20l16-12 16 12v20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M18 40V26h12v14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 8v6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Neubau &amp; Projektvermarktung</h3>
+          <p>Vermarktungskonzepte für Bauträger &ndash; von der Visualisierung bis zum
+            letzten verkauften Objekt.</p>
+        </article>
+
+        <article class="card service-card reveal">
+          <div class="icon-box">
+            <svg viewBox="0 0 48 48"><rect x="10" y="8" width="28" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M16 16h16M16 24h16M16 32h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Objektverwaltung</h3>
+          <p>Laufende Betreuung von Miet- und Renditeobjekten &ndash; Abrechnung, Instandhaltung
+            und Kommunikation mit Mietern.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÜBER UNS -->
+  <section id="ueber-uns" class="section alt">
+    <div class="container about-grid">
+      <div class="about-media reveal">
+        <div class="about-photo"></div>
+        <div class="about-badge">
+          <strong>15+</strong>
+          <span>Jahre am Markt</span>
+        </div>
+      </div>
+      <div class="about-content reveal">
+        <p class="eyebrow">Über uns</p>
+        <h2 class="section-title">Familiengeführt. Regional verwurzelt.<br>International vernetzt.</h2>
+        <p>Steigenberger Immobilien wurde 2010 von Anna Steigenberger als kleines
+          Maklerbüro gegründet &ndash; heute sind wir ein Team aus zwölf erfahrenen
+          Immobilienexpert:innen, das Eigentümer, Käufer und Mieter in der gesamten
+          Region begleitet.</p>
+        <p>Unser Anspruch: ehrliche Beratung statt Verkaufsdruck, transparente
+          Prozesse statt Kleingedrucktem, und ein persönlicher Ansprechpartner
+          von der ersten Anfrage bis zur Schlüsselübergabe.</p>
+
+        <ul class="check-list">
+          <li>Kostenlose, unverbindliche Wertermittlung</li>
+          <li>Professionelle Fotografie &amp; virtuelle Rundgänge</li>
+          <li>Geprüfte Kaufinteressenten &amp; Mieter</li>
+          <li>Persönlicher Ansprechpartner bis zum Notartermin</li>
+        </ul>
+
+        <a href="#kontakt" class="btn btn-primary">Erstgespräch vereinbaren</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMMOBILIEN -->
+  <section id="immobilien" class="section">
+    <div class="container">
+      <p class="eyebrow center reveal">Immobilien</p>
+      <h2 class="section-title center reveal">Aktuelle Angebote</h2>
+      <p class="section-sub center reveal">Eine Auswahl unserer aktuell vermittelten Objekte.
+        Nicht das Richtige dabei? Wir finden auch abseits der Kartei etwas Passendes für Sie.</p>
+
+      <div class="filter-tabs reveal" id="filterTabs" role="tablist">
+        <button class="filter-btn active" data-filter="alle">Alle</button>
+        <button class="filter-btn" data-filter="kaufen">Kaufen</button>
+        <button class="filter-btn" data-filter="mieten">Mieten</button>
+      </div>
+
+      <div class="grid property-grid" id="propertyGrid"></div>
+
+      <div class="center" style="margin-top:2.5rem;">
+        <a href="#kontakt" class="btn btn-outline">Alle Angebote auf Anfrage anzeigen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEWERTUNG CTA -->
+  <section class="cta-banner">
+    <div class="container cta-banner-inner reveal">
+      <div>
+        <h2>Was ist Ihre Immobilie wert?</h2>
+        <p>Erhalten Sie eine fundierte, kostenlose Einschätzung &ndash; digital in 5 Minuten
+          oder persönlich vor Ort.</p>
+      </div>
+      <a href="#kontakt" class="btn btn-primary-inverted">Jetzt kostenlos bewerten</a>
+    </div>
+  </section>
+
+  <!-- ABLAUF -->
+  <section id="ablauf" class="section alt">
+    <div class="container">
+      <p class="eyebrow center reveal">So arbeiten wir</p>
+      <h2 class="section-title center reveal">Ihr Weg zum Verkauf</h2>
+
+      <div class="steps">
+        <div class="step reveal">
+          <span class="step-num">01</span>
+          <h3>Erstgespräch</h3>
+          <p>Kennenlernen, Ziele und Zeitplan klären &ndash; unverbindlich und kostenfrei.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">02</span>
+          <h3>Bewertung</h3>
+          <p>Marktgerechte Wertermittlung anhand von Lage, Zustand und aktuellen Vergleichsdaten.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">03</span>
+          <h3>Vermarktung</h3>
+          <p>Professionelle Fotos, Exposé und gezielte Ansprache passender Interessent:innen.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">04</span>
+          <h3>Besichtigungen</h3>
+          <p>Wir organisieren und begleiten alle Besichtigungstermine für Sie.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">05</span>
+          <h3>Verhandlung</h3>
+          <p>Professionelle Preisverhandlung im Sinne des bestmöglichen Ergebnisses.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">06</span>
+          <h3>Notartermin &amp; Übergabe</h3>
+          <p>Begleitung bis zur Beurkundung und reibungslose Objektübergabe.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="section">
+    <div class="container">
+      <p class="eyebrow center reveal">Team</p>
+      <h2 class="section-title center reveal">Ihre Ansprechpartner</h2>
+      <p class="section-sub center reveal">Persönlich, erreichbar, mit echter Marktkenntnis.</p>
+
+      <div class="grid team-grid">
+        <article class="card team-card reveal">
+          <div class="team-photo" style="--h:210;"></div>
+          <h3>Anna Steigenberger</h3>
+          <p class="role">Gründerin &amp; Geschäftsführung</p>
+          <p class="team-desc">Über 15 Jahre Erfahrung im gehobenen Wohnimmobiliensegment.</p>
+        </article>
+        <article class="card team-card reveal">
+          <div class="team-photo" style="--h:20;"></div>
+          <h3>Markus Feldmann</h3>
+          <p class="role">Leitung Verkauf</p>
+          <p class="team-desc">Spezialist für Einfamilienhäuser und Neubauprojekte.</p>
+        </article>
+        <article class="card team-card reveal">
+          <div class="team-photo" style="--h:150;"></div>
+          <h3>Laura Bergmann</h3>
+          <p class="role">Vermietung &amp; Objektverwaltung</p>
+          <p class="team-desc">Ihre Ansprechpartnerin für Miet- und Renditeobjekte.</p>
+        </article>
+        <article class="card team-card reveal">
+          <div class="team-photo" style="--h:80;"></div>
+          <h3>Jonas Weller</h3>
+          <p class="role">Finanzierungsberatung</p>
+          <p class="team-desc">Unabhängige Finanzierungslösungen über unser Bankennetzwerk.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section alt testimonials">
+    <div class="container">
+      <p class="eyebrow center reveal">Kundenstimmen</p>
+      <h2 class="section-title center reveal">Was unsere Kund:innen sagen</h2>
+
+      <div class="testimonial-slider reveal" id="testimonialSlider">
+        <div class="testimonial-track" id="testimonialTrack">
+          <blockquote class="testimonial">
+            <p>&bdquo;Von der Bewertung bis zum Notartermin lief alles reibungslos.
+              Wir wurden zu jedem Zeitpunkt ehrlich beraten.&ldquo;</p>
+            <footer>&mdash; Familie Hoffmann, Hausverkauf in München</footer>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p>&bdquo;Unsere Wohnung war innerhalb von drei Wochen zum gewünschten
+              Preis verkauft. Absolut professionell.&ldquo;</p>
+            <footer>&mdash; S. Kraus, Eigentumswohnung Starnberg</footer>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p>&bdquo;Als Kapitalanleger schätze ich die zuverlässige Objektverwaltung
+              und die schnelle Kommunikation.&ldquo;</p>
+            <footer>&mdash; T. Reinhardt, Kapitalanleger</footer>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p>&bdquo;Endlich ein Makler, der zuhört. Wir haben genau das Haus
+              gefunden, das zu unserer Familie passt.&ldquo;</p>
+            <footer>&mdash; Familie Nowak, Immobilienkauf</footer>
+          </blockquote>
+        </div>
+        <div class="testimonial-dots" id="testimonialDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="container faq-grid">
+      <div class="reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="section-title">Häufige Fragen</h2>
+        <p class="section-sub">Antworten auf die wichtigsten Fragen rund um Kauf, Verkauf
+          und Vermietung. Weitere Fragen? Sprechen Sie uns einfach an.</p>
+      </div>
+
+      <div class="accordion reveal" id="accordion">
+        <div class="accordion-item">
+          <button class="accordion-trigger">Was kostet die Immobilienbewertung?
+            <span class="accordion-icon">+</span></button>
+          <div class="accordion-panel"><p>Die Erstbewertung Ihrer Immobilie ist für Sie
+            als Eigentümer:in grundsätzlich kostenlos und unverbindlich.</p></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Wie lange dauert ein typischer Verkaufsprozess?
+            <span class="accordion-icon">+</span></button>
+          <div class="accordion-panel"><p>Im Durchschnitt vermitteln wir Objekte innerhalb
+            von 21 Tagen &ndash; abhängig von Lage, Zustand und Marktsituation.</p></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Welche Unterlagen benötige ich für den Verkauf?
+            <span class="accordion-icon">+</span></button>
+          <div class="accordion-panel"><p>Grundbuchauszug, Energieausweis, Grundriss und ggf.
+            Teilungserklärung. Wir unterstützen Sie bei der Beschaffung fehlender Unterlagen.</p></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Übernehmen Sie auch die Vermietung möblierter Wohnungen?
+            <span class="accordion-icon">+</span></button>
+          <div class="accordion-panel"><p>Ja, wir vermitteln sowohl unmöblierte als auch
+            möblierte Wohnungen inklusive Mieterprüfung und Vertragsgestaltung.</p></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">In welchen Regionen sind Sie aktiv?
+            <span class="accordion-icon">+</span></button>
+          <div class="accordion-panel"><p>Unser Schwerpunkt liegt in München und dem
+            Umland, auf Anfrage vermitteln wir auch überregional.</p></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Wie werde ich als Kaufinteressent:in informiert?
+            <span class="accordion-icon">+</span></button>
+          <div class="accordion-panel"><p>Nach einem kurzen Beratungsgespräch erhalten Sie
+            passende Angebote exklusiv per E-Mail, oft vor der öffentlichen Vermarktung.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section id="kontakt" class="section alt">
+    <div class="container contact-grid">
+      <div class="contact-info reveal">
+        <p class="eyebrow">Kontakt</p>
+        <h2 class="section-title">Lassen Sie uns sprechen</h2>
+        <p>Ob Kauf, Verkauf, Vermietung oder einfach eine erste Einschätzung &ndash;
+          wir freuen uns auf Ihre Nachricht.</p>
+
+        <ul class="contact-list">
+          <li><strong>Adresse</strong><span>Maximilianstraße 12, 80539 München</span></li>
+          <li><strong>Telefon</strong><span><a href="tel:+498912345678">+49 89 123 456 78</a></span></li>
+          <li><strong>E-Mail</strong><span><a href="mailto:info@steigenberger-immobilien.de">info@steigenberger-immobilien.de</a></span></li>
+          <li><strong>Bürozeiten</strong><span>Mo&ndash;Fr 9:00&ndash;18:00, Sa nach Vereinbarung</span></li>
+        </ul>
+
+        <div class="map-frame" role="img" aria-label="Kartenausschnitt Standort München"></div>
+      </div>
+
+      <form class="contact-form reveal" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Name *</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="email">E-Mail *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="phone">Telefon</label>
+            <input type="tel" id="phone" name="phone">
+          </div>
+          <div class="field">
+            <label for="topic">Anliegen</label>
+            <select id="topic" name="topic">
+              <option>Immobilie verkaufen</option>
+              <option>Immobilie kaufen</option>
+              <option>Immobilie vermieten</option>
+              <option>Immobilie mieten</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="message">Nachricht *</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <label class="checkbox-field">
+          <input type="checkbox" id="privacy" required>
+          <span>Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen. *</span>
+        </label>
+        <button type="submit" class="btn btn-primary form-submit">Nachricht senden</button>
+        <p class="form-success" id="formSuccess" hidden>Vielen Dank! Wir melden uns innerhalb
+          eines Werktags bei Ihnen.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="#top" class="logo">
+        <span class="logo-mark">S</span>
+        <span class="logo-text">STEIGENBERGER<br><small>IMMOBILIEN</small></span>
+      </a>
+      <p>Ihr Partner für Kauf, Verkauf und Vermietung von Immobilien
+        in München und Umgebung.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="LinkedIn">IN</a>
+        <a href="#" aria-label="Facebook">FB</a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Leistungen</h4>
+      <a href="#leistungen">Verkauf</a>
+      <a href="#leistungen">Vermietung</a>
+      <a href="#leistungen">Bewertung</a>
+      <a href="#leistungen">Beratung</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Unternehmen</h4>
+      <a href="#ueber-uns">Über uns</a>
+      <a href="#team">Team</a>
+      <a href="#faq">FAQ</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p>Neue Angebote &amp; Markttrends direkt im Postfach.</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" placeholder="Ihre E-Mail" required aria-label="E-Mail für Newsletter">
+        <button type="submit">Anmelden</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; <span id="year"></span> Steigenberger Immobilien. Alle Rechte vorbehalten.</p>
+    <div class="footer-legal">
+      <a href="#impressum" id="impressum">Impressum</a>
+      <a href="#datenschutz" id="datenschutz">Datenschutz</a>
+      <a href="#agb">AGB</a>
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Nach oben scrollen">↑</button>
+
+<div class="modal" id="legalModal" hidden>
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose" aria-label="Schließen">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>

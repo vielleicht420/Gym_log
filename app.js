@@ -1,403 +1,509 @@
-(function () {
-  "use strict";
+/* =========================================================
+   Steigenberger Immobilien — App Logic
+   ========================================================= */
 
-  var TOPICS = window.STUDY_DATA.topics;
-  var STORAGE_KEY = "examTrainer:v1";
-  var DAY_MS = 24 * 60 * 60 * 1000;
+document.addEventListener('DOMContentLoaded', () => {
+  initHeader();
+  initNavToggle();
+  initSmoothAnchors();
+  initReveal();
+  initCounters();
+  initProperties();
+  initTestimonialSlider();
+  initAccordion();
+  initContactForm();
+  initNewsletterForm();
+  initHeroSearch();
+  initBackToTop();
+  initLegalModal();
+  initFooterYear();
+});
 
-  // ---------- State ----------
-  function loadState() {
-    var raw = null;
-    try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { /* ignore */ }
-    if (!raw) return { cards: {}, quiz: {} };
-    try {
-      var parsed = JSON.parse(raw);
-      return { cards: parsed.cards || {}, quiz: parsed.quiz || {} };
-    } catch (e) {
-      return { cards: {}, quiz: {} };
-    }
-  }
+/* ---------- Header shrink on scroll + progress bar ---------- */
+function initHeader() {
+  const header = document.getElementById('siteHeader');
+  const progressBar = document.getElementById('progressBar');
 
-  var state = loadState();
+  const onScroll = () => {
+    header.classList.toggle('scrolled', window.scrollY > 40);
 
-  function saveState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
-  }
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+  };
 
-  function cardState(id) {
-    if (!state.cards[id]) {
-      state.cards[id] = { ef: 2.5, interval: 0, reps: 0, due: 0, lapses: 0, seen: 0 };
-    }
-    return state.cards[id];
-  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
 
-  function quizStat(id) {
-    if (!state.quiz[id]) {
-      state.quiz[id] = { attempts: 0, correct: 0 };
-    }
-    return state.quiz[id];
-  }
+/* ---------- Mobile nav toggle ---------- */
+function initNavToggle() {
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('mainNav');
 
-  // ---------- Spaced repetition (simplified SM-2) ----------
-  function rateCard(id, rating) {
-    var s = cardState(id);
-    s.seen++;
-    if (rating === 0) { // again
-      s.reps = 0;
-      s.interval = 0;
-      s.ef = Math.max(1.3, s.ef - 0.2);
-      s.lapses++;
-    } else if (rating === 1) { // hard
-      s.interval = Math.max(1, Math.round((s.interval || 1) * 1.2));
-      s.ef = Math.max(1.3, s.ef - 0.15);
-      s.reps++;
-    } else if (rating === 2) { // good
-      if (s.reps === 0) s.interval = 1;
-      else if (s.reps === 1) s.interval = 6;
-      else s.interval = Math.round(s.interval * s.ef);
-      s.reps++;
-    } else { // easy
-      if (s.reps === 0) s.interval = 4;
-      else s.interval = Math.round(s.interval * s.ef * 1.3);
-      s.ef = s.ef + 0.15;
-      s.reps++;
-    }
-    s.due = Date.now() + s.interval * DAY_MS;
-    saveState();
-  }
+  toggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('open');
+    toggle.classList.toggle('open', isOpen);
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
 
-  function allCards() {
-    var out = [];
-    TOPICS.forEach(function (t) {
-      t.cards.forEach(function (c) { out.push(Object.assign({ topicId: t.id, topicTitle: t.title }, c)); });
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
     });
-    return out;
-  }
+  });
+}
 
-  function cardsForTopic(topicId) {
-    var cards = allCards();
-    if (topicId === "all") return cards;
-    return cards.filter(function (c) { return c.topicId === topicId; });
-  }
-
-  function dueCards(topicId) {
-    var now = Date.now();
-    return cardsForTopic(topicId).filter(function (c) {
-      var s = cardState(c.id);
-      return s.due <= now;
-    }).sort(function (a, b) { return cardState(a.id).due - cardState(b.id).due; });
-  }
-
-  function allQuiz() {
-    var out = [];
-    TOPICS.forEach(function (t) {
-      t.quiz.forEach(function (q) { out.push(Object.assign({ topicId: t.id, topicTitle: t.title }, q)); });
+/* ---------- Smooth scroll for in-page anchors ---------- */
+function initSmoothAnchors() {
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
+      const id = anchor.getAttribute('href');
+      if (!id || id === '#' || id === '#top') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      // Let legal-link handler manage modal targets separately.
+      if (anchor.id === 'impressum' || anchor.id === 'datenschutz') return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    return out;
+  });
+}
+
+/* ---------- Scroll reveal animation ---------- */
+function initReveal() {
+  const items = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    items.forEach((el) => el.classList.add('in-view'));
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  items.forEach((el) => observer.observe(el));
+}
+
+/* ---------- Animated stat counters ---------- */
+function initCounters() {
+  const counters = document.querySelectorAll('.stat-num');
+  if (!counters.length) return;
+
+  const animate = (el) => {
+    const target = parseInt(el.dataset.count, 10) || 0;
+    const duration = 1400;
+    const start = performance.now();
+
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target).toString();
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
+  if (!('IntersectionObserver' in window)) {
+    counters.forEach(animate);
+    return;
   }
 
-  function quizForTopic(topicId) {
-    var qs = allQuiz();
-    if (topicId === "all") return qs;
-    return qs.filter(function (q) { return q.topicId === topicId; });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animate(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+  counters.forEach((el) => observer.observe(el));
+}
+
+/* ---------- Property listings ---------- */
+const PROPERTIES = [
+  {
+    title: 'Lichtdurchflutete Altbauwohnung',
+    location: 'Schwabing, München',
+    price: 745000,
+    type: 'kaufen',
+    tag: 'Neu',
+    rooms: 3.5,
+    area: 98,
+    colors: ['#2a3c65', '#14213d'],
+  },
+  {
+    title: 'Modernes Reihenhaus mit Garten',
+    location: 'Starnberg',
+    price: 1180000,
+    type: 'kaufen',
+    tag: 'Neu',
+    rooms: 5,
+    area: 165,
+    colors: ['#3a5a80', '#14213d'],
+  },
+  {
+    title: 'Penthouse mit Dachterrasse',
+    location: 'Bogenhausen, München',
+    price: 2450000,
+    type: 'kaufen',
+    tag: 'Exklusiv',
+    rooms: 4,
+    area: 175,
+    colors: ['#1c2a4a', '#0f1a30'],
+  },
+  {
+    title: 'Helle 2-Zimmer-Wohnung',
+    location: 'Sendling, München',
+    price: 1450,
+    type: 'mieten',
+    tag: 'Reserviert',
+    rooms: 2,
+    area: 62,
+    colors: ['#4a6285', '#233457'],
+  },
+  {
+    title: 'Familienhaus mit Doppelgarage',
+    location: 'Germering',
+    price: 890000,
+    type: 'kaufen',
+    tag: null,
+    rooms: 6,
+    area: 190,
+    colors: ['#2a3c65', '#0f1a30'],
+  },
+  {
+    title: 'Loft-Wohnung im Industrial-Stil',
+    location: 'Haidhausen, München',
+    price: 2200,
+    type: 'mieten',
+    tag: 'Neu',
+    rooms: 3,
+    area: 88,
+    colors: ['#3a5a80', '#1c2a4a'],
+  },
+  {
+    title: 'Gepflegte Gewerbefläche',
+    location: 'Innenstadt, München',
+    price: 3800,
+    type: 'mieten',
+    tag: null,
+    rooms: 1,
+    area: 210,
+    colors: ['#1c2a4a', '#14213d'],
+  },
+  {
+    title: 'Villa mit Seeblick',
+    location: 'Ammersee',
+    price: 3650000,
+    type: 'kaufen',
+    tag: 'Exklusiv',
+    rooms: 7,
+    area: 320,
+    colors: ['#233457', '#0f1a30'],
+  },
+  {
+    title: 'Charmante Maisonette-Wohnung',
+    location: 'Pasing, München',
+    price: 1690,
+    type: 'mieten',
+    tag: null,
+    rooms: 3,
+    area: 76,
+    colors: ['#4a6285', '#2a3c65'],
+  },
+];
+
+function formatPrice(property) {
+  const formatted = new Intl.NumberFormat('de-DE').format(property.price);
+  return property.type === 'mieten'
+    ? `${formatted} € <small>/ Monat</small>`
+    : `${formatted} €`;
+}
+
+function propertyCardHTML(property) {
+  const badgeClass = property.type === 'mieten' ? 'tag-mieten' : '';
+  const badgeLabel = property.type === 'mieten' ? 'Mieten' : 'Kaufen';
+  const extraTag = property.tag
+    ? `<span class="property-tag">${property.tag}</span>`
+    : '';
+
+  return `
+    <article class="card property-card reveal in-view" data-type="${property.type}">
+      <div class="property-media" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}">
+        <span class="property-badge ${badgeClass}">${badgeLabel}</span>
+        ${extraTag}
+      </div>
+      <div class="property-body">
+        <p class="property-price">${formatPrice(property)}</p>
+        <h3 class="property-title">${property.title}</h3>
+        <p class="property-loc">${property.location}</p>
+        <div class="property-meta">
+          <span>🛏 ${property.rooms} Zimmer</span>
+          <span>📐 ${property.area} m²</span>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function initProperties() {
+  const grid = document.getElementById('propertyGrid');
+  const tabs = document.getElementById('filterTabs');
+  if (!grid || !tabs) return;
+
+  const render = (filter) => {
+    const items =
+      filter === 'alle' ? PROPERTIES : PROPERTIES.filter((p) => p.type === filter);
+    grid.innerHTML = items.map(propertyCardHTML).join('');
+  };
+
+  tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    tabs.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    render(btn.dataset.filter);
+  });
+
+  render('alle');
+}
+
+/* ---------- Testimonial slider ---------- */
+function initTestimonialSlider() {
+  const track = document.getElementById('testimonialTrack');
+  const dotsWrap = document.getElementById('testimonialDots');
+  if (!track || !dotsWrap) return;
+
+  const slides = track.children.length;
+  let index = 0;
+  let timer = null;
+
+  for (let i = 0; i < slides; i++) {
+    const dot = document.createElement('button');
+    if (i === 0) dot.classList.add('active');
+    dot.setAttribute('aria-label', `Bewertung ${i + 1} anzeigen`);
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
   }
 
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  function goTo(i) {
+    index = (i + slides) % slides;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    [...dotsWrap.children].forEach((d, di) => d.classList.toggle('active', di === index));
+  }
+
+  function startAutoplay() {
+    timer = setInterval(() => goTo(index + 1), 5500);
+  }
+
+  const slider = document.getElementById('testimonialSlider');
+  slider.addEventListener('mouseenter', () => clearInterval(timer));
+  slider.addEventListener('mouseleave', startAutoplay);
+
+  startAutoplay();
+}
+
+/* ---------- FAQ accordion ---------- */
+function initAccordion() {
+  const accordion = document.getElementById('accordion');
+  if (!accordion) return;
+
+  accordion.querySelectorAll('.accordion-item').forEach((item) => {
+    const trigger = item.querySelector('.accordion-trigger');
+    const panel = item.querySelector('.accordion-panel');
+
+    trigger.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+
+      accordion.querySelectorAll('.accordion-item.open').forEach((openItem) => {
+        openItem.classList.remove('open');
+        openItem.querySelector('.accordion-panel').style.maxHeight = null;
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+  });
+}
+
+/* ---------- Contact form ---------- */
+function initContactForm() {
+  const form = document.getElementById('contactForm');
+  const success = document.getElementById('formSuccess');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let valid = true;
+
+    form.querySelectorAll('[required]').forEach((field) => {
+      const wrapper = field.closest('.field') || field.closest('.checkbox-field');
+      const filled =
+        field.type === 'checkbox' ? field.checked : field.value.trim().length > 0;
+      const emailOk =
+        field.type !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
+
+      if (!filled || !emailOk) {
+        valid = false;
+        if (wrapper) wrapper.classList.add('error');
+      } else if (wrapper) {
+        wrapper.classList.remove('error');
+      }
+    });
+
+    if (!valid) {
+      success.hidden = true;
+      return;
     }
-    return a;
-  }
 
-  // ---------- View router ----------
-  var app = document.getElementById("app");
-  var tabs = document.querySelectorAll(".tab-btn");
-  var currentView = "home";
+    success.hidden = false;
+    success.textContent = 'Vielen Dank! Wir melden uns innerhalb eines Werktags bei Ihnen.';
+    form.reset();
+    form.querySelectorAll('.field.error').forEach((f) => f.classList.remove('error'));
+  });
+}
 
-  tabs.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      tabs.forEach(function (b) { b.classList.remove("active"); });
-      btn.classList.add("active");
-      currentView = btn.dataset.view;
-      render();
+/* ---------- Newsletter form ---------- */
+function initNewsletterForm() {
+  const form = document.getElementById('newsletterForm');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = form.querySelector('input');
+    const button = form.querySelector('button');
+    if (!input.value.trim()) return;
+    const original = button.textContent;
+    button.textContent = 'Danke!';
+    input.value = '';
+    setTimeout(() => (button.textContent = original), 2200);
+  });
+}
+
+/* ---------- Hero search -> scrolls to contact with prefilled topic ---------- */
+function initHeroSearch() {
+  const form = document.getElementById('heroSearch');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const type = document.getElementById('searchType').value;
+    const location = document.getElementById('searchLocation').value.trim();
+
+    const topicSelect = document.getElementById('topic');
+    const messageField = document.getElementById('message');
+
+    const labelMap = {
+      kaufen: 'Immobilie kaufen',
+      mieten: 'Immobilie mieten',
+      verkaufen: 'Immobilie verkaufen',
+    };
+
+    if (topicSelect && labelMap[type]) topicSelect.value = labelMap[type];
+    if (messageField && location) {
+      messageField.value = `Ich interessiere mich für eine Immobilie in/bei "${location}".`;
+    }
+
+    document.getElementById('kontakt').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+/* ---------- Back to top button ---------- */
+function initBackToTop() {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+
+  window.addEventListener(
+    'scroll',
+    () => btn.classList.toggle('visible', window.scrollY > 600),
+    { passive: true }
+  );
+
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
+
+/* ---------- Legal modal (Impressum / Datenschutz) ---------- */
+const LEGAL_CONTENT = {
+  impressum: {
+    title: 'Impressum',
+    html: `
+      <p><strong>Steigenberger Immobilien GmbH</strong><br>
+      Maximilianstraße 12, 80539 München</p>
+      <p>Vertreten durch: Anna Steigenberger (Geschäftsführung)</p>
+      <p>Telefon: +49 89 123 456 78<br>E-Mail: info@steigenberger-immobilien.de</p>
+      <p>Registergericht: Amtsgericht München · HRB (Beispiel)<br>
+      USt-IdNr.: DE 000000000 (Beispiel)</p>
+      <p>Diese Inhalte dienen als Platzhalter für eine Demo-Website und
+      ersetzen keine rechtsverbindliche Anbieterkennzeichnung.</p>
+    `,
+  },
+  datenschutz: {
+    title: 'Datenschutzerklärung',
+    html: `
+      <p>Wir nehmen den Schutz Ihrer persönlichen Daten ernst und behandeln
+      sie vertraulich entsprechend den gesetzlichen Datenschutzvorschriften.</p>
+      <p>Die über das Kontaktformular übermittelten Daten werden ausschließlich
+      zur Bearbeitung Ihrer Anfrage verwendet und nicht an Dritte weitergegeben.</p>
+      <p>Diese Website verwendet keine Tracking- oder Analyse-Cookies. Für
+      Auskunft, Berichtigung oder Löschung Ihrer Daten kontaktieren Sie uns
+      unter info@steigenberger-immobilien.de.</p>
+      <p>Diese Inhalte dienen als Platzhalter für eine Demo-Website.</p>
+    `,
+  },
+};
+
+function initLegalModal() {
+  const modal = document.getElementById('legalModal');
+  const modalBody = document.getElementById('modalBody');
+  const closeBtn = document.getElementById('modalClose');
+  const backdrop = document.getElementById('modalBackdrop');
+  if (!modal) return;
+
+  const open = (key) => {
+    const content = LEGAL_CONTENT[key];
+    if (!content) return;
+    modalBody.innerHTML = `<h3>${content.title}</h3>${content.html}`;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+
+  const close = () => {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  };
+
+  ['impressum', 'datenschutz'].forEach((key) => {
+    document.querySelectorAll(`#${key}, a[href="#${key}"]`).forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        open(key);
+      });
     });
   });
 
-  function render() {
-    if (currentView === "home") renderHome();
-    else if (currentView === "cards") renderCards();
-    else if (currentView === "quiz") renderQuiz();
-    else if (currentView === "progress") renderProgress();
-  }
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) close();
+  });
+}
 
-  function topicOptionsHTML(includeAll) {
-    var html = includeAll ? '<option value="all">Alle Themen</option>' : "";
-    TOPICS.forEach(function (t) {
-      html += '<option value="' + t.id + '">' + t.title + "</option>";
-    });
-    return html;
-  }
-
-  // ---------- Home ----------
-  function renderHome() {
-    var tpl = document.getElementById("tpl-home");
-    app.innerHTML = "";
-    app.appendChild(tpl.content.cloneNode(true));
-
-    var due = dueCards("all").length;
-    var totalCards = allCards().length;
-    var learned = Object.keys(state.cards).filter(function (id) { return state.cards[id].reps > 0; }).length;
-    var quizAttempts = Object.values(state.quiz).reduce(function (s, q) { return s + q.attempts; }, 0);
-    var quizCorrect = Object.values(state.quiz).reduce(function (s, q) { return s + q.correct; }, 0);
-    var accuracy = quizAttempts > 0 ? Math.round((quizCorrect / quizAttempts) * 100) : 0;
-
-    document.getElementById("home-stats").innerHTML = [
-      statCard(due, "Fällig heute"),
-      statCard(learned + " / " + totalCards, "Karten gelernt"),
-      statCard(accuracy + "%", "Quiz-Trefferquote")
-    ].join("");
-
-    var topicsHTML = TOPICS.map(function (t) {
-      var cardIds = t.cards.map(function (c) { return c.id; });
-      var learnedInTopic = cardIds.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
-      var pct = cardIds.length ? Math.round((learnedInTopic / cardIds.length) * 100) : 0;
-      return (
-        '<div class="topic-card">' +
-        "<h4>" + t.title + "</h4>" +
-        '<div class="meta">' + t.cards.length + " Karteikarten · " + t.quiz.length + " Quizfragen</div>" +
-        '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + pct + '%"></div></div>' +
-        '<div class="meta" style="margin-top:6px;">' + pct + "% gelernt</div>" +
-        "</div>"
-      );
-    }).join("");
-    document.getElementById("home-topics").innerHTML = topicsHTML;
-  }
-
-  function statCard(num, label) {
-    return '<div class="stat-card"><div class="num">' + num + '</div><div class="label">' + label + "</div></div>";
-  }
-
-  // ---------- Flashcards ----------
-  var cardsSession = null; // { queue: [...], index, showingBack }
-
-  function renderCards() {
-    var tpl = document.getElementById("tpl-cards");
-    app.innerHTML = "";
-    app.appendChild(tpl.content.cloneNode(true));
-
-    var select = document.getElementById("cards-topic-select");
-    select.innerHTML = topicOptionsHTML(true);
-    var saved = sessionStorage.getItem("cardsTopic") || "all";
-    select.value = saved;
-
-    select.addEventListener("change", function () {
-      sessionStorage.setItem("cardsTopic", select.value);
-      startCardsSession(select.value);
-    });
-
-    startCardsSession(select.value);
-  }
-
-  function startCardsSession(topicId) {
-    var due = dueCards(topicId);
-    var newOnes = cardsForTopic(topicId).filter(function (c) {
-      var s = state.cards[c.id];
-      return !s || s.reps === 0;
-    }).filter(function (c) { return due.indexOf(c) === -1; });
-
-    var queue = due.concat(newOnes);
-    cardsSession = { queue: queue, index: 0, showingBack: false };
-
-    var hint = document.getElementById("cards-hint");
-    hint.textContent = queue.length
-      ? due.length + " fällig, " + newOnes.length + " neu"
-      : "Für dieses Thema ist gerade nichts fällig.";
-
-    renderCardStage();
-  }
-
-  function renderCardStage() {
-    var stage = document.getElementById("cards-stage");
-    if (!cardsSession || cardsSession.index >= cardsSession.queue.length) {
-      stage.innerHTML = '<div class="empty-state">🎉 Alles erledigt für jetzt!<br>Schau später wieder vorbei oder wähle ein anderes Thema.</div>';
-      return;
-    }
-    var card = cardsSession.queue[cardsSession.index];
-    var showingBack = cardsSession.showingBack;
-
-    stage.innerHTML =
-      '<div class="flashcard-wrap">' +
-      '<div class="flashcard' + (showingBack ? " answer" : "") + '" id="flashcard">' +
-      (showingBack ? card.back : card.front) +
-      "</div></div>" +
-      '<div class="flip-hint">' + (showingBack ? "Wie gut wusstest du die Antwort?" : "Tippen zum Umdrehen · " + card.topicTitle) + "</div>" +
-      (showingBack
-        ? '<div class="rate-row">' +
-          '<button class="rate-again" data-r="0">Nochmal</button>' +
-          '<button class="rate-hard" data-r="1">Schwer</button>' +
-          '<button class="rate-good" data-r="2">Gut</button>' +
-          '<button class="rate-easy" data-r="3">Einfach</button>' +
-          "</div>"
-        : "");
-
-    var el = document.getElementById("flashcard");
-    el.addEventListener("click", function () {
-      cardsSession.showingBack = !cardsSession.showingBack;
-      renderCardStage();
-    });
-
-    if (showingBack) {
-      stage.querySelectorAll(".rate-row button").forEach(function (btn) {
-        btn.addEventListener("click", function (ev) {
-          ev.stopPropagation();
-          rateCard(card.id, parseInt(btn.dataset.r, 10));
-          cardsSession.index++;
-          cardsSession.showingBack = false;
-          renderCardStage();
-        });
-      });
-    }
-  }
-
-  // ---------- Quiz ----------
-  var quizSession = null; // { questions, index, score, answered, selectedIndex }
-
-  function renderQuiz() {
-    var tpl = document.getElementById("tpl-quiz");
-    app.innerHTML = "";
-    app.appendChild(tpl.content.cloneNode(true));
-
-    var select = document.getElementById("quiz-topic-select");
-    select.innerHTML = topicOptionsHTML(true);
-    var saved = sessionStorage.getItem("quizTopic") || "all";
-    select.value = saved;
-
-    select.addEventListener("change", function () {
-      sessionStorage.setItem("quizTopic", select.value);
-      startQuizSession(select.value);
-    });
-
-    startQuizSession(select.value);
-  }
-
-  function startQuizSession(topicId) {
-    var questions = shuffle(quizForTopic(topicId)).slice(0, 15);
-    quizSession = { questions: questions, index: 0, score: 0, answered: false, selectedIndex: null };
-    renderQuizStage();
-  }
-
-  function renderQuizStage() {
-    var stage = document.getElementById("quiz-stage");
-    if (!quizSession || quizSession.questions.length === 0) {
-      stage.innerHTML = '<div class="empty-state">Für dieses Thema gibt es noch keine Quizfragen.</div>';
-      return;
-    }
-    if (quizSession.index >= quizSession.questions.length) {
-      var pct = Math.round((quizSession.score / quizSession.questions.length) * 100);
-      stage.innerHTML =
-        '<div class="quiz-result">' +
-        '<div class="score">' + quizSession.score + " / " + quizSession.questions.length + "</div>" +
-        "<div>" + pct + "% richtig</div>" +
-        '<button class="btn" id="quiz-restart" style="margin-top:20px;">Neue Runde</button>' +
-        "</div>";
-      document.getElementById("quiz-restart").addEventListener("click", function () {
-        var select = document.getElementById("quiz-topic-select");
-        startQuizSession(select.value);
-      });
-      return;
-    }
-
-    var q = quizSession.questions[quizSession.index];
-    var optionsHTML = q.options.map(function (opt, i) {
-      var cls = "quiz-option";
-      if (quizSession.answered) {
-        if (i === q.correct) cls += " correct";
-        else if (i === quizSession.selectedIndex) cls += " wrong";
-      }
-      return '<button class="' + cls + '" data-i="' + i + '" ' + (quizSession.answered ? "disabled" : "") + ">" + opt + "</button>";
-    }).join("");
-
-    stage.innerHTML =
-      '<div class="quiz-progress">Frage ' + (quizSession.index + 1) + " von " + quizSession.questions.length + " · " + q.topicTitle + "</div>" +
-      '<div class="quiz-question">' +
-      '<div class="qtext">' + q.question + "</div>" +
-      optionsHTML +
-      (quizSession.answered && q.explanation ? '<div class="quiz-explain">' + q.explanation + "</div>" : "") +
-      "</div>" +
-      '<div class="quiz-footer">' +
-      (quizSession.answered ? '<button class="btn" id="quiz-next">Weiter</button>' : "") +
-      "</div>";
-
-    if (!quizSession.answered) {
-      stage.querySelectorAll(".quiz-option").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          var i = parseInt(btn.dataset.i, 10);
-          answerQuiz(q, i);
-        });
-      });
-    } else {
-      document.getElementById("quiz-next").addEventListener("click", function () {
-        quizSession.index++;
-        quizSession.answered = false;
-        quizSession.selectedIndex = null;
-        renderQuizStage();
-      });
-    }
-  }
-
-  function answerQuiz(q, selectedIndex) {
-    quizSession.answered = true;
-    quizSession.selectedIndex = selectedIndex;
-    var stat = quizStat(q.id);
-    stat.attempts++;
-    if (selectedIndex === q.correct) {
-      quizSession.score++;
-      stat.correct++;
-    }
-    saveState();
-    renderQuizStage();
-  }
-
-  // ---------- Progress ----------
-  function renderProgress() {
-    var tpl = document.getElementById("tpl-progress");
-    app.innerHTML = "";
-    app.appendChild(tpl.content.cloneNode(true));
-
-    var html = TOPICS.map(function (t) {
-      var cardIds = t.cards.map(function (c) { return c.id; });
-      var learned = cardIds.filter(function (id) { return state.cards[id] && state.cards[id].reps > 0; }).length;
-      var lapses = cardIds.reduce(function (s, id) { return s + (state.cards[id] ? state.cards[id].lapses : 0); }, 0);
-
-      var quizIds = t.quiz.map(function (q) { return q.id; });
-      var attempts = quizIds.reduce(function (s, id) { return s + (state.quiz[id] ? state.quiz[id].attempts : 0); }, 0);
-      var correct = quizIds.reduce(function (s, id) { return s + (state.quiz[id] ? state.quiz[id].correct : 0); }, 0);
-      var acc = attempts > 0 ? Math.round((correct / attempts) * 100) : null;
-
-      return (
-        '<div class="progress-topic">' +
-        "<h4>" + t.title + "</h4>" +
-        '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + Math.round((learned / cardIds.length) * 100) + '%"></div></div>' +
-        '<div class="progress-metric"><span>Karteikarten gelernt</span><span>' + learned + " / " + cardIds.length + "</span></div>" +
-        '<div class="progress-metric"><span>Fehlversuche (Nochmal)</span><span>' + lapses + "</span></div>" +
-        '<div class="progress-metric"><span>Quiz-Trefferquote</span><span>' + (acc === null ? "–" : acc + "%") + "</span></div>" +
-        "</div>"
-      );
-    }).join("");
-
-    document.getElementById("progress-stage").innerHTML = html;
-
-    document.getElementById("reset-progress").addEventListener("click", function () {
-      if (confirm("Wirklich den gesamten Lernfortschritt zurücksetzen?")) {
-        state = { cards: {}, quiz: {} };
-        saveState();
-        renderProgress();
-      }
-    });
-  }
-
-  // ---------- Init ----------
-  render();
-})();
+/* ---------- Footer year ---------- */
+function initFooterYear() {
+  const el = document.getElementById('year');
+  if (el) el.textContent = new Date().getFullYear().toString();
+}
