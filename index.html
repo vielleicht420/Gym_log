@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Winkfried Immobilien &ndash; Ihr Makler für exklusive Immobilien</title>
 <meta name="description" content="Winkfried Immobilien: professionelle Vermittlung, Bewertung und Beratung rund um Kauf, Verkauf und Vermietung von Wohn- und Gewerbeimmobilien.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2314213d'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Georgia,serif' fill='%23c9a24b' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f6f1e7'/%3E%3Crect x='4' y='4' width='92' height='92' fill='none' stroke='%231b1812' stroke-width='4'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Georgia,serif' fill='%23b2502b' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,7 +19,7 @@
   <div class="container header-inner">
     <a href="#top" class="logo">
       <span class="logo-mark">W</span>
-      <span class="logo-text">WINKFRIED<br><small>IMMOBILIEN</small></span>
+      <span class="logo-text">Winkfried<span class="logo-rule"></span>Immobilien</span>
     </a>
 
     <nav class="main-nav" id="mainNav">
@@ -45,18 +45,28 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="container hero-inner">
-      <p class="eyebrow reveal">Immobilienmakler &middot; München</p>
-      <h1 class="reveal">Ihre Immobilie<br>in <span class="accent-text">besten Händen.</span></h1>
-      <p class="hero-sub reveal">Winkfried Immobilien begleitet Sie beim Kauf, Verkauf und der Vermietung
-        von Wohn- und Gewerbeimmobilien &ndash; diskret, transparent und mit einem
-        Gespür für den richtigen Preis.</p>
-      <div class="hero-actions reveal">
-        <a href="#kontakt" class="btn btn-primary">Kostenlose Immobilienbewertung</a>
-        <a href="#immobilien" class="btn btn-ghost">Angebote ansehen</a>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">Immobilienmakler &middot; München</p>
+        <h1 class="reveal">Ihre Immobilie<br>in <span class="accent-text">besten Händen.</span></h1>
+        <p class="hero-sub reveal">Winkfried Immobilien begleitet Sie beim Kauf, Verkauf und der Vermietung
+          von Wohn- und Gewerbeimmobilien &ndash; diskret, transparent und mit einem
+          Gespür für den richtigen Preis.</p>
+        <div class="hero-actions reveal">
+          <a href="#kontakt" class="btn btn-primary">Kostenlose Immobilienbewertung</a>
+          <a href="#immobilien" class="btn btn-ghost">Angebote ansehen &rarr;</a>
+        </div>
       </div>
 
+      <div class="hero-media reveal">
+        <div class="hero-frame">
+          <span class="hero-frame-mark">W</span>
+        </div>
+        <p class="hero-frame-caption">Gegründet von Tim Winkler &amp; Maximilian Seyfried</p>
+      </div>
+    </div>
+
+    <div class="container">
       <form class="hero-search reveal" id="heroSearch">
         <div class="field">
           <label for="searchType">Anliegen</label>
@@ -126,56 +136,44 @@
       <p class="section-sub center reveal">Von der ersten Einschätzung bis zur Schlüsselübergabe &ndash;
         wir begleiten Sie durch den gesamten Immobilienprozess.</p>
 
-      <div class="grid services-grid">
-        <article class="card service-card reveal">
-          <div class="icon-box">
-            <svg viewBox="0 0 48 48"><path d="M6 24 24 8l18 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 22v16h24V22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 38v-9h8v9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>
-          </div>
+      <div class="service-list">
+        <article class="service-row reveal">
+          <span class="service-num">01</span>
           <h3>Verkauf</h3>
           <p>Zielgerichtetes Marketing, professionelle Exposés und ein qualifiziertes Käufernetzwerk
             für den bestmöglichen Verkaufspreis.</p>
         </article>
 
-        <article class="card service-card reveal">
-          <div class="icon-box">
-            <svg viewBox="0 0 48 48"><rect x="8" y="10" width="32" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M8 18h32" stroke="currentColor" stroke-width="2.5"/><path d="M16 26h6M26 26h6M16 32h6M26 32h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-          </div>
+        <article class="service-row reveal">
+          <span class="service-num">02</span>
           <h3>Vermietung</h3>
           <p>Sorgfältige Mieterauswahl, Bonitätsprüfung und rechtssichere Vertragsgestaltung
             für einen reibungslosen Mietstart.</p>
         </article>
 
-        <article class="card service-card reveal">
-          <div class="icon-box">
-            <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 15v9l6 5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+        <article class="service-row reveal">
+          <span class="service-num">03</span>
           <h3>Immobilienbewertung</h3>
           <p>Marktgerechte, kostenlose Wertermittlung auf Basis aktueller Vergleichsdaten
             und lokaler Marktkenntnis.</p>
         </article>
 
-        <article class="card service-card reveal">
-          <div class="icon-box">
-            <svg viewBox="0 0 48 48"><path d="M24 6c9 6 16 6 16 6v12c0 10-7 16-16 18C15 40 8 34 8 24V12s7 0 16-6Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M18 24l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
+        <article class="service-row reveal">
+          <span class="service-num">04</span>
           <h3>Beratung &amp; Finanzierung</h3>
           <p>Unabhängige Beratung zu Finanzierung, Fördermitteln und rechtlichen Rahmenbedingungen
             über unser Partnernetzwerk.</p>
         </article>
 
-        <article class="card service-card reveal">
-          <div class="icon-box">
-            <svg viewBox="0 0 48 48"><path d="M8 40V20l16-12 16 12v20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M18 40V26h12v14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 8v6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-          </div>
+        <article class="service-row reveal">
+          <span class="service-num">05</span>
           <h3>Neubau &amp; Projektvermarktung</h3>
           <p>Vermarktungskonzepte für Bauträger &ndash; von der Visualisierung bis zum
             letzten verkauften Objekt.</p>
         </article>
 
-        <article class="card service-card reveal">
-          <div class="icon-box">
-            <svg viewBox="0 0 48 48"><rect x="10" y="8" width="28" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M16 16h16M16 24h16M16 32h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-          </div>
+        <article class="service-row reveal">
+          <span class="service-num">06</span>
           <h3>Objektverwaltung</h3>
           <p>Laufende Betreuung von Miet- und Renditeobjekten &ndash; Abrechnung, Instandhaltung
             und Kommunikation mit Mietern.</p>
@@ -188,7 +186,7 @@
   <section id="ueber-uns" class="section alt">
     <div class="container about-grid">
       <div class="about-media reveal">
-        <div class="about-photo"></div>
+        <div class="about-photo"><span class="photo-mark">TW &amp; MS</span></div>
         <div class="about-badge">
           <strong>2</strong>
           <span>Gründer, ein Versprechen</span>
@@ -300,26 +298,26 @@
       <p class="section-sub center reveal">Persönlich, erreichbar, mit echter Marktkenntnis.</p>
 
       <div class="grid team-grid">
-        <article class="card team-card reveal">
-          <div class="team-photo" style="--h:210;"></div>
+        <article class="team-card reveal">
+          <div class="team-photo"><span>TW</span></div>
           <h3>Tim Winkler</h3>
           <p class="role">Mitgründer &amp; Geschäftsführung</p>
           <p class="team-desc">Verantwortet Verkauf und Neubauprojekte, spezialisiert auf Einfamilienhäuser.</p>
         </article>
-        <article class="card team-card reveal">
-          <div class="team-photo" style="--h:20;"></div>
+        <article class="team-card reveal">
+          <div class="team-photo"><span>MS</span></div>
           <h3>Maximilian Seyfried</h3>
           <p class="role">Mitgründer &amp; Geschäftsführung</p>
           <p class="team-desc">Verantwortet Bewertung und Beratung im gehobenen Wohnimmobiliensegment.</p>
         </article>
-        <article class="card team-card reveal">
-          <div class="team-photo" style="--h:150;"></div>
+        <article class="team-card reveal">
+          <div class="team-photo"><span>LB</span></div>
           <h3>Laura Bergmann</h3>
           <p class="role">Vermietung &amp; Objektverwaltung</p>
           <p class="team-desc">Ihre Ansprechpartnerin für Miet- und Renditeobjekte.</p>
         </article>
-        <article class="card team-card reveal">
-          <div class="team-photo" style="--h:80;"></div>
+        <article class="team-card reveal">
+          <div class="team-photo"><span>JW</span></div>
           <h3>Jonas Weller</h3>
           <p class="role">Finanzierungsberatung</p>
           <p class="team-desc">Unabhängige Finanzierungslösungen über unser Bankennetzwerk.</p>
@@ -481,7 +479,7 @@
     <div class="footer-brand">
       <a href="#top" class="logo">
         <span class="logo-mark">W</span>
-        <span class="logo-text">WINKFRIED<br><small>IMMOBILIEN</small></span>
+        <span class="logo-text">Winkfried<span class="logo-rule"></span>Immobilien</span>
       </a>
       <p>Ihr Partner für Kauf, Verkauf und Vermietung von Immobilien
         in München und Umgebung.</p>

@@ -141,7 +141,7 @@ const PROPERTIES = [
     tag: 'Neu',
     rooms: 3.5,
     area: 98,
-    colors: ['#2a3c65', '#14213d'],
+    colors: ['#b2502b', '#1b1812'],
   },
   {
     title: 'Modernes Reihenhaus mit Garten',
@@ -151,7 +151,7 @@ const PROPERTIES = [
     tag: 'Neu',
     rooms: 5,
     area: 165,
-    colors: ['#3a5a80', '#14213d'],
+    colors: ['#c97a4a', '#1b1812'],
   },
   {
     title: 'Penthouse mit Dachterrasse',
@@ -161,7 +161,7 @@ const PROPERTIES = [
     tag: 'Exklusiv',
     rooms: 4,
     area: 175,
-    colors: ['#1c2a4a', '#0f1a30'],
+    colors: ['#8a3d1e', '#1b1812'],
   },
   {
     title: 'Helle 2-Zimmer-Wohnung',
@@ -171,7 +171,7 @@ const PROPERTIES = [
     tag: 'Reserviert',
     rooms: 2,
     area: 62,
-    colors: ['#4a6285', '#233457'],
+    colors: ['#4b5842', '#1b1812'],
   },
   {
     title: 'Familienhaus mit Doppelgarage',
@@ -181,7 +181,7 @@ const PROPERTIES = [
     tag: null,
     rooms: 6,
     area: 190,
-    colors: ['#2a3c65', '#0f1a30'],
+    colors: ['#b2502b', '#3a3327'],
   },
   {
     title: 'Loft-Wohnung im Industrial-Stil',
@@ -191,7 +191,7 @@ const PROPERTIES = [
     tag: 'Neu',
     rooms: 3,
     area: 88,
-    colors: ['#3a5a80', '#1c2a4a'],
+    colors: ['#c97a4a', '#3a3327'],
   },
   {
     title: 'Gepflegte Gewerbefläche',
@@ -201,7 +201,7 @@ const PROPERTIES = [
     tag: null,
     rooms: 1,
     area: 210,
-    colors: ['#1c2a4a', '#14213d'],
+    colors: ['#1b1812', '#4b5842'],
   },
   {
     title: 'Villa mit Seeblick',
@@ -211,7 +211,7 @@ const PROPERTIES = [
     tag: 'Exklusiv',
     rooms: 7,
     area: 320,
-    colors: ['#233457', '#0f1a30'],
+    colors: ['#8a3d1e', '#3a3327'],
   },
   {
     title: 'Charmante Maisonette-Wohnung',
@@ -221,7 +221,7 @@ const PROPERTIES = [
     tag: null,
     rooms: 3,
     area: 76,
-    colors: ['#4a6285', '#2a3c65'],
+    colors: ['#b2502b', '#4b5842'],
   },
 ];
 
@@ -241,7 +241,7 @@ function propertyCardHTML(property) {
 
   return `
     <article class="card property-card reveal in-view" data-type="${property.type}">
-      <div class="property-media" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}">
+      <div class="property-media" data-initial="${property.location.charAt(0)}" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}">
         <span class="property-badge ${badgeClass}">${badgeLabel}</span>
         ${extraTag}
       </div>
