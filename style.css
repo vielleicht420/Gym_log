@@ -1313,8 +1313,12 @@ textarea:focus-visible,
   .service-arrow { grid-area: arrow; align-self: start; font-size: 1.1rem; }
   #leistungen .section-sub { font-size: 1.2rem; }
 
-  /* About: keep the founder photo full-width and prominent, tighten the
-     copy underneath so it reads as a brand moment, not a wall of text. */
+  /* About: keep the founder photo full-width and prominent — just a
+     little less tall on phones — and tighten the copy underneath so it
+     reads as a brand moment, not a wall of text. */
+  .about-grid { gap: 1.8rem; }
+  .about-photo { aspect-ratio: 10/11; }
+  .about-badge { margin-top: 0.7rem; }
   .about-content p { margin-bottom: 0.9rem; }
   .about-facts { margin: 1.2rem 0 1.5rem; }
   .check-list { margin: 1.2rem 0 1.6rem; }
