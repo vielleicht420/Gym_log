@@ -457,6 +457,7 @@ textarea:focus-visible,
   border-radius: var(--radius);
 }
 .service-row:hover { background: var(--white); box-shadow: var(--shadow-sm); }
+.service-row > * { min-width: 0; overflow-wrap: break-word; }
 .service-num {
   font-family: var(--font-head);
   font-size: 1.15rem;
@@ -575,11 +576,20 @@ textarea:focus-visible,
   gap: 1.8rem;
 }
 .property-feature-side .property-card { flex: 1; }
+/* Grid/flex items default to min-width:auto, which lets their text content's
+   intrinsic width force the track wider than its container — the nested
+   feature-row/side-column layout otherwise overflows on narrow viewports. */
+.property-grid > *,
+.property-feature-row > *,
+.property-feature-side > * {
+  min-width: 0;
+}
 .property-card.featured .property-media { aspect-ratio: 16/11; }
 .property-card.featured .property-body { padding: 2.1rem 2.3rem 2.3rem; }
 .property-card.featured .property-price { font-size: 1.85rem; }
 .property-card.featured .property-title { font-size: 1.5rem; }
 .property-card.featured .property-loc { font-size: 0.95rem; margin-bottom: 1.3rem; }
+.property-card.featured .property-meta { font-size: 1.05rem; }
 /* Above 1024px the feature row stretches the big card to match the height
    of the two stacked side cards; let its image fill that space instead of
    leaving blank room below the text (the stack's own aspect-ratio still
@@ -667,20 +677,56 @@ textarea:focus-visible,
 .property-loc { color: var(--text-soft); font-size: 0.88rem; margin-bottom: 1rem; }
 .property-meta {
   display: flex;
-  gap: 1.1rem;
+  align-items: center;
+  gap: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
-  font-size: 0.82rem;
+  font-size: 1rem;
+  font-weight: 500;
   color: var(--text-soft);
   flex-wrap: wrap;
 }
-.property-meta span { display: flex; align-items: center; gap: 0.35rem; }
+.property-meta span + span {
+  position: relative;
+  padding-left: 1rem;
+}
+.property-meta span + span::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 0.9em;
+  background: var(--border);
+}
 
 /* CTA banner */
 .cta-banner { background: var(--ink); padding: 5rem 0; }
 .cta-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
 .cta-banner h2 { color: var(--white); font-size: 1.9rem; margin-bottom: 0.5rem; }
 .cta-banner p { color: rgba(255,255,255,0.62); max-width: 460px; }
+
+/* ---------------- Visual break ---------------- */
+.visual-break {
+  position: relative;
+  min-height: 62vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  color: var(--white);
+}
+.visual-break-media { position: absolute; inset: 0; z-index: -1; }
+.visual-break-media img { width: 100%; height: 100%; object-fit: cover; }
+.visual-break-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(23,23,23,0.78) 0%, rgba(23,23,23,0.28) 55%, rgba(23,23,23,0.1) 100%);
+}
+.visual-break-inner { padding: 4rem 0 3.5rem; max-width: 640px; }
+.visual-break-inner .eyebrow { color: var(--gold); }
+.visual-break-inner h2 { color: var(--white); font-size: clamp(1.9rem, 3.4vw, 2.7rem); margin-bottom: 0.9rem; }
+.visual-break-inner p { color: rgba(255,255,255,0.82); font-size: 1.05rem; max-width: 520px; }
 
 /* ---------------- Ablauf: vertical timeline ---------------- */
 .timeline { position: relative; margin-top: 3rem; max-width: 760px; margin-left: auto; margin-right: auto; }
@@ -840,6 +886,7 @@ textarea:focus-visible,
 
 /* Contact */
 .contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 4rem; }
+.contact-grid > * { min-width: 0; }
 .contact-info p { color: var(--text-soft); margin-bottom: 2rem; }
 .contact-list { margin-bottom: 2rem; }
 .contact-list li { display: flex; flex-direction: column; gap: 0.15rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
@@ -858,7 +905,7 @@ textarea:focus-visible,
   box-shadow: var(--shadow-sm);
 }
 .map-frame::after {
-  content: '📍 Maximilianstraße 12, München';
+  content: 'Maximilianstraße 12, München';
   position: absolute;
   bottom: 1rem; left: 1rem;
   background: var(--white);
@@ -884,7 +931,7 @@ textarea:focus-visible,
 }
 .checkbox-field input { margin-top: 0.2rem; }
 .checkbox-field a { color: var(--text); text-decoration: underline; }
-.form-submit { width: 100%; }
+.form-submit { width: 100%; white-space: normal; }
 .form-success {
   margin-top: 1rem;
   padding: 0.9rem 1rem;
@@ -901,12 +948,13 @@ textarea:focus-visible,
 /* Footer */
 .site-footer { background: var(--ink); color: rgba(255,255,255,0.6); padding: 5rem 0 0; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 3rem; padding-bottom: 3.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.footer-grid > * { min-width: 0; }
 .footer-brand .logo-text { color: var(--white); }
 .footer-brand .logo-mark { border-color: rgba(255,255,255,0.4); color: var(--gold); }
 .footer-brand .logo-rule { background: rgba(255,255,255,0.3); }
 .footer-brand p { margin-top: 1rem; font-size: 0.9rem; max-width: 280px; }
 .footer-contact { margin-top: 1.2rem; font-size: 0.88rem; }
-.footer-contact a { display: block; margin-bottom: 0.3rem; transition: color var(--transition); }
+.footer-contact a { display: block; margin-bottom: 0.3rem; transition: color var(--transition); overflow-wrap: anywhere; }
 .footer-contact a:hover { color: var(--gold); }
 .social-row { display: flex; gap: 0.8rem; margin-top: 1.4rem; }
 .social-row a {
@@ -1075,6 +1123,7 @@ textarea:focus-visible,
   .property-card.featured .property-price { font-size: 1.4rem; }
   .property-card.featured .property-title { font-size: 1.05rem; }
   .property-card.featured .property-loc { font-size: 0.88rem; margin-bottom: 1rem; }
+  .property-card.featured .property-meta { font-size: 0.92rem; }
   /* Tightens only the section that follows the stats — the stats
      section itself (.hero-stats-section / .hero-stats) is untouched. */
   .trustbar { padding: 0.9rem 0; }
@@ -1150,4 +1199,13 @@ textarea:focus-visible,
   .timeline-track { left: 23px; }
   .timeline-item { grid-template-columns: 48px 1fr; gap: 1.2rem; }
   .timeline-marker { width: 48px; height: 48px; font-size: 1rem; }
+  .visual-break { min-height: 48vh; }
+  .visual-break-inner { padding: 2.8rem 0 2.4rem; }
+}
+
+@media (max-width: 420px) {
+  /* Safety net: a couple of longer button labels can outgrow very narrow
+     screens (≤320px) since .btn is nowrap by default — let them wrap here
+     instead of overflowing the viewport. */
+  .btn { white-space: normal; text-align: center; }
 }

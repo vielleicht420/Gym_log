@@ -305,9 +305,40 @@ const PROPERTIES = [
     tag: 'Neu',
     rooms: 3.5,
     area: 98,
+    photo: 'images/altbau-schwabing.jpg',
     colors: ['#b2502b', '#1b1812'],
     description: [
       'Stilvolle Altbauwohnung mit hohen Decken, Stuckelementen und Dielenboden in gefragter Lage nahe der Leopoldstraße.',
+    ],
+  },
+  {
+    id: 'bogenhausen-penthouse',
+    title: 'Penthouse mit Dachterrasse',
+    location: 'Bogenhausen, München',
+    price: 2450000,
+    type: 'kaufen',
+    tag: 'Exklusiv',
+    rooms: 4,
+    area: 175,
+    photo: 'images/penthouse-bogenhausen.jpg',
+    colors: ['#8a3d1e', '#1b1812'],
+    description: [
+      'Exklusives Penthouse mit umlaufender Dachterrasse und Blick über die Isarauen, hochwertig ausgestattet mit Fußbodenheizung und Smart-Home-Technik.',
+    ],
+  },
+  {
+    id: 'haidhausen-loft',
+    title: 'Loft-Wohnung im Industrial-Stil',
+    location: 'Haidhausen, München',
+    price: 2200,
+    type: 'mieten',
+    tag: 'Neu',
+    rooms: 3,
+    area: 88,
+    photo: 'images/loft-haidhausen.jpg',
+    colors: ['#c97a4a', '#3a3327'],
+    description: [
+      'Loft-Wohnung mit großen Fensterfronten und offenem Grundriss in zentraler Lage nahe dem Gasteig.',
     ],
   },
   {
@@ -322,20 +353,6 @@ const PROPERTIES = [
     colors: ['#c97a4a', '#1b1812'],
     description: [
       'Familienfreundliches Reihenhaus mit privatem Garten, offener Wohnküche und kurzer Anbindung an den S-Bahnhof Starnberg.',
-    ],
-  },
-  {
-    id: 'bogenhausen-penthouse',
-    title: 'Penthouse mit Dachterrasse',
-    location: 'Bogenhausen, München',
-    price: 2450000,
-    type: 'kaufen',
-    tag: 'Exklusiv',
-    rooms: 4,
-    area: 175,
-    colors: ['#8a3d1e', '#1b1812'],
-    description: [
-      'Exklusives Penthouse mit umlaufender Dachterrasse und Blick über die Isarauen, hochwertig ausgestattet mit Fußbodenheizung und Smart-Home-Technik.',
     ],
   },
   {
@@ -367,20 +384,6 @@ const PROPERTIES = [
     ],
   },
   {
-    id: 'haidhausen-loft',
-    title: 'Loft-Wohnung im Industrial-Stil',
-    location: 'Haidhausen, München',
-    price: 2200,
-    type: 'mieten',
-    tag: 'Neu',
-    rooms: 3,
-    area: 88,
-    colors: ['#c97a4a', '#3a3327'],
-    description: [
-      'Loft-Wohnung mit Betondecken, großen Fensterfronten und offenem Grundriss in zentraler Lage nahe dem Gasteig.',
-    ],
-  },
-  {
     id: 'innenstadt-gewerbe',
     title: 'Gepflegte Gewerbefläche',
     location: 'Innenstadt, München',
@@ -403,6 +406,7 @@ const PROPERTIES = [
     tag: 'Exklusiv',
     rooms: 7,
     area: 320,
+    photo: 'images/villa-ammersee.jpg',
     colors: ['#8a3d1e', '#3a3327'],
     description: [
       'Freistehende Villa mit direktem Seeblick, großzügigem Grundstück und privatem Bootssteg am Ammersee.',
@@ -415,6 +419,10 @@ function formatPrice(property) {
   return property.type === 'mieten'
     ? `${formatted} € <small>/ Monat</small>`
     : `${formatted} €`;
+}
+
+function formatRooms(rooms) {
+  return String(rooms).replace('.', ',');
 }
 
 function propertyCardHTML(property, featured = false) {
@@ -443,8 +451,8 @@ function propertyCardHTML(property, featured = false) {
         <h3 class="property-title">${property.title}</h3>
         <p class="property-loc">${property.location}</p>
         <div class="property-meta">
-          <span>🛏 ${property.rooms} Zimmer</span>
-          <span>📐 ${property.area} m²</span>
+          <span>${formatRooms(property.rooms)} Zimmer</span>
+          <span>${property.area} m²</span>
         </div>
         <p class="property-details-link">Details ansehen <span class="arrow">&rarr;</span></p>
       </div>
@@ -458,7 +466,7 @@ function propertyPageHTML(property) {
     [
       { label: 'Objekttyp', value: property.type === 'mieten' ? 'Mietobjekt' : 'Kaufobjekt' },
       { label: 'Wohnfläche ca.', value: `${property.area} m²` },
-      { label: 'Zimmer', value: `${property.rooms}` },
+      { label: 'Zimmer', value: formatRooms(property.rooms) },
     ];
 
   const factsHTML = facts
@@ -474,7 +482,7 @@ function propertyPageHTML(property) {
   const lageHTML = property.lage ? `<h2>Lage</h2><p>${property.lage}</p>` : '';
 
   const addressHTML = property.address
-    ? `<p class="detail-address">📍 ${property.address}</p>`
+    ? `<p class="detail-address">${property.address}</p>`
     : '';
 
   const media = property.photo
