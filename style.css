@@ -458,6 +458,7 @@ textarea:focus-visible,
 }
 .service-row:hover { background: var(--white); box-shadow: var(--shadow-sm); }
 .service-row > * { min-width: 0; overflow-wrap: break-word; }
+.service-row h3 { hyphens: auto; }
 .service-num {
   font-family: var(--font-head);
   font-size: 1.15rem;
