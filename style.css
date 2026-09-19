@@ -723,7 +723,7 @@ textarea:focus-visible,
   inset: 0;
   background: linear-gradient(0deg, rgba(23,23,23,0.78) 0%, rgba(23,23,23,0.28) 55%, rgba(23,23,23,0.1) 100%);
 }
-.visual-break-inner { padding: 4rem 0 3.5rem; max-width: 640px; }
+.visual-break-inner { padding-top: 4rem; padding-bottom: 3.5rem; max-width: 640px; }
 .visual-break-inner .eyebrow { color: var(--gold); }
 .visual-break-inner h2 { color: var(--white); font-size: clamp(1.9rem, 3.4vw, 2.7rem); margin-bottom: 0.9rem; }
 .visual-break-inner p { color: rgba(255,255,255,0.82); font-size: 1.05rem; max-width: 520px; }
@@ -1220,7 +1220,7 @@ textarea:focus-visible,
   .timeline-item { grid-template-columns: 48px 1fr; gap: 1.2rem; }
   .timeline-marker { width: 48px; height: 48px; font-size: 1rem; }
   .visual-break { min-height: 48vh; }
-  .visual-break-inner { padding: 2.8rem 0 2.4rem; }
+  .visual-break-inner { padding-top: 2.8rem; padding-bottom: 2.4rem; }
 }
 
 @media (max-width: 420px) {
@@ -1339,7 +1339,7 @@ textarea:focus-visible,
      legible headline rather than small text floating over a photo. */
   .visual-break { min-height: 50vh; }
   .visual-break-media img { object-position: center 42%; }
-  .visual-break-inner { padding: 2.2rem 0 2rem; max-width: 100%; }
+  .visual-break-inner { padding-top: 2.2rem; padding-bottom: 2rem; max-width: 100%; }
   .visual-break-inner p { margin-top: 0.2rem; }
 
   /* Team: full-width photos stay large and confident, just tighten the
