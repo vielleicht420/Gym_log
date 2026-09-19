@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroSearch();
   initBackToTop();
   initLegalModal();
+  initCookieBanner();
+  initMapEmbed();
   initFooterYear();
 });
 
@@ -879,6 +881,88 @@ function initBackToTop() {
   btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
 
+/* ---------- Cookie consent ---------- */
+const COOKIE_CONSENT_KEY = 'cookieConsent';
+
+function getCookieConsent() {
+  try {
+    return localStorage.getItem(COOKIE_CONSENT_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function setCookieConsent(value) {
+  try {
+    localStorage.setItem(COOKIE_CONSENT_KEY, value);
+  } catch {
+    /* localStorage unavailable (e.g. private mode) */
+  }
+  document.dispatchEvent(new CustomEvent('cookieconsentchange', { detail: value }));
+}
+
+function initCookieBanner() {
+  const banner = document.getElementById('cookieBanner');
+  const acceptBtn = document.getElementById('cookieAccept');
+  const declineBtn = document.getElementById('cookieDecline');
+  if (!banner || !acceptBtn || !declineBtn) return;
+
+  const openBanner = () => {
+    banner.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => banner.classList.add('open')));
+  };
+
+  const closeBanner = () => {
+    banner.classList.remove('open');
+    setTimeout(() => {
+      banner.hidden = true;
+    }, 350);
+  };
+
+  if (!getCookieConsent()) openBanner();
+
+  acceptBtn.addEventListener('click', () => {
+    setCookieConsent('accepted');
+    closeBanner();
+  });
+
+  declineBtn.addEventListener('click', () => {
+    setCookieConsent('declined');
+    closeBanner();
+  });
+
+  document.querySelectorAll('.cookie-settings-link').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      openBanner();
+    });
+  });
+}
+
+function initMapEmbed() {
+  const placeholder = document.getElementById('mapPlaceholder');
+  if (!placeholder) return;
+
+  let loaded = false;
+  const loadMap = () => {
+    if (loaded) return;
+    loaded = true;
+    const iframe = document.createElement('iframe');
+    iframe.src =
+      'https://maps.google.com/maps?q=Maximilianstra%C3%9Fe%2012%2C%2080539%20M%C3%BCnchen&output=embed';
+    iframe.title = 'Standort Winfried Immobilien auf der Karte';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    placeholder.replaceWith(iframe);
+  };
+
+  document.addEventListener('cookieconsentchange', (e) => {
+    if (e.detail === 'accepted') loadMap();
+  });
+
+  if (getCookieConsent() === 'accepted') loadMap();
+}
+
 /* ---------- Legal modal (Impressum / Datenschutz) ---------- */
 const LEGAL_CONTENT = {
   impressum: {
@@ -906,14 +990,18 @@ const LEGAL_CONTENT = {
       <p><strong>Schriftarten:</strong> Diese Website bindet Schriftarten
       lokal ein. Es findet keine Verbindung zu externen Schriftarten-Anbietern
       statt, sodass hierbei keine Daten an Dritte übertragen werden.</p>
-      <p><strong>Google Maps:</strong> Im Kontaktbereich ist eine Kartenansicht
-      von Google Maps eingebunden, die beim Aufruf dieser Seite automatisch
-      lädt. Dabei überträgt Ihr Browser Daten (u.a. Ihre IP-Adresse) an
-      Google LLC und es können Cookies gesetzt werden. Weitere Informationen
-      finden Sie in den Datenschutzhinweisen von Google unter
+      <p><strong>Google Maps:</strong> Im Kontaktbereich bieten wir eine
+      Kartenansicht von Google Maps an. Diese wird erst nach Ihrer
+      ausdrücklichen Zustimmung geladen. Wird die Karte geladen, überträgt
+      Ihr Browser Daten (u.a. Ihre IP-Adresse) an Google LLC und es können
+      Cookies gesetzt werden. Weitere Informationen finden Sie in den
+      Datenschutzhinweisen von Google unter
       <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.
-      Zusätzlich verlinken wir auf Google Maps und Apple Maps, um Ihnen die
-      Anfahrt zu erleichtern.</p>
+      Ihre Zustimmung können Sie jederzeit über den Link
+      „Cookie-Einstellungen" im Footer widerrufen bzw. erneut erteilen.
+      Unabhängig von Ihrer Zustimmung können Sie den Standort auch jederzeit
+      über die Links "In Google Maps öffnen" bzw. "In Apple Maps öffnen"
+      in einem neuen Tab aufrufen.</p>
       <p>Für Auskunft, Berichtigung oder Löschung Ihrer Daten kontaktieren
       Sie uns unter info@winfried-immobilien.de.</p>
       <p>Diese Inhalte dienen als Platzhalter für eine Demo-Website.</p>
