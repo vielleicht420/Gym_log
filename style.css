@@ -458,7 +458,6 @@ textarea:focus-visible,
 }
 .service-row:hover { background: var(--white); box-shadow: var(--shadow-sm); }
 .service-row > * { min-width: 0; overflow-wrap: break-word; }
-.service-row h3 { hyphens: auto; }
 .service-num {
   font-family: var(--font-head);
   font-size: 1.15rem;
@@ -1314,17 +1313,22 @@ textarea:focus-visible,
      below the description). */
   .service-row {
     display: grid;
-    grid-template-columns: 2rem 1fr auto;
-    grid-template-areas: "num title arrow" "num desc desc";
+    grid-template-columns: 2rem 1fr;
+    grid-template-areas: "num title" "num desc";
     column-gap: 0.9rem;
     row-gap: 0.35rem;
     align-items: start;
-    padding: 1.15rem 1rem;
+    padding: 1.15rem 2.6rem 1.15rem 1rem;
+    position: relative;
   }
   .service-num { grid-area: num; font-size: 0.95rem; }
-  .service-row h3 { grid-area: title; font-size: 1.65rem; }
+  /* Title gets the row's full remaining width (no separate arrow column
+     eating into it) so even a long single-word title like
+     "Immobilienbewertung" fits on one clean line without hyphenating or
+     breaking mid-word — verified against the two longest titles. */
+  .service-row h3 { grid-area: title; font-size: 1.5rem; }
   .service-row p { grid-area: desc; max-width: none; font-size: 1.1rem; }
-  .service-arrow { grid-area: arrow; align-self: start; font-size: 1.1rem; }
+  .service-arrow { position: absolute; top: 1.3rem; right: 1rem; font-size: 1.1rem; }
   #leistungen .section-sub { font-size: 1.2rem; }
 
   /* About: keep the founder photo full-width and prominent — just a
@@ -1393,4 +1397,15 @@ textarea:focus-visible,
   .property-card:active { transform: translateY(-2px); box-shadow: var(--shadow-md); }
   .service-row:active { background: var(--white); }
   .team-card:active .team-photo img { transform: scale(1.02); }
+}
+
+@media (max-width: 340px) {
+  /* Safety net: on the very narrowest phones (iPhone SE-class, 320px) the
+     longest single-word Leistungen title ("Immobilienbewertung") no
+     longer fits its column at the 375px+ title size — measured and
+     confirmed this size keeps it on one line with room to spare. Placed
+     after the max-width:767px block so it actually wins the cascade
+     (same-specificity rules resolve by source order, not by which
+     media query is narrower). */
+  .service-row h3 { font-size: 1.25rem; }
 }
