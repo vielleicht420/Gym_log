@@ -1300,9 +1300,10 @@ textarea:focus-visible,
     padding: 1.15rem 1rem;
   }
   .service-num { grid-area: num; font-size: 0.95rem; }
-  .service-row h3 { grid-area: title; font-size: 1.1rem; }
-  .service-row p { grid-area: desc; max-width: none; font-size: 0.9rem; }
+  .service-row h3 { grid-area: title; font-size: 1.65rem; }
+  .service-row p { grid-area: desc; max-width: none; font-size: 1.1rem; }
   .service-arrow { grid-area: arrow; align-self: start; font-size: 1.1rem; }
+  #leistungen .section-sub { font-size: 1.2rem; }
 
   /* About: keep the founder photo full-width and prominent, tighten the
      copy underneath so it reads as a brand moment, not a wall of text. */
@@ -1318,6 +1319,14 @@ textarea:focus-visible,
   .property-title { margin-bottom: 0.2rem; }
   .property-loc { margin-bottom: 0.8rem; }
   .property-meta { padding-top: 0.8rem; }
+  /* The tablet/1024px breakpoint puts the two "side" cards next to each
+     other (flex-direction: row) so they fit a wider column; on phones
+     that squeezes each card to ~half width, wrapping the price and
+     making every card after the first one narrow. Below 768px every
+     property card — featured and side alike — stacks in one full-width
+     column instead. */
+  .property-feature-side { flex-direction: column; }
+  .property-price { white-space: nowrap; }
 
   /* Ablauf: keep the vertical timeline but tighten the rhythm between
      steps considerably — six stops shouldn't need six screens. */
