@@ -435,7 +435,7 @@ function propertyCardHTML(property, featured = false) {
     ? ''
     : ` data-initial="${property.location.charAt(0)}" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}"`;
   const mediaContent = property.photo
-    ? `<img src="${property.photo}" alt="${property.title}">`
+    ? `<img src="${property.photo}" alt="${property.title}" loading="lazy">`
     : '';
   const featuredClass = featured ? ' featured' : '';
 

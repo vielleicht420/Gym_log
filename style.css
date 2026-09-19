@@ -239,7 +239,7 @@ textarea:focus-visible,
 .logo-rule { width: 1px; height: 14px; background: var(--border); display: inline-block; }
 
 .main-nav { display: flex; gap: 2.1rem; align-items: center; }
-.main-nav a {
+.main-nav a:not(.nav-mobile-cta) {
   font-weight: 600;
   font-size: 0.82rem;
   text-transform: uppercase;
@@ -249,7 +249,7 @@ textarea:focus-visible,
   transition: color var(--transition);
   padding: 0.3rem 0;
 }
-.main-nav a::after {
+.main-nav a:not(.nav-mobile-cta)::after {
   content: '';
   position: absolute;
   left: 0; bottom: -2px;
@@ -257,7 +257,7 @@ textarea:focus-visible,
   background: var(--gold);
   transition: width var(--transition);
 }
-.main-nav a:hover::after { width: 100%; }
+.main-nav a:not(.nav-mobile-cta):hover::after { width: 100%; }
 
 .header-actions { display: flex; align-items: center; gap: 1rem; }
 .header-cta { padding: 0.7rem 1.35rem; font-size: 0.8rem; }
@@ -1159,28 +1159,34 @@ textarea:focus-visible,
   .service-row p { grid-column: 1 / -1; max-width: none; }
 }
 
+/* Hidden by default (desktop nav already has its own header-cta); shown
+   only inside the full-screen mobile nav overlay below. */
+.nav-mobile-cta { display: none; }
+
 @media (max-width: 1024px) {
   .main-nav {
     position: fixed;
     top: 0; right: 0;
     height: 100vh;
-    width: min(320px, 80vw);
+    width: 100%;
     background: var(--white);
     flex-direction: column;
     align-items: flex-start;
-    padding: 6.5rem 2rem 2rem;
-    gap: 1.8rem;
+    justify-content: center;
+    padding: calc(2rem + env(safe-area-inset-top)) 2.2rem calc(2rem + env(safe-area-inset-bottom));
+    gap: 1.5rem;
     box-shadow: var(--shadow-lg);
     transform: translateX(100%);
     transition: transform var(--transition);
   }
   .main-nav.open { transform: translateX(0); }
-  .main-nav a { font-size: 0.95rem; padding: 0.6rem 0; }
+  .main-nav a:not(.nav-mobile-cta) { font-size: 1.35rem; font-weight: 600; padding: 0.4rem 0; letter-spacing: 0; text-transform: none; }
+  .main-nav .nav-mobile-cta { display: inline-flex; margin-top: 1.4rem; }
   /* The slide-out panel always has an opaque white background on mobile,
      so its links must stay dark even while the header is in its on-dark
      (transparent-over-hero) state — otherwise white-on-white is invisible. */
-  .site-header.on-dark .main-nav a { color: var(--text); }
-  .site-header.on-dark .main-nav a::after { background: var(--gold); }
+  .site-header.on-dark .main-nav a:not(.nav-mobile-cta) { color: var(--text); }
+  .site-header.on-dark .main-nav a:not(.nav-mobile-cta)::after { background: var(--gold); }
   .nav-toggle { display: flex; }
   .header-cta { display: none; }
   .hero { min-height: auto; padding: 7.5rem 0 4.5rem; }
@@ -1208,4 +1214,83 @@ textarea:focus-visible,
      screens (≤320px) since .btn is nowrap by default — let them wrap here
      instead of overflowing the viewport. */
   .btn { white-space: normal; text-align: center; }
+}
+
+/* =========================================================
+   Phone art direction — a deliberately mobile-first pass on
+   top of the tablet/hamburger rules above. Desktop (>1024px)
+   is untouched; everything here is scoped to phone widths so
+   the mobile experience stops being a shrunk-down desktop.
+   ========================================================= */
+@media (max-width: 767px) {
+  /* Sections carry generous desktop whitespace (7rem/112px); phones get a
+     tighter, more scrollable rhythm. The stats section isn't `.section`
+     and is untouched either way. */
+  .section { padding: 4.5rem 0; }
+  .cta-banner { padding: 4rem 0; }
+
+  /* Compact header: less vertical weight, safe-area aware for notches. */
+  .site-header { padding: calc(0.9rem + env(safe-area-inset-top)) 0 0.9rem; }
+  .site-header.scrolled { padding: calc(0.75rem + env(safe-area-inset-top)) 0 0.75rem; }
+  .logo-mark { width: 32px; height: 32px; font-size: 1rem; }
+  .logo-text { font-size: 0.95rem; gap: 0.45rem; }
+
+  /* Hero: more compact, building stays legible in a shorter crop, and the
+     second CTA steps back into a quiet text link instead of a second
+     full-weight button. */
+  .hero { padding: 6.3rem 0 3.2rem; }
+  .hero-bg-img { object-position: center 55%; }
+  .hero-copy { max-width: 100%; }
+  .hero h1 { font-size: 2.7rem; }
+  .hero-sub { font-size: 1rem; margin-bottom: 1.8rem; }
+  .hero-actions { flex-direction: column; align-items: stretch; gap: 0.9rem; }
+  .hero-actions .btn-primary { width: 100%; }
+  .hero-actions .btn-outline-light {
+    background: none;
+    border-color: transparent;
+    padding: 0.3rem 0;
+    font-size: 0.88rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    align-self: center;
+  }
+  .hero-actions .btn-outline-light:hover { background: none; }
+  .hero-search-float { margin-top: 1.5rem; }
+
+  /* Property cards: rounder, quieter, more image-led — a listing, not a
+     generic UI tile. */
+  .property-card, .card { border-radius: 20px; }
+  .property-body { padding: 1.3rem 1.4rem 1.4rem; }
+  .property-card.featured .property-body { padding: 1.5rem 1.5rem 1.6rem; }
+
+  /* Ablauf: keep the vertical timeline but tighten the rhythm between steps. */
+  .timeline { margin-top: 2rem; }
+  .timeline-item { padding-bottom: 2rem; }
+  .timeline-content h3 { font-size: 1.1rem; }
+
+  /* Visual break: image should read as near-full-bleed with a confident,
+     legible headline rather than small text floating over a photo. */
+  .visual-break { min-height: 52vh; }
+  .visual-break-media img { object-position: center 42%; }
+  .visual-break-inner { padding: 2.4rem 0 2.2rem; max-width: 100%; }
+
+  /* Contact: comfortable ≥48px touch targets on every input. */
+  .field input, .field select, .field textarea { padding: 0.95rem 0.9rem; }
+  .contact-form { padding: 1.8rem; }
+
+  /* Footer: a touch more breathing room between the stacked columns. */
+  .footer-grid { gap: 2.6rem; }
+  .site-footer { padding-top: 4rem; }
+
+  /* Fixed elements should clear the home-indicator area on notch devices. */
+  .back-to-top { bottom: calc(1.4rem + env(safe-area-inset-bottom)); }
+}
+
+/* Touch devices: no hover-only feedback — give buttons, cards and rows a
+   quiet tap state instead. */
+@media (hover: none) {
+  .btn:active { transform: scale(0.97); }
+  .property-card:active { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .service-row:active { background: var(--white); }
+  .team-card:active .team-photo img { transform: scale(1.02); }
 }
