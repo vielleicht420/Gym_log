@@ -906,12 +906,14 @@ const LEGAL_CONTENT = {
       <p><strong>Schriftarten:</strong> Diese Website bindet Schriftarten
       lokal ein. Es findet keine Verbindung zu externen Schriftarten-Anbietern
       statt, sodass hierbei keine Daten an Dritte übertragen werden.</p>
-      <p><strong>Standort/Karte:</strong> Im Kontaktbereich verlinken wir
-      auf Google Maps und Apple Maps, um Ihnen die Anfahrt zu erleichtern.
-      Es ist keine Karte auf dieser Seite eingebettet – erst wenn Sie aktiv
-      auf einen dieser Links klicken, öffnet sich die jeweilige Karte in
-      einem neuen Tab und es werden Daten an den entsprechenden Anbieter
-      übertragen.</p>
+      <p><strong>Google Maps:</strong> Im Kontaktbereich ist eine Kartenansicht
+      von Google Maps eingebunden, die beim Aufruf dieser Seite automatisch
+      lädt. Dabei überträgt Ihr Browser Daten (u.a. Ihre IP-Adresse) an
+      Google LLC und es können Cookies gesetzt werden. Weitere Informationen
+      finden Sie in den Datenschutzhinweisen von Google unter
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.
+      Zusätzlich verlinken wir auf Google Maps und Apple Maps, um Ihnen die
+      Anfahrt zu erleichtern.</p>
       <p>Für Auskunft, Berichtigung oder Löschung Ihrer Daten kontaktieren
       Sie uns unter info@winfried-immobilien.de.</p>
       <p>Diese Inhalte dienen als Platzhalter für eine Demo-Website.</p>
