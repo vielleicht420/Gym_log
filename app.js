@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavToggle();
   initSmoothAnchors();
   initReveal();
+  initTeamPhotoScrollColor();
   initCounters();
   initHeroIntro();
   initScrollIndicator();
@@ -136,6 +137,26 @@ function initReveal() {
     { threshold: 0.15 }
   );
   items.forEach((el) => observer.observe(el));
+}
+
+/* ---------- Team photos: colour in on scroll (touch devices only) ----------
+   On desktop the photos colour in on :hover (CSS). Touch devices have no
+   hover, so instead the photo colours in while it's in view and fades
+   back to grayscale once it scrolls away — reversible, unlike .reveal. */
+function initTeamPhotoScrollColor() {
+  if (!window.matchMedia('(hover: none)').matches) return;
+  const photos = document.querySelectorAll('.team-photo');
+  if (!photos.length || !('IntersectionObserver' in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle('in-frame', entry.isIntersecting);
+      });
+    },
+    { threshold: 0.55 }
+  );
+  photos.forEach((el) => observer.observe(el));
 }
 
 /* ---------- Animated stat counters ---------- */
