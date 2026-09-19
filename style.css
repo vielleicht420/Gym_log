@@ -395,7 +395,15 @@ h1, h2, h3, h4 {
 .filter-btn.active { background: var(--ink); color: var(--paper); }
 
 /* Property cards */
-.property-card { overflow: hidden; }
+.property-card { overflow: hidden; cursor: pointer; transition: transform var(--transition), box-shadow var(--transition); }
+.property-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.property-card:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+.property-details-link {
+  margin-top: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--rust);
+}
 .property-media {
   position: relative;
   aspect-ratio: 4/3;
@@ -691,6 +699,42 @@ h1, h2, h3, h4 {
   width: 32px; height: 32px;
   font-size: 1.1rem;
   cursor: pointer;
+  z-index: 1;
+}
+
+/* Property detail modal */
+.modal-content-wide { max-width: 720px; padding: 0 0 2.5rem; }
+.modal-content-wide .modal-close { background: var(--white); }
+.detail-media {
+  aspect-ratio: 16/9;
+  border-bottom: 1.5px solid var(--ink);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--rust), var(--ink));
+}
+.detail-media img { width: 100%; height: 100%; object-fit: cover; }
+.detail-media .property-media { aspect-ratio: auto; height: 100%; }
+#propertyModalBody > *:not(.detail-media) { padding-left: 2.5rem; padding-right: 2.5rem; }
+#propertyModalBody h2 { font-size: 1.6rem; margin: 1.6rem 0 0.4rem; }
+.detail-loc { color: var(--ink-soft); font-size: 0.95rem; }
+.detail-address { color: var(--ink-soft); font-size: 0.88rem; margin-top: 0.3rem; }
+.detail-price { font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; margin: 0.8rem 0 1.6rem; }
+.detail-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1.5rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 1.2rem 0;
+  margin-bottom: 1.6rem;
+}
+.detail-facts li { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.9rem; }
+.detail-facts li span { color: var(--ink-soft); }
+#propertyModalBody h3 { font-size: 1.05rem; margin-top: 1.8rem; }
+.detail-cta { margin-top: 1.8rem; width: 100%; }
+
+@media (max-width: 560px) {
+  #propertyModalBody > *:not(.detail-media) { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .detail-facts { grid-template-columns: 1fr; }
 }
 
 /* Scroll reveal */

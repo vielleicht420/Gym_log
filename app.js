@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initCounters();
   initProperties();
+  initPropertyModal();
   initTestimonialSlider();
   initAccordion();
   initContactForm();
@@ -134,6 +135,7 @@ function initCounters() {
 /* ---------- Property listings ---------- */
 const PROPERTIES = [
   {
+    id: 'schwabing-altbau',
     title: 'Lichtdurchflutete Altbauwohnung',
     location: 'Schwabing, München',
     price: 745000,
@@ -142,8 +144,12 @@ const PROPERTIES = [
     rooms: 3.5,
     area: 98,
     colors: ['#b2502b', '#1b1812'],
+    description: [
+      'Stilvolle Altbauwohnung mit hohen Decken, Stuckelementen und Dielenboden in gefragter Lage nahe der Leopoldstraße.',
+    ],
   },
   {
+    id: 'starnberg-reihenhaus',
     title: 'Modernes Reihenhaus mit Garten',
     location: 'Starnberg',
     price: 1180000,
@@ -152,8 +158,12 @@ const PROPERTIES = [
     rooms: 5,
     area: 165,
     colors: ['#c97a4a', '#1b1812'],
+    description: [
+      'Familienfreundliches Reihenhaus mit privatem Garten, offener Wohnküche und kurzer Anbindung an den S-Bahnhof Starnberg.',
+    ],
   },
   {
+    id: 'bogenhausen-penthouse',
     title: 'Penthouse mit Dachterrasse',
     location: 'Bogenhausen, München',
     price: 2450000,
@@ -162,8 +172,12 @@ const PROPERTIES = [
     rooms: 4,
     area: 175,
     colors: ['#8a3d1e', '#1b1812'],
+    description: [
+      'Exklusives Penthouse mit umlaufender Dachterrasse und Blick über die Isarauen, hochwertig ausgestattet mit Fußbodenheizung und Smart-Home-Technik.',
+    ],
   },
   {
+    id: 'sendling-2zi',
     title: 'Helle 2-Zimmer-Wohnung',
     location: 'Sendling, München',
     price: 1450,
@@ -172,8 +186,12 @@ const PROPERTIES = [
     rooms: 2,
     area: 62,
     colors: ['#4b5842', '#1b1812'],
+    description: [
+      'Ruhige 2-Zimmer-Wohnung mit Südbalkon, Einbauküche und guter Anbindung an die U3.',
+    ],
   },
   {
+    id: 'germering-familienhaus',
     title: 'Familienhaus mit Doppelgarage',
     location: 'Germering',
     price: 890000,
@@ -182,8 +200,12 @@ const PROPERTIES = [
     rooms: 6,
     area: 190,
     colors: ['#b2502b', '#3a3327'],
+    description: [
+      'Geräumiges Familienhaus mit Doppelgarage, Garten und Kellergeschoss in kinderfreundlicher Wohnlage.',
+    ],
   },
   {
+    id: 'haidhausen-loft',
     title: 'Loft-Wohnung im Industrial-Stil',
     location: 'Haidhausen, München',
     price: 2200,
@@ -192,8 +214,12 @@ const PROPERTIES = [
     rooms: 3,
     area: 88,
     colors: ['#c97a4a', '#3a3327'],
+    description: [
+      'Loft-Wohnung mit Betondecken, großen Fensterfronten und offenem Grundriss in zentraler Lage nahe dem Gasteig.',
+    ],
   },
   {
+    id: 'innenstadt-gewerbe',
     title: 'Gepflegte Gewerbefläche',
     location: 'Innenstadt, München',
     price: 3800,
@@ -202,8 +228,12 @@ const PROPERTIES = [
     rooms: 1,
     area: 210,
     colors: ['#1b1812', '#4b5842'],
+    description: [
+      'Repräsentative Gewerbefläche mit Schaufensterfront, ideal für Einzelhandel oder Showroom in bester Innenstadtlage.',
+    ],
   },
   {
+    id: 'ammersee-villa',
     title: 'Villa mit Seeblick',
     location: 'Ammersee',
     price: 3650000,
@@ -212,8 +242,12 @@ const PROPERTIES = [
     rooms: 7,
     area: 320,
     colors: ['#8a3d1e', '#3a3327'],
+    description: [
+      'Freistehende Villa mit direktem Seeblick, großzügigem Grundstück und privatem Bootssteg am Ammersee.',
+    ],
   },
   {
+    id: 'haar-eglfing-maisonette',
     title: 'Charmante Maisonettewohnung mit Dachterrasse',
     location: 'Haar-Eglfing',
     price: 590000,
@@ -222,6 +256,34 @@ const PROPERTIES = [
     rooms: 3,
     area: 84,
     photo: 'images/haar-eglfing-exterior.jpg',
+    address: 'Tassilostraße 6, 85540 Haar',
+    pricePerSqm: '7.024 €/m²',
+    commission: 'Keine Provision für Käufer',
+    description: [
+      'Diese gepflegte 3-Zimmer-Maisonettewohnung aus dem Baujahr 2008 erstreckt sich über zwei Etagen und bietet auf 84 m² ein modernes und komfortables Wohngefühl. Die offene Einbauküche mit hochwertigen Fronten, Granitarbeitsplatte, Dunstabzugshaube und praktischer Frühstücksbar ist ein echtes Highlight. Der großzügige, lichtdurchflutete Wohnbereich mit hellem Parkettboden lädt zum Wohlfühlen ein und bietet direkten Zugang zur sonnigen Dachterrasse mit schönem Ausblick ins Grüne – perfekt zum Entspannen und Genießen. Das gepflegte Badezimmer mit Dusche und WC sowie ein separates Gäste-WC runden das Raumangebot ab. Ein Aufzug im Gebäude sorgt ebenfalls für zusätzlichen Komfort.',
+      'Im Kaufpreis inbegriffen ist ein Tiefgaragen-Einzelstellplatz im Wert von 15.000 €. Ein Energieausweis liegt vor. Die Wohnung ist zeitnah bezugsfrei. Die Wohnung ist aktuell noch voll möbliert. Die Einbauküche kann bei Interesse kostenlos übernommen werden.',
+    ],
+    lage:
+      'Die Wohnung befindet sich in Haar-Eglfing, einer ruhigen und grünen Wohnsiedlung mit gepflegter Außenanlage – und das direkt vor den Toren Münchens. Haar überzeugt mit einer hervorragenden Infrastruktur: Einkaufsmöglichkeiten, Schulen, Ärzte und Freizeitangebote sind alle in unmittelbarer Nähe. Die S-Bahn (S6 und S4) bringt Sie schnell und bequem in die Münchner Innenstadt – ideal für Berufspendler und Stadtliebhaber gleichermaßen.',
+    facts: [
+      { label: 'Wohnungstyp', value: 'Maisonette' },
+      { label: 'Nutzfläche ca.', value: '84 m²' },
+      { label: 'Etage', value: '2' },
+      { label: 'Etagenanzahl', value: '3' },
+      { label: 'Schlafzimmer', value: '2' },
+      { label: 'Badezimmer', value: '1' },
+      { label: 'Gäste-WC', value: 'Ja' },
+      { label: 'Balkon / Terrasse', value: 'Ja' },
+      { label: 'Personenaufzug', value: 'Ja' },
+      { label: 'Einbauküche', value: 'Ja' },
+      { label: 'Garage / Stellplatz', value: 'Tiefgarage (1 Stellplatz)' },
+    ],
+    costs: [
+      { label: 'Provision für Käufer', value: 'Nein' },
+      { label: 'Preis pro m²', value: '7.024 €/m²' },
+      { label: 'Qualität der Ausstattung', value: 'Normal' },
+      { label: 'Energieausweis', value: 'Vorhanden' },
+    ],
   },
 ];
 
@@ -246,7 +308,7 @@ function propertyCardHTML(property) {
     : '';
 
   return `
-    <article class="card property-card reveal in-view" data-type="${property.type}">
+    <article class="card property-card reveal in-view" data-type="${property.type}" data-id="${property.id}" tabindex="0" role="button" aria-haspopup="dialog">
       <div class="property-media"${mediaStyle}>
         ${mediaContent}
         <span class="property-badge ${badgeClass}">${badgeLabel}</span>
@@ -260,8 +322,62 @@ function propertyCardHTML(property) {
           <span>🛏 ${property.rooms} Zimmer</span>
           <span>📐 ${property.area} m²</span>
         </div>
+        <p class="property-details-link">Details ansehen &rarr;</p>
       </div>
     </article>
+  `;
+}
+
+function propertyDetailHTML(property) {
+  const facts =
+    property.facts ||
+    [
+      { label: 'Objekttyp', value: property.type === 'mieten' ? 'Mietobjekt' : 'Kaufobjekt' },
+      { label: 'Wohnfläche ca.', value: `${property.area} m²` },
+      { label: 'Zimmer', value: `${property.rooms}` },
+    ];
+
+  const factsHTML = facts
+    .map((f) => `<li><span>${f.label}</span><strong>${f.value}</strong></li>`)
+    .join('');
+
+  const costsHTML = property.costs
+    ? `<h3>Kosten</h3><ul class="detail-facts">${property.costs
+        .map((c) => `<li><span>${c.label}</span><strong>${c.value}</strong></li>`)
+        .join('')}</ul>`
+    : '';
+
+  const lageHTML = property.lage
+    ? `<h3>Lage</h3><p>${property.lage}</p>`
+    : '';
+
+  const addressHTML = property.address
+    ? `<p class="detail-address">📍 ${property.address}</p>`
+    : '';
+
+  const media = property.photo
+    ? `<img src="${property.photo}" alt="${property.title}">`
+    : `<div class="property-media" data-initial="${property.location.charAt(0)}" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}"></div>`;
+
+  const badgeLabel = property.type === 'mieten' ? 'Mieten' : 'Kaufen';
+
+  return `
+    <div class="detail-media">${media}</div>
+    <span class="eyebrow">${badgeLabel}${property.tag ? ' · ' + property.tag : ''}</span>
+    <h2>${property.title}</h2>
+    <p class="detail-loc">${property.location}</p>
+    ${addressHTML}
+    <p class="detail-price">${formatPrice(property)}</p>
+
+    <ul class="detail-facts">${factsHTML}</ul>
+
+    <h3>Objektbeschreibung</h3>
+    ${(property.description || []).map((p) => `<p>${p}</p>`).join('')}
+
+    ${lageHTML}
+    ${costsHTML}
+
+    <a href="#kontakt" class="btn btn-primary detail-cta">Besichtigung anfragen</a>
   `;
 }
 
@@ -284,7 +400,65 @@ function initProperties() {
     render(btn.dataset.filter);
   });
 
+  const openCard = (card) => {
+    const property = PROPERTIES.find((p) => p.id === card.dataset.id);
+    if (property) openPropertyModal(property);
+  };
+
+  grid.addEventListener('click', (e) => {
+    const card = e.target.closest('.property-card');
+    if (card) openCard(card);
+  });
+
+  grid.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.property-card');
+    if (!card) return;
+    e.preventDefault();
+    openCard(card);
+  });
+
   render('alle');
+}
+
+/* ---------- Property detail modal ---------- */
+function openPropertyModal(property) {
+  const modal = document.getElementById('propertyModal');
+  const body = document.getElementById('propertyModalBody');
+  if (!modal || !body) return;
+
+  body.innerHTML = propertyDetailHTML(property);
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+
+  const cta = body.querySelector('.detail-cta');
+  if (cta) {
+    cta.addEventListener('click', (e) => {
+      e.preventDefault();
+      closePropertyModal();
+      document.getElementById('kontakt').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+}
+
+function closePropertyModal() {
+  const modal = document.getElementById('propertyModal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+}
+
+function initPropertyModal() {
+  const closeBtn = document.getElementById('propertyModalClose');
+  const backdrop = document.getElementById('propertyModalBackdrop');
+  if (!closeBtn || !backdrop) return;
+
+  closeBtn.addEventListener('click', closePropertyModal);
+  backdrop.addEventListener('click', closePropertyModal);
+  document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('propertyModal');
+    if (e.key === 'Escape' && modal && !modal.hidden) closePropertyModal();
+  });
 }
 
 /* ---------- Testimonial slider ---------- */
