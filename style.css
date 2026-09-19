@@ -962,6 +962,16 @@ textarea:focus-visible,
   font-size: 0.9rem;
   text-align: center;
 }
+.form-error {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  background: rgba(179,69,63,0.1);
+  color: #b3453f;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  text-align: center;
+}
+.form-error a { text-decoration: underline; color: inherit; }
 .field.error input, .field.error select, .field.error textarea { border-color: #b3453f; }
 .field-error-msg { color: #b3453f; font-size: 0.78rem; margin-top: 0.35rem; display: none; }
 .field.error .field-error-msg { display: block; }

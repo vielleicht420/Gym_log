@@ -756,9 +756,13 @@ function initAccordion() {
 function initContactForm() {
   const form = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
-  if (!form) return;
+  const error = document.getElementById('formError');
+  const submitBtn = form?.querySelector('.form-submit');
+  if (!form || !submitBtn) return;
 
-  form.addEventListener('submit', (e) => {
+  const submitLabel = submitBtn.innerHTML;
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     let valid = true;
 
@@ -780,18 +784,39 @@ function initContactForm() {
       }
     });
 
+    success.hidden = true;
+    error.hidden = true;
+
     if (!valid) {
-      success.hidden = true;
       const firstError = form.querySelector('.field.error input, .field.error select, .field.error textarea');
       firstError?.focus();
       return;
     }
 
-    success.hidden = false;
-    success.textContent = 'Vielen Dank! Wir melden uns innerhalb eines Werktags bei Ihnen.';
-    form.reset();
-    form.querySelectorAll('.field.error').forEach((f) => f.classList.remove('error'));
-    form.querySelectorAll('[aria-invalid]').forEach((f) => f.setAttribute('aria-invalid', 'false'));
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Wird gesendet …';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+
+      if (response.ok) {
+        success.hidden = false;
+        form.reset();
+        form.querySelectorAll('.field.error').forEach((f) => f.classList.remove('error'));
+        form.querySelectorAll('[aria-invalid]').forEach((f) => f.setAttribute('aria-invalid', 'false'));
+      } else {
+        error.hidden = false;
+      }
+    } catch {
+      error.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = submitLabel;
+    }
   });
 }
 

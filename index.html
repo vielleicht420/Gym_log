@@ -496,7 +496,11 @@
         <a class="map-apple-link" href="https://maps.apple.com/?address=Maximilianstra%C3%9Fe%2012%2C%2080539%20M%C3%BCnchen" target="_blank" rel="noopener">In Apple Maps öffnen <span class="arrow">&rarr;</span></a>
       </div>
 
-      <form class="contact-form reveal" id="contactForm" novalidate>
+      <!-- Replace YOUR_FORM_ID with your own Formspree form ID (formspree.io –
+           free account, verify the inbox email you want requests sent to,
+           then copy the ID from your form's endpoint URL). Until then this
+           will fail to send and show the error message below the button. -->
+      <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
         <div class="form-row">
           <div class="field">
             <label for="name">Name *</label>
@@ -537,6 +541,9 @@
         <button type="submit" class="btn btn-primary form-submit">Kostenlose Anfrage senden <span class="arrow">&rarr;</span></button>
         <p class="form-success" id="formSuccess" hidden>Vielen Dank! Wir melden uns innerhalb
           eines Werktags bei Ihnen.</p>
+        <p class="form-error" id="formError" hidden>Ihre Anfrage konnte leider nicht gesendet werden.
+          Bitte versuchen Sie es erneut oder schreiben Sie uns direkt an
+          <a href="mailto:info@winfried-immobilien.de">info@winfried-immobilien.de</a>.</p>
       </form>
     </div>
   </section>
