@@ -486,15 +486,16 @@
           <li><strong>Bürozeiten</strong><span>Mo&ndash;Fr 9:00&ndash;18:00, Sa nach Vereinbarung</span></li>
         </ul>
 
-        <div class="map-frame" id="mapFrame">
-          <div class="map-placeholder" id="mapPlaceholder">
-            <p>Beim Laden der Karte wird eine Verbindung zu Google Maps hergestellt.
-              Dabei werden Daten an Google übertragen und Cookies gesetzt.</p>
-            <button type="button" class="btn btn-outline map-load-btn" id="mapLoadBtn">Karte laden</button>
+        <div class="map-frame">
+          <div class="map-static">
+            <span class="map-pin">&#128205;</span>
           </div>
           <span class="map-frame-label">Maximilianstraße 12, München</span>
         </div>
-        <a class="map-apple-link" href="https://maps.apple.com/?address=Maximilianstra%C3%9Fe%2012%2C%2080539%20M%C3%BCnchen" target="_blank" rel="noopener">In Apple Maps öffnen <span class="arrow">&rarr;</span></a>
+        <div class="map-links">
+          <a class="map-external-link" href="https://www.google.com/maps/search/?api=1&query=Maximilianstra%C3%9Fe+12%2C+80539+M%C3%BCnchen" target="_blank" rel="noopener">In Google Maps öffnen <span class="arrow">&rarr;</span></a>
+          <a class="map-external-link" href="https://maps.apple.com/?address=Maximilianstra%C3%9Fe%2012%2C%2080539%20M%C3%BCnchen" target="_blank" rel="noopener">In Apple Maps öffnen <span class="arrow">&rarr;</span></a>
+        </div>
       </div>
 
       <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/myezkkbq" method="POST" novalidate>
@@ -604,25 +605,11 @@
       <a href="#impressum" id="impressum">Impressum</a>
       <a href="#datenschutz" id="datenschutz">Datenschutz</a>
       <a href="#agb">AGB</a>
-      <a href="#" class="cookie-settings-link">Cookie-Einstellungen</a>
     </div>
   </div>
 </footer>
 
 <button class="back-to-top" id="backToTop" aria-label="Nach oben scrollen">↑</button>
-
-<div class="cookie-banner" id="cookieBanner" hidden>
-  <div class="container cookie-banner-inner">
-    <p>Wir nutzen auf dieser Seite eine eingebettete Google-Maps-Karte im
-      Kontaktbereich. Beim Laden werden Daten an Google übertragen und
-      Cookies gesetzt. Alle übrigen Funktionen der Seite sind davon nicht
-      betroffen. Mehr dazu in unserer <a href="#datenschutz">Datenschutzerklärung</a>.</p>
-    <div class="cookie-banner-actions">
-      <button type="button" class="btn btn-outline" id="cookieDecline">Nur notwendige</button>
-      <button type="button" class="btn btn-primary" id="cookieAccept">Alle akzeptieren</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal" id="legalModal" hidden>
   <div class="modal-backdrop" id="modalBackdrop"></div>
