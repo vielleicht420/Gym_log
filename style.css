@@ -1287,7 +1287,6 @@ textarea:focus-visible,
   .property-feature-row { grid-template-columns: 1fr; }
   .property-feature-side { flex-direction: row; }
   .cta-banner-inner { flex-direction: column; text-align: center; }
-  .about-badge { position: static; margin-top: 1rem; width: fit-content; }
   .form-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .timeline-track { left: 23px; }
@@ -1389,7 +1388,7 @@ textarea:focus-visible,
      reads as a brand moment, not a wall of text. */
   .about-grid { gap: 1.8rem; }
   .about-photo { aspect-ratio: 10/11; }
-  .about-badge { margin-top: 0.7rem; }
+  .about-badge { bottom: 0.9rem; right: 0.9rem; }
   .about-content p { margin-bottom: 0.9rem; }
   .about-facts { margin: 1.2rem 0 1.5rem; }
   .check-list { margin: 1.2rem 0 1.6rem; }
