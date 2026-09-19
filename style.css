@@ -814,7 +814,7 @@ h1, h2, h3, h4 {
   .search-submit { width: 100%; }
   .property-grid, .team-grid, .steps { grid-template-columns: 1fr; }
   .cta-banner-inner { flex-direction: column; text-align: center; }
-  .about-badge { position: static; margin-top: -2.5rem; margin-left: 1.5rem; width: fit-content; }
+  .about-badge { position: static; margin-top: 1rem; width: fit-content; }
   .form-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
 }
