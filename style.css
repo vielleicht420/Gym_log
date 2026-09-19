@@ -1160,28 +1160,42 @@ textarea:focus-visible,
 }
 
 /* Hidden by default (desktop nav already has its own header-cta); shown
-   only inside the full-screen mobile nav overlay below. */
+   only inside the mobile nav drawer below. */
 .nav-mobile-cta { display: none; }
+
+/* Dimmed backdrop behind the mobile nav drawer — lets the page stay
+   visible on the left while the drawer is open on the right. */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(23, 23, 23, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+.nav-overlay.open { opacity: 1; pointer-events: auto; }
 
 @media (max-width: 1024px) {
   .main-nav {
     position: fixed;
     top: 0; right: 0;
     height: 100vh;
-    width: 100%;
+    width: 75vw;
+    max-width: 380px;
     background: var(--white);
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding: calc(2rem + env(safe-area-inset-top)) 2.2rem calc(2rem + env(safe-area-inset-bottom));
-    gap: 1.5rem;
+    padding: calc(2rem + env(safe-area-inset-top)) 1.8rem calc(2rem + env(safe-area-inset-bottom));
+    gap: 1.3rem;
     box-shadow: var(--shadow-lg);
     transform: translateX(100%);
     transition: transform var(--transition);
   }
   .main-nav.open { transform: translateX(0); }
-  .main-nav a:not(.nav-mobile-cta) { font-size: 1.35rem; font-weight: 600; padding: 0.4rem 0; letter-spacing: 0; text-transform: none; }
-  .main-nav .nav-mobile-cta { display: inline-flex; margin-top: 1.4rem; }
+  .main-nav a:not(.nav-mobile-cta) { font-size: 1.15rem; font-weight: 600; padding: 0.35rem 0; letter-spacing: 0; text-transform: none; }
+  .main-nav .nav-mobile-cta { display: inline-flex; margin-top: 1.2rem; }
   /* The slide-out panel always has an opaque white background on mobile,
      so its links must stay dark even while the header is in its on-dark
      (transparent-over-hero) state — otherwise white-on-white is invisible. */

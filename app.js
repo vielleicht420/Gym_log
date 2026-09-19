@@ -58,19 +58,26 @@ function initHeader() {
 function initNavToggle() {
   const toggle = document.getElementById('navToggle');
   const nav = document.getElementById('mainNav');
+  const overlay = document.getElementById('navOverlay');
+
+  const closeNav = () => {
+    nav.classList.remove('open');
+    toggle.classList.remove('open');
+    overlay?.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  };
 
   toggle.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('open');
     toggle.classList.toggle('open', isOpen);
+    overlay?.classList.toggle('open', isOpen);
     toggle.setAttribute('aria-expanded', String(isOpen));
   });
 
+  overlay?.addEventListener('click', closeNav);
+
   nav.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      nav.classList.remove('open');
-      toggle.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-    });
+    link.addEventListener('click', closeNav);
   });
 }
 
