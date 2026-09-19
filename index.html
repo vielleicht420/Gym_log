@@ -6,9 +6,11 @@
 <title>Winfried Immobilien &ndash; Ihr Makler für exklusive Immobilien</title>
 <meta name="description" content="Winfried Immobilien: professionelle Vermittlung, Bewertung und Beratung rund um Kauf, Verkauf und Vermietung von Wohn- und Gewerbeimmobilien.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23f7f5f0'/%3E%3Crect x='4' y='4' width='92' height='92' rx='14' fill='none' stroke='%23171717' stroke-width='4'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Georgia,serif' fill='%23b89b63' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Self-hosted (not loaded from Google's CDN): avoids transmitting visitor
+     IP addresses to Google on every page load, which German courts (LG
+     München I, 2022) have ruled needs consent when done via Google's own
+     servers without a legal basis. No consent needed this way. -->
+<link href="fonts/fonts.css" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -484,13 +486,12 @@
           <li><strong>Bürozeiten</strong><span>Mo&ndash;Fr 9:00&ndash;18:00, Sa nach Vereinbarung</span></li>
         </ul>
 
-        <div class="map-frame">
-          <iframe
-            src="https://maps.google.com/maps?q=Maximilianstra%C3%9Fe%2012%2C%2080539%20M%C3%BCnchen&output=embed"
-            title="Standort Winfried Immobilien auf der Karte"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
+        <div class="map-frame" id="mapFrame">
+          <div class="map-placeholder" id="mapPlaceholder">
+            <p>Beim Laden der Karte wird eine Verbindung zu Google Maps hergestellt.
+              Dabei werden Daten an Google übertragen und Cookies gesetzt.</p>
+            <button type="button" class="btn btn-outline map-load-btn" id="mapLoadBtn">Karte laden</button>
+          </div>
           <span class="map-frame-label">Maximilianstraße 12, München</span>
         </div>
         <a class="map-apple-link" href="https://maps.apple.com/?address=Maximilianstra%C3%9Fe%2012%2C%2080539%20M%C3%BCnchen" target="_blank" rel="noopener">In Apple Maps öffnen <span class="arrow">&rarr;</span></a>
@@ -603,11 +604,25 @@
       <a href="#impressum" id="impressum">Impressum</a>
       <a href="#datenschutz" id="datenschutz">Datenschutz</a>
       <a href="#agb">AGB</a>
+      <a href="#" class="cookie-settings-link">Cookie-Einstellungen</a>
     </div>
   </div>
 </footer>
 
 <button class="back-to-top" id="backToTop" aria-label="Nach oben scrollen">↑</button>
+
+<div class="cookie-banner" id="cookieBanner" hidden>
+  <div class="container cookie-banner-inner">
+    <p>Wir nutzen auf dieser Seite eine eingebettete Google-Maps-Karte im
+      Kontaktbereich. Beim Laden werden Daten an Google übertragen und
+      Cookies gesetzt. Alle übrigen Funktionen der Seite sind davon nicht
+      betroffen. Mehr dazu in unserer <a href="#datenschutz">Datenschutzerklärung</a>.</p>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn btn-outline" id="cookieDecline">Nur notwendige</button>
+      <button type="button" class="btn btn-primary" id="cookieAccept">Alle akzeptieren</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="legalModal" hidden>
   <div class="modal-backdrop" id="modalBackdrop"></div>
