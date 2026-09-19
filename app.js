@@ -214,14 +214,14 @@ const PROPERTIES = [
     colors: ['#8a3d1e', '#3a3327'],
   },
   {
-    title: 'Charmante Maisonette-Wohnung',
-    location: 'Pasing, München',
-    price: 1690,
-    type: 'mieten',
-    tag: null,
+    title: 'Charmante Maisonettewohnung mit Dachterrasse',
+    location: 'Haar-Eglfing',
+    price: 590000,
+    type: 'kaufen',
+    tag: 'Neu',
     rooms: 3,
-    area: 76,
-    colors: ['#b2502b', '#4b5842'],
+    area: 84,
+    photo: 'images/haar-eglfing-exterior.jpg',
   },
 ];
 
@@ -238,10 +238,17 @@ function propertyCardHTML(property) {
   const extraTag = property.tag
     ? `<span class="property-tag">${property.tag}</span>`
     : '';
+  const mediaStyle = property.photo
+    ? ''
+    : ` data-initial="${property.location.charAt(0)}" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}"`;
+  const mediaContent = property.photo
+    ? `<img src="${property.photo}" alt="${property.title}">`
+    : '';
 
   return `
     <article class="card property-card reveal in-view" data-type="${property.type}">
-      <div class="property-media" data-initial="${property.location.charAt(0)}" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}">
+      <div class="property-media"${mediaStyle}>
+        ${mediaContent}
         <span class="property-badge ${badgeClass}">${badgeLabel}</span>
         ${extraTag}
       </div>
