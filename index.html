@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Winfried Immobilien &ndash; Ihr Makler für exklusive Immobilien</title>
 <meta name="description" content="Winfried Immobilien: professionelle Vermittlung, Bewertung und Beratung rund um Kauf, Verkauf und Vermietung von Wohn- und Gewerbeimmobilien.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f6f1e7'/%3E%3Crect x='4' y='4' width='92' height='92' fill='none' stroke='%231b1812' stroke-width='4'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Georgia,serif' fill='%23b2502b' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23f7f5f0'/%3E%3Crect x='4' y='4' width='92' height='92' rx='14' fill='none' stroke='%23171717' stroke-width='4'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Georgia,serif' fill='%23b89b63' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,7 +33,7 @@
     </nav>
 
     <div class="header-actions">
-      <a href="#kontakt" class="btn btn-outline header-cta">Kostenlose Bewertung</a>
+      <a href="#kontakt" class="btn btn-primary header-cta">Kostenlose Bewertung</a>
       <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -44,23 +44,34 @@
 <main id="top">
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" id="heroSection">
+    <div class="hero-bg" aria-hidden="true">
+      <img src="images/haar-eglfing-exterior.jpg" alt="" class="hero-bg-img">
+    </div>
+
     <div class="container hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow reveal">Immobilienmakler &middot; München</p>
-        <h1 class="reveal">Ihre Immobilie<br>in <span class="accent-text">besten Händen.</span></h1>
-        <p class="hero-sub reveal">Winfried Immobilien begleitet Sie beim Kauf, Verkauf und der Vermietung
+        <p class="eyebrow hero-anim hero-anim-1">Immobilienmakler &middot; München</p>
+        <h1 class="hero-anim hero-anim-2">Ihre Immobilie<br>in <span class="accent-text">besten Händen.</span></h1>
+        <p class="hero-sub hero-anim hero-anim-3">Winfried Immobilien begleitet Sie beim Kauf, Verkauf und der Vermietung
           von Wohn- und Gewerbeimmobilien &ndash; diskret, transparent und mit einem
           Gespür für den richtigen Preis.</p>
-        <div class="hero-actions reveal">
-          <a href="#kontakt" class="btn btn-primary">Kostenlose Immobilienbewertung</a>
-          <a href="#immobilien" class="btn btn-ghost">Angebote ansehen &rarr;</a>
+        <div class="hero-actions hero-anim hero-anim-4">
+          <a href="#kontakt" class="btn btn-primary">Kostenlose Bewertung</a>
+          <a href="#immobilien" class="btn btn-outline-light">Immobilien entdecken <span class="arrow">&rarr;</span></a>
         </div>
       </div>
     </div>
 
+    <button class="scroll-indicator hero-anim hero-anim-5" id="scrollIndicator" aria-label="Zum Inhalt scrollen">
+      <span>Scroll</span>
+      <span class="scroll-arrow" aria-hidden="true"></span>
+    </button>
+  </section>
+
+  <div class="hero-search-float">
     <div class="container">
-      <form class="hero-search reveal" id="heroSearch">
+      <form class="hero-search" id="heroSearch">
         <div class="field">
           <label for="searchType">Anliegen</label>
           <select id="searchType">
@@ -87,7 +98,9 @@
         <button type="submit" class="btn btn-primary search-submit">Suchen</button>
       </form>
     </div>
+  </div>
 
+  <section class="hero-stats-section">
     <div class="hero-stats container reveal">
       <div class="stat">
         <span class="stat-num" data-count="15">0</span><span class="stat-suffix">+</span>
@@ -135,6 +148,7 @@
           <h3>Verkauf</h3>
           <p>Zielgerichtetes Marketing, professionelle Exposés und ein qualifiziertes Käufernetzwerk
             für den bestmöglichen Verkaufspreis.</p>
+          <span class="service-arrow">&rarr;</span>
         </article>
 
         <article class="service-row reveal">
@@ -142,6 +156,7 @@
           <h3>Vermietung</h3>
           <p>Sorgfältige Mieterauswahl, Bonitätsprüfung und rechtssichere Vertragsgestaltung
             für einen reibungslosen Mietstart.</p>
+          <span class="service-arrow">&rarr;</span>
         </article>
 
         <article class="service-row reveal">
@@ -149,6 +164,7 @@
           <h3>Immobilienbewertung</h3>
           <p>Marktgerechte, kostenlose Wertermittlung auf Basis aktueller Vergleichsdaten
             und lokaler Marktkenntnis.</p>
+          <span class="service-arrow">&rarr;</span>
         </article>
 
         <article class="service-row reveal">
@@ -156,6 +172,7 @@
           <h3>Beratung &amp; Finanzierung</h3>
           <p>Unabhängige Beratung zu Finanzierung, Fördermitteln und rechtlichen Rahmenbedingungen
             über unser Partnernetzwerk.</p>
+          <span class="service-arrow">&rarr;</span>
         </article>
 
         <article class="service-row reveal">
@@ -163,6 +180,7 @@
           <h3>Neubau &amp; Projektvermarktung</h3>
           <p>Vermarktungskonzepte für Bauträger &ndash; von der Visualisierung bis zum
             letzten verkauften Objekt.</p>
+          <span class="service-arrow">&rarr;</span>
         </article>
 
         <article class="service-row reveal">
@@ -170,6 +188,7 @@
           <h3>Objektverwaltung</h3>
           <p>Laufende Betreuung von Miet- und Renditeobjekten &ndash; Abrechnung, Instandhaltung
             und Kommunikation mit Mietern.</p>
+          <span class="service-arrow">&rarr;</span>
         </article>
       </div>
     </div>
@@ -198,6 +217,12 @@
         <p>Unser Anspruch: ehrliche Beratung statt Verkaufsdruck, transparente
           Prozesse statt Kleingedrucktem, und ein persönlicher Ansprechpartner
           von der ersten Anfrage bis zur Schlüsselübergabe.</p>
+
+        <ul class="about-facts">
+          <li>Inhabergeführt</li>
+          <li>Regional verwurzelt</li>
+          <li>Persönlich betreut</li>
+        </ul>
 
         <ul class="check-list">
           <li>Kostenlose, unverbindliche Wertermittlung</li>
@@ -251,36 +276,50 @@
       <p class="eyebrow center reveal">So arbeiten wir</p>
       <h2 class="section-title center reveal">Ihr Weg zum Verkauf</h2>
 
-      <div class="steps">
-        <div class="step reveal">
-          <span class="step-num">01</span>
-          <h3>Erstgespräch</h3>
-          <p>Kennenlernen, Ziele und Zeitplan klären &ndash; unverbindlich und kostenfrei.</p>
+      <div class="timeline" id="timeline">
+        <div class="timeline-track"><div class="timeline-track-fill" id="timelineFill"></div></div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">01</div>
+          <div class="timeline-content">
+            <h3>Erstgespräch</h3>
+            <p>Kennenlernen, Ziele und Zeitplan klären &ndash; unverbindlich und kostenfrei.</p>
+          </div>
         </div>
-        <div class="step reveal">
-          <span class="step-num">02</span>
-          <h3>Bewertung</h3>
-          <p>Marktgerechte Wertermittlung anhand von Lage, Zustand und aktuellen Vergleichsdaten.</p>
+        <div class="timeline-item">
+          <div class="timeline-marker">02</div>
+          <div class="timeline-content">
+            <h3>Bewertung</h3>
+            <p>Marktgerechte Wertermittlung anhand von Lage, Zustand und aktuellen Vergleichsdaten.</p>
+          </div>
         </div>
-        <div class="step reveal">
-          <span class="step-num">03</span>
-          <h3>Vermarktung</h3>
-          <p>Professionelle Fotos, Exposé und gezielte Ansprache passender Interessent:innen.</p>
+        <div class="timeline-item">
+          <div class="timeline-marker">03</div>
+          <div class="timeline-content">
+            <h3>Vermarktung</h3>
+            <p>Professionelle Fotos, Exposé und gezielte Ansprache passender Interessent:innen.</p>
+          </div>
         </div>
-        <div class="step reveal">
-          <span class="step-num">04</span>
-          <h3>Besichtigungen</h3>
-          <p>Wir organisieren und begleiten alle Besichtigungstermine für Sie.</p>
+        <div class="timeline-item">
+          <div class="timeline-marker">04</div>
+          <div class="timeline-content">
+            <h3>Besichtigungen</h3>
+            <p>Wir organisieren und begleiten alle Besichtigungstermine für Sie.</p>
+          </div>
         </div>
-        <div class="step reveal">
-          <span class="step-num">05</span>
-          <h3>Verhandlung</h3>
-          <p>Professionelle Preisverhandlung im Sinne des bestmöglichen Ergebnisses.</p>
+        <div class="timeline-item">
+          <div class="timeline-marker">05</div>
+          <div class="timeline-content">
+            <h3>Verhandlung</h3>
+            <p>Professionelle Preisverhandlung im Sinne des bestmöglichen Ergebnisses.</p>
+          </div>
         </div>
-        <div class="step reveal">
-          <span class="step-num">06</span>
-          <h3>Notartermin &amp; Übergabe</h3>
-          <p>Begleitung bis zur Beurkundung und reibungslose Objektübergabe.</p>
+        <div class="timeline-item">
+          <div class="timeline-marker">06</div>
+          <div class="timeline-content">
+            <h3>Notartermin &amp; Übergabe</h3>
+            <p>Begleitung bis zur Beurkundung und reibungslose Objektübergabe.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -329,29 +368,35 @@
       <h2 class="section-title center reveal">Was unsere Kund:innen sagen</h2>
 
       <div class="testimonial-slider reveal" id="testimonialSlider">
-        <div class="testimonial-track" id="testimonialTrack">
-          <blockquote class="testimonial">
-            <p>&bdquo;Von der Bewertung bis zum Notartermin lief alles reibungslos.
-              Wir wurden zu jedem Zeitpunkt ehrlich beraten.&ldquo;</p>
-            <footer>&mdash; Familie Hoffmann, Hausverkauf in München</footer>
-          </blockquote>
-          <blockquote class="testimonial">
-            <p>&bdquo;Unsere Wohnung war innerhalb von drei Wochen zum gewünschten
-              Preis verkauft. Absolut professionell.&ldquo;</p>
-            <footer>&mdash; S. Kraus, Eigentumswohnung Starnberg</footer>
-          </blockquote>
-          <blockquote class="testimonial">
-            <p>&bdquo;Als Kapitalanleger schätze ich die zuverlässige Objektverwaltung
-              und die schnelle Kommunikation.&ldquo;</p>
-            <footer>&mdash; T. Reinhardt, Kapitalanleger</footer>
-          </blockquote>
-          <blockquote class="testimonial">
-            <p>&bdquo;Endlich ein Makler, der zuhört. Wir haben genau das Haus
-              gefunden, das zu unserer Familie passt.&ldquo;</p>
-            <footer>&mdash; Familie Nowak, Immobilienkauf</footer>
-          </blockquote>
+        <div class="testimonial-viewport">
+          <div class="testimonial-track" id="testimonialTrack">
+            <blockquote class="testimonial">
+              <p>&bdquo;Von der Bewertung bis zum Notartermin lief alles reibungslos.
+                Wir wurden zu jedem Zeitpunkt ehrlich beraten.&ldquo;</p>
+              <footer>&mdash; Familie Hoffmann, Hausverkauf in München</footer>
+            </blockquote>
+            <blockquote class="testimonial">
+              <p>&bdquo;Unsere Wohnung war innerhalb von drei Wochen zum gewünschten
+                Preis verkauft. Absolut professionell.&ldquo;</p>
+              <footer>&mdash; S. Kraus, Eigentumswohnung Starnberg</footer>
+            </blockquote>
+            <blockquote class="testimonial">
+              <p>&bdquo;Als Kapitalanleger schätze ich die zuverlässige Objektverwaltung
+                und die schnelle Kommunikation.&ldquo;</p>
+              <footer>&mdash; T. Reinhardt, Kapitalanleger</footer>
+            </blockquote>
+            <blockquote class="testimonial">
+              <p>&bdquo;Endlich ein Makler, der zuhört. Wir haben genau das Haus
+                gefunden, das zu unserer Familie passt.&ldquo;</p>
+              <footer>&mdash; Familie Nowak, Immobilienkauf</footer>
+            </blockquote>
+          </div>
         </div>
-        <div class="testimonial-dots" id="testimonialDots"></div>
+        <div class="testimonial-nav">
+          <button class="testimonial-arrow" id="testimonialPrev" aria-label="Vorherige Bewertung">&larr;</button>
+          <span class="testimonial-counter" id="testimonialCounter"><strong>01</strong> / 04</span>
+          <button class="testimonial-arrow" id="testimonialNext" aria-label="Nächste Bewertung">&rarr;</button>
+        </div>
       </div>
     </div>
   </section>
@@ -412,7 +457,7 @@
     <div class="container contact-grid">
       <div class="contact-info reveal">
         <p class="eyebrow">Kontakt</p>
-        <h2 class="section-title">Lassen Sie uns sprechen</h2>
+        <h2 class="section-title">Lassen Sie uns über Ihre Immobilie sprechen.</h2>
         <p>Ob Kauf, Verkauf, Vermietung oder einfach eine erste Einschätzung &ndash;
           wir freuen uns auf Ihre Nachricht.</p>
 
@@ -431,10 +476,12 @@
           <div class="field">
             <label for="name">Name *</label>
             <input type="text" id="name" name="name" required>
+            <p class="field-error-msg">Bitte geben Sie Ihren Namen ein.</p>
           </div>
           <div class="field">
             <label for="email">E-Mail *</label>
             <input type="email" id="email" name="email" required>
+            <p class="field-error-msg">Bitte geben Sie eine gültige E-Mail-Adresse ein.</p>
           </div>
         </div>
         <div class="form-row">
@@ -456,12 +503,13 @@
         <div class="field">
           <label for="message">Nachricht *</label>
           <textarea id="message" name="message" rows="5" required></textarea>
+          <p class="field-error-msg">Bitte teilen Sie uns kurz Ihr Anliegen mit.</p>
         </div>
         <label class="checkbox-field">
           <input type="checkbox" id="privacy" required>
           <span>Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen. *</span>
         </label>
-        <button type="submit" class="btn btn-primary form-submit">Nachricht senden</button>
+        <button type="submit" class="btn btn-primary form-submit">Kostenlose Anfrage senden <span class="arrow">&rarr;</span></button>
         <p class="form-success" id="formSuccess" hidden>Vielen Dank! Wir melden uns innerhalb
           eines Werktags bei Ihnen.</p>
       </form>
@@ -483,6 +531,10 @@
       </a>
       <p>Ihr Partner für Kauf, Verkauf und Vermietung von Immobilien
         in München und Umgebung.</p>
+      <div class="footer-contact">
+        <a href="tel:+498912345678">+49 89 123 456 78</a>
+        <a href="mailto:info@winfried-immobilien.de">info@winfried-immobilien.de</a>
+      </div>
       <div class="social-row">
         <a href="#" aria-label="Instagram">IG</a>
         <a href="#" aria-label="LinkedIn">IN</a>

@@ -2,12 +2,18 @@
    Winfried Immobilien — App Logic
    ========================================================= */
 
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 document.addEventListener('DOMContentLoaded', () => {
   initHeader();
   initNavToggle();
   initSmoothAnchors();
   initReveal();
   initCounters();
+  initHeroIntro();
+  initScrollIndicator();
+  initAboutParallax();
+  initTimeline();
   initProperties();
   initPropertyPage();
   initTestimonialSlider();
@@ -20,21 +26,32 @@ document.addEventListener('DOMContentLoaded', () => {
   initFooterYear();
 });
 
-/* ---------- Header shrink on scroll + progress bar ---------- */
-function initHeader() {
+/* ---------- Header shrink on scroll + progress bar + light/dark theme ---------- */
+function updateHeaderState() {
   const header = document.getElementById('siteHeader');
+  const hero = document.getElementById('heroSection');
   const progressBar = document.getElementById('progressBar');
+  if (!header) return;
 
-  const onScroll = () => {
-    header.classList.toggle('scrolled', window.scrollY > 40);
+  header.classList.toggle('scrolled', window.scrollY > 40);
 
+  // getBoundingClientRect() collapses to all-zero when the hero (or an
+  // ancestor, e.g. <main> while the property page is open) isn't rendered —
+  // so this naturally turns off on-dark styling on the property page too.
+  const heroVisible = !!hero && hero.getBoundingClientRect().bottom > header.offsetHeight;
+  header.classList.toggle('on-dark', heroVisible);
+
+  if (progressBar) {
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const progress = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
     progressBar.style.width = progress + '%';
-  };
+  }
+}
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+function initHeader() {
+  window.addEventListener('scroll', updateHeaderState, { passive: true });
+  window.addEventListener('resize', updateHeaderState);
+  updateHeaderState();
 }
 
 /* ---------- Mobile nav toggle ---------- */
@@ -142,6 +159,100 @@ function initCounters() {
     { threshold: 0.5 }
   );
   counters.forEach((el) => observer.observe(el));
+}
+
+/* ---------- Hero entrance animation ---------- */
+function initHeroIntro() {
+  const hero = document.getElementById('heroSection');
+  if (!hero) return;
+  // Reduced motion is handled purely in CSS (elements are shown instantly);
+  // the class is still added so no JS branch is needed elsewhere.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => hero.classList.add('hero-loaded'));
+  });
+}
+
+/* ---------- Scroll indicator ---------- */
+function initScrollIndicator() {
+  const btn = document.getElementById('scrollIndicator');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const target = document.getElementById('leistungen');
+    if (target) target.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth', block: 'start' });
+  });
+}
+
+/* ---------- Subtle parallax on the about photo ---------- */
+function initAboutParallax() {
+  if (REDUCED_MOTION) return;
+  const photo = document.querySelector('.about-photo');
+  if (!photo) return;
+  const images = photo.querySelectorAll('img');
+  if (!images.length) return;
+
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    const rect = photo.getBoundingClientRect();
+    const viewportCenter = window.innerHeight / 2;
+    const elementCenter = rect.top + rect.height / 2;
+    const offset = Math.max(Math.min((viewportCenter - elementCenter) * 0.06, 16), -16);
+    images.forEach((img) => { img.style.transform = `translateY(${offset}px) scale(1.06)`; });
+  };
+
+  const onScroll = () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+}
+
+/* ---------- Ablauf timeline: progressive line + active step ---------- */
+function initTimeline() {
+  const timeline = document.getElementById('timeline');
+  const fill = document.getElementById('timelineFill');
+  if (!timeline || !fill) return;
+  const items = [...timeline.querySelectorAll('.timeline-item')];
+
+  if (REDUCED_MOTION) {
+    fill.style.transform = 'scaleY(1)';
+    items.forEach((item) => item.classList.add('active'));
+    return;
+  }
+
+  const REF_OFFSET = 170; // px from viewport top, clears the fixed header
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    const rect = timeline.getBoundingClientRect();
+    const progress = Math.min(Math.max((REF_OFFSET - rect.top) / rect.height, 0), 1);
+    fill.style.transform = `scaleY(${progress})`;
+
+    let activeIndex = -1;
+    items.forEach((item, i) => {
+      const marker = item.querySelector('.timeline-marker');
+      if (marker && marker.getBoundingClientRect().top <= REF_OFFSET) activeIndex = i;
+    });
+    items.forEach((item, i) => item.classList.toggle('active', i === activeIndex));
+  };
+
+  const onScroll = () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
 }
 
 /* ---------- Property listings ---------- */
@@ -334,7 +445,7 @@ function propertyCardHTML(property) {
           <span>🛏 ${property.rooms} Zimmer</span>
           <span>📐 ${property.area} m²</span>
         </div>
-        <p class="property-details-link">Details ansehen &rarr;</p>
+        <p class="property-details-link">Details ansehen <span class="arrow">&rarr;</span></p>
       </div>
     </article>
   `;
@@ -463,6 +574,7 @@ function showPropertyPage(property) {
   // before the page's own fade-in ever becomes visible.
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   document.title = `${property.title} – Winfried Immobilien`;
+  updateHeaderState();
 
   // Double rAF: lets the browser paint the initial (hidden→shown) state
   // before adding the class that triggers the transition.
@@ -480,6 +592,7 @@ function closePropertyPage() {
   page.hidden = true;
   if (main) main.hidden = false;
   document.title = DEFAULT_TITLE;
+  updateHeaderState();
 }
 
 function syncPropertyRoute() {
@@ -502,35 +615,54 @@ function initPropertyPage() {
 /* ---------- Testimonial slider ---------- */
 function initTestimonialSlider() {
   const track = document.getElementById('testimonialTrack');
-  const dotsWrap = document.getElementById('testimonialDots');
-  if (!track || !dotsWrap) return;
+  const counter = document.getElementById('testimonialCounter');
+  const prevBtn = document.getElementById('testimonialPrev');
+  const nextBtn = document.getElementById('testimonialNext');
+  const slider = document.getElementById('testimonialSlider');
+  if (!track || !counter || !slider) return;
 
   const slides = track.children.length;
   let index = 0;
   let timer = null;
 
-  for (let i = 0; i < slides; i++) {
-    const dot = document.createElement('button');
-    if (i === 0) dot.classList.add('active');
-    dot.setAttribute('aria-label', `Bewertung ${i + 1} anzeigen`);
-    dot.addEventListener('click', () => goTo(i));
-    dotsWrap.appendChild(dot);
-  }
+  const pad = (n) => String(n).padStart(2, '0');
 
   function goTo(i) {
     index = (i + slides) % slides;
     track.style.transform = `translateX(-${index * 100}%)`;
-    [...dotsWrap.children].forEach((d, di) => d.classList.toggle('active', di === index));
+    counter.innerHTML = `<strong>${pad(index + 1)}</strong> / ${pad(slides)}`;
   }
 
   function startAutoplay() {
+    clearInterval(timer);
+    if (REDUCED_MOTION) return; // no automatic slider motion under reduced motion
     timer = setInterval(() => goTo(index + 1), 5500);
   }
+  function stopAutoplay() {
+    clearInterval(timer);
+  }
 
-  const slider = document.getElementById('testimonialSlider');
-  slider.addEventListener('mouseenter', () => clearInterval(timer));
+  prevBtn?.addEventListener('click', () => { goTo(index - 1); startAutoplay(); });
+  nextBtn?.addEventListener('click', () => { goTo(index + 1); startAutoplay(); });
+
+  slider.addEventListener('mouseenter', stopAutoplay);
   slider.addEventListener('mouseleave', startAutoplay);
 
+  // Touch swipe support
+  let touchStartX = null;
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    stopAutoplay();
+  }, { passive: true });
+  track.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) goTo(dx < 0 ? index + 1 : index - 1);
+    touchStartX = null;
+    startAutoplay();
+  });
+
+  goTo(0);
   startAutoplay();
 }
 
@@ -576,7 +708,10 @@ function initContactForm() {
       const emailOk =
         field.type !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
 
-      if (!filled || !emailOk) {
+      const fieldValid = filled && emailOk;
+      field.setAttribute('aria-invalid', fieldValid ? 'false' : 'true');
+
+      if (!fieldValid) {
         valid = false;
         if (wrapper) wrapper.classList.add('error');
       } else if (wrapper) {
@@ -586,6 +721,8 @@ function initContactForm() {
 
     if (!valid) {
       success.hidden = true;
+      const firstError = form.querySelector('.field.error input, .field.error select, .field.error textarea');
+      firstError?.focus();
       return;
     }
 
@@ -593,6 +730,7 @@ function initContactForm() {
     success.textContent = 'Vielen Dank! Wir melden uns innerhalb eines Werktags bei Ihnen.';
     form.reset();
     form.querySelectorAll('.field.error').forEach((f) => f.classList.remove('error'));
+    form.querySelectorAll('[aria-invalid]').forEach((f) => f.setAttribute('aria-invalid', 'false'));
   });
 }
 
