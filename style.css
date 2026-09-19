@@ -134,7 +134,7 @@ textarea:focus-visible,
   white-space: nowrap;
 }
 .btn .arrow { display: inline-block; transition: transform var(--transition-fast); }
-.btn:hover .arrow { transform: translateX(3px); }
+.btn:hover .arrow { transform: translateX(5px); }
 .btn-primary {
   background: var(--ink);
   color: var(--white);
@@ -295,9 +295,9 @@ textarea:focus-visible,
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: center 65%;
-  transform: scale(1.06);
+  transform: scale(1.03);
   opacity: 0;
-  transition: opacity 1.1s ease, transform 6s ease;
+  transition: opacity 1s ease, transform 4s ease;
 }
 .hero.hero-loaded .hero-bg-img { opacity: 1; transform: scale(1); }
 .hero-bg::after {
@@ -559,6 +559,36 @@ textarea:focus-visible,
 .filter-btn:hover { border-color: var(--ink); }
 .filter-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
 
+/* Property feature layout — one large highlighted listing plus two
+   smaller supporting cards, ahead of the regular grid rows. */
+.property-feature-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.8rem;
+  align-items: stretch;
+}
+.property-feature-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.8rem;
+}
+.property-feature-side .property-card { flex: 1; }
+.property-card.featured .property-media { aspect-ratio: 16/11; }
+.property-card.featured .property-body { padding: 2.1rem 2.3rem 2.3rem; }
+.property-card.featured .property-price { font-size: 1.85rem; }
+.property-card.featured .property-title { font-size: 1.5rem; }
+.property-card.featured .property-loc { font-size: 0.95rem; margin-bottom: 1.3rem; }
+/* Above 1024px the feature row stretches the big card to match the height
+   of the two stacked side cards; let its image fill that space instead of
+   leaving blank room below the text (the stack's own aspect-ratio still
+   governs at narrower widths, where the row becomes a single column). */
+@media (min-width: 1025px) {
+  .property-card.featured { display: flex; flex-direction: column; }
+  .property-card.featured .property-media { aspect-ratio: auto; flex: 1 1 auto; min-height: 260px; }
+}
+
 /* Property cards */
 .property-card { overflow: hidden; cursor: pointer; transition: transform var(--transition), box-shadow var(--transition); }
 .property-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
@@ -707,7 +737,8 @@ textarea:focus-visible,
 .timeline-content p { color: var(--text-soft); font-size: 0.95rem; }
 
 /* ---------------- Team ---------------- */
-.team-card { padding: 0; text-align: left; }
+.team-card { padding: 0; text-align: left; transition: transform var(--transition); }
+.team-card:hover { transform: translateY(-5px); }
 .team-photo {
   aspect-ratio: 1/1;
   width: 100%;
@@ -804,7 +835,8 @@ textarea:focus-visible,
 .accordion-icon { font-size: 1.3rem; color: var(--gold-deep); transition: transform var(--transition); flex-shrink: 0; margin-left: 1rem; font-weight: 300; }
 .accordion-item.open .accordion-icon { transform: rotate(45deg); }
 .accordion-panel { max-height: 0; overflow: hidden; transition: max-height var(--transition); }
-.accordion-panel p { color: var(--text-soft); padding-bottom: 1.4rem; font-size: 0.95rem; }
+.accordion-panel p { color: var(--text-soft); padding-bottom: 1.4rem; font-size: 0.95rem; opacity: 0; transition: opacity 0.3s ease; }
+.accordion-item.open .accordion-panel p { opacity: 1; transition: opacity 0.35s ease 0.1s; }
 
 /* Contact */
 .contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 4rem; }
@@ -837,7 +869,7 @@ textarea:focus-visible,
   box-shadow: var(--shadow-sm);
 }
 
-.contact-form { background: var(--white); padding: 2.4rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); }
+.contact-form { background: var(--white); padding: 2.4rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
 .contact-form .field { margin-bottom: 1.2rem; padding: 0; border: none; }
 .contact-form .form-row .field { margin-bottom: 0; }
@@ -1037,6 +1069,15 @@ textarea:focus-visible,
 @media (max-width: 560px) {
   .property-page { padding-top: 8rem; }
   .property-hero-media { aspect-ratio: 4/3; }
+  .property-feature-side { flex-direction: column; }
+  .property-card.featured .property-media { aspect-ratio: 4/3; }
+  .property-card.featured .property-body { padding: 1.6rem; }
+  .property-card.featured .property-price { font-size: 1.4rem; }
+  .property-card.featured .property-title { font-size: 1.05rem; }
+  .property-card.featured .property-loc { font-size: 0.88rem; margin-bottom: 1rem; }
+  /* Tightens only the section that follows the stats — the stats
+     section itself (.hero-stats-section / .hero-stats) is untouched. */
+  .trustbar { padding: 0.9rem 0; }
 }
 
 /* Scroll reveal */
@@ -1100,6 +1141,8 @@ textarea:focus-visible,
   .hero-search .field { border-right: none; border-bottom: 1px solid var(--border); padding: 0.9rem 1.1rem; }
   .search-submit { width: 100%; border-radius: 0; }
   .property-grid, .team-grid { grid-template-columns: 1fr; }
+  .property-feature-row { grid-template-columns: 1fr; }
+  .property-feature-side { flex-direction: row; }
   .cta-banner-inner { flex-direction: column; text-align: center; }
   .about-badge { position: static; margin-top: 1rem; width: fit-content; }
   .form-row { grid-template-columns: 1fr; }

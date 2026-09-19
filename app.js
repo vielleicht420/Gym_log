@@ -258,6 +258,45 @@ function initTimeline() {
 /* ---------- Property listings ---------- */
 const PROPERTIES = [
   {
+    id: 'haar-eglfing-maisonette',
+    title: 'Charmante Maisonettewohnung mit Dachterrasse',
+    location: 'Haar-Eglfing',
+    price: 590000,
+    type: 'kaufen',
+    tag: 'Neu',
+    rooms: 3,
+    area: 84,
+    photo: 'images/haar-eglfing-exterior.jpg',
+    address: 'Tassilostraße 6, 85540 Haar',
+    pricePerSqm: '7.024 €/m²',
+    commission: 'Keine Provision für Käufer',
+    description: [
+      'Diese gepflegte 3-Zimmer-Maisonettewohnung aus dem Baujahr 2008 erstreckt sich über zwei Etagen und bietet auf 84 m² ein modernes und komfortables Wohngefühl. Die offene Einbauküche mit hochwertigen Fronten, Granitarbeitsplatte, Dunstabzugshaube und praktischer Frühstücksbar ist ein echtes Highlight. Der großzügige, lichtdurchflutete Wohnbereich mit hellem Parkettboden lädt zum Wohlfühlen ein und bietet direkten Zugang zur sonnigen Dachterrasse mit schönem Ausblick ins Grüne – perfekt zum Entspannen und Genießen. Das gepflegte Badezimmer mit Dusche und WC sowie ein separates Gäste-WC runden das Raumangebot ab. Ein Aufzug im Gebäude sorgt ebenfalls für zusätzlichen Komfort.',
+      'Im Kaufpreis inbegriffen ist ein Tiefgaragen-Einzelstellplatz im Wert von 15.000 €. Ein Energieausweis liegt vor. Die Wohnung ist zeitnah bezugsfrei. Die Wohnung ist aktuell noch voll möbliert. Die Einbauküche kann bei Interesse kostenlos übernommen werden.',
+    ],
+    lage:
+      'Die Wohnung befindet sich in Haar-Eglfing, einer ruhigen und grünen Wohnsiedlung mit gepflegter Außenanlage – und das direkt vor den Toren Münchens. Haar überzeugt mit einer hervorragenden Infrastruktur: Einkaufsmöglichkeiten, Schulen, Ärzte und Freizeitangebote sind alle in unmittelbarer Nähe. Die S-Bahn (S6 und S4) bringt Sie schnell und bequem in die Münchner Innenstadt – ideal für Berufspendler und Stadtliebhaber gleichermaßen.',
+    facts: [
+      { label: 'Wohnungstyp', value: 'Maisonette' },
+      { label: 'Nutzfläche ca.', value: '84 m²' },
+      { label: 'Etage', value: '2' },
+      { label: 'Etagenanzahl', value: '3' },
+      { label: 'Schlafzimmer', value: '2' },
+      { label: 'Badezimmer', value: '1' },
+      { label: 'Gäste-WC', value: 'Ja' },
+      { label: 'Balkon / Terrasse', value: 'Ja' },
+      { label: 'Personenaufzug', value: 'Ja' },
+      { label: 'Einbauküche', value: 'Ja' },
+      { label: 'Garage / Stellplatz', value: 'Tiefgarage (1 Stellplatz)' },
+    ],
+    costs: [
+      { label: 'Provision für Käufer', value: 'Nein' },
+      { label: 'Preis pro m²', value: '7.024 €/m²' },
+      { label: 'Qualität der Ausstattung', value: 'Normal' },
+      { label: 'Energieausweis', value: 'Vorhanden' },
+    ],
+  },
+  {
     id: 'schwabing-altbau',
     title: 'Lichtdurchflutete Altbauwohnung',
     location: 'Schwabing, München',
@@ -369,45 +408,6 @@ const PROPERTIES = [
       'Freistehende Villa mit direktem Seeblick, großzügigem Grundstück und privatem Bootssteg am Ammersee.',
     ],
   },
-  {
-    id: 'haar-eglfing-maisonette',
-    title: 'Charmante Maisonettewohnung mit Dachterrasse',
-    location: 'Haar-Eglfing',
-    price: 590000,
-    type: 'kaufen',
-    tag: 'Neu',
-    rooms: 3,
-    area: 84,
-    photo: 'images/haar-eglfing-exterior.jpg',
-    address: 'Tassilostraße 6, 85540 Haar',
-    pricePerSqm: '7.024 €/m²',
-    commission: 'Keine Provision für Käufer',
-    description: [
-      'Diese gepflegte 3-Zimmer-Maisonettewohnung aus dem Baujahr 2008 erstreckt sich über zwei Etagen und bietet auf 84 m² ein modernes und komfortables Wohngefühl. Die offene Einbauküche mit hochwertigen Fronten, Granitarbeitsplatte, Dunstabzugshaube und praktischer Frühstücksbar ist ein echtes Highlight. Der großzügige, lichtdurchflutete Wohnbereich mit hellem Parkettboden lädt zum Wohlfühlen ein und bietet direkten Zugang zur sonnigen Dachterrasse mit schönem Ausblick ins Grüne – perfekt zum Entspannen und Genießen. Das gepflegte Badezimmer mit Dusche und WC sowie ein separates Gäste-WC runden das Raumangebot ab. Ein Aufzug im Gebäude sorgt ebenfalls für zusätzlichen Komfort.',
-      'Im Kaufpreis inbegriffen ist ein Tiefgaragen-Einzelstellplatz im Wert von 15.000 €. Ein Energieausweis liegt vor. Die Wohnung ist zeitnah bezugsfrei. Die Wohnung ist aktuell noch voll möbliert. Die Einbauküche kann bei Interesse kostenlos übernommen werden.',
-    ],
-    lage:
-      'Die Wohnung befindet sich in Haar-Eglfing, einer ruhigen und grünen Wohnsiedlung mit gepflegter Außenanlage – und das direkt vor den Toren Münchens. Haar überzeugt mit einer hervorragenden Infrastruktur: Einkaufsmöglichkeiten, Schulen, Ärzte und Freizeitangebote sind alle in unmittelbarer Nähe. Die S-Bahn (S6 und S4) bringt Sie schnell und bequem in die Münchner Innenstadt – ideal für Berufspendler und Stadtliebhaber gleichermaßen.',
-    facts: [
-      { label: 'Wohnungstyp', value: 'Maisonette' },
-      { label: 'Nutzfläche ca.', value: '84 m²' },
-      { label: 'Etage', value: '2' },
-      { label: 'Etagenanzahl', value: '3' },
-      { label: 'Schlafzimmer', value: '2' },
-      { label: 'Badezimmer', value: '1' },
-      { label: 'Gäste-WC', value: 'Ja' },
-      { label: 'Balkon / Terrasse', value: 'Ja' },
-      { label: 'Personenaufzug', value: 'Ja' },
-      { label: 'Einbauküche', value: 'Ja' },
-      { label: 'Garage / Stellplatz', value: 'Tiefgarage (1 Stellplatz)' },
-    ],
-    costs: [
-      { label: 'Provision für Käufer', value: 'Nein' },
-      { label: 'Preis pro m²', value: '7.024 €/m²' },
-      { label: 'Qualität der Ausstattung', value: 'Normal' },
-      { label: 'Energieausweis', value: 'Vorhanden' },
-    ],
-  },
 ];
 
 function formatPrice(property) {
@@ -417,7 +417,7 @@ function formatPrice(property) {
     : `${formatted} €`;
 }
 
-function propertyCardHTML(property) {
+function propertyCardHTML(property, featured = false) {
   const badgeClass = property.type === 'mieten' ? 'tag-mieten' : '';
   const badgeLabel = property.type === 'mieten' ? 'Mieten' : 'Kaufen';
   const extraTag = property.tag
@@ -429,9 +429,10 @@ function propertyCardHTML(property) {
   const mediaContent = property.photo
     ? `<img src="${property.photo}" alt="${property.title}">`
     : '';
+  const featuredClass = featured ? ' featured' : '';
 
   return `
-    <article class="card property-card reveal in-view" data-type="${property.type}" data-id="${property.id}" tabindex="0" role="button" aria-haspopup="dialog">
+    <article class="card property-card${featuredClass} reveal in-view" data-type="${property.type}" data-id="${property.id}" tabindex="0" role="button" aria-haspopup="dialog">
       <div class="property-media"${mediaStyle}>
         ${mediaContent}
         <span class="property-badge ${badgeClass}">${badgeLabel}</span>
@@ -524,7 +525,23 @@ function initProperties() {
   const render = (filter) => {
     const items =
       filter === 'alle' ? PROPERTIES : PROPERTIES.filter((p) => p.type === filter);
-    grid.innerHTML = items.map(propertyCardHTML).join('');
+
+    if (items.length < 3) {
+      grid.innerHTML = items.map((p) => propertyCardHTML(p)).join('');
+      return;
+    }
+
+    const [first, second, third, ...rest] = items;
+    const featureRow = `
+      <div class="property-feature-row">
+        ${propertyCardHTML(first, true)}
+        <div class="property-feature-side">
+          ${propertyCardHTML(second)}
+          ${propertyCardHTML(third)}
+        </div>
+      </div>
+    `;
+    grid.innerHTML = featureRow + rest.map((p) => propertyCardHTML(p)).join('');
   };
 
   tabs.addEventListener('click', (e) => {
