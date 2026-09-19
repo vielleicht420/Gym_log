@@ -92,11 +92,19 @@ function initSmoothAnchors() {
     // Let legal-link handler manage modal targets separately.
     if (anchor.id === 'impressum' || anchor.id === 'datenschutz') return;
 
+    // Leaving the property detail page (e.g. "Zurück zu allen Immobilien")
+    // lands on a different part of the page than where the user currently
+    // is, since that page always opens scrolled to its own top — an
+    // animated smooth scroll there just plays a long, disorienting scroll
+    // through unrelated sections instead of a clean "go back". Jump
+    // straight there, the same way opening the page itself does.
+    const leavingPropertyPage = !!anchor.closest('#propertyPage');
+
     if (id === '#top') {
       e.preventDefault();
       closePropertyPage();
       history.replaceState(null, '', '#top');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: leavingPropertyPage ? 'instant' : 'smooth' });
       return;
     }
 
@@ -105,7 +113,7 @@ function initSmoothAnchors() {
     e.preventDefault();
     closePropertyPage();
     history.replaceState(null, '', id);
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target.scrollIntoView({ behavior: leavingPropertyPage ? 'instant' : 'smooth', block: 'start' });
   });
 }
 
