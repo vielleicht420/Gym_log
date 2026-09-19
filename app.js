@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initCounters();
   initProperties();
-  initPropertyModal();
+  initPropertyPage();
   initTestimonialSlider();
   initAccordion();
   initContactForm();
@@ -59,17 +59,29 @@ function initNavToggle() {
 
 /* ---------- Smooth scroll for in-page anchors ---------- */
 function initSmoothAnchors() {
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', (e) => {
-      const id = anchor.getAttribute('href');
-      if (!id || id === '#' || id === '#top') return;
-      const target = document.querySelector(id);
-      if (!target) return;
-      // Let legal-link handler manage modal targets separately.
-      if (anchor.id === 'impressum' || anchor.id === 'datenschutz') return;
+  // Delegated so it also handles anchors injected later (e.g. inside the property page).
+  document.addEventListener('click', (e) => {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (!anchor) return;
+    const id = anchor.getAttribute('href');
+    if (!id || id === '#') return;
+    // Let legal-link handler manage modal targets separately.
+    if (anchor.id === 'impressum' || anchor.id === 'datenschutz') return;
+
+    if (id === '#top') {
       e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+      closePropertyPage();
+      history.replaceState(null, '', '#top');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    closePropertyPage();
+    history.replaceState(null, '', id);
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }
 
@@ -328,7 +340,7 @@ function propertyCardHTML(property) {
   `;
 }
 
-function propertyDetailHTML(property) {
+function propertyPageHTML(property) {
   const facts =
     property.facts ||
     [
@@ -342,14 +354,12 @@ function propertyDetailHTML(property) {
     .join('');
 
   const costsHTML = property.costs
-    ? `<h3>Kosten</h3><ul class="detail-facts">${property.costs
+    ? `<h2>Kosten</h2><ul class="detail-facts">${property.costs
         .map((c) => `<li><span>${c.label}</span><strong>${c.value}</strong></li>`)
         .join('')}</ul>`
     : '';
 
-  const lageHTML = property.lage
-    ? `<h3>Lage</h3><p>${property.lage}</p>`
-    : '';
+  const lageHTML = property.lage ? `<h2>Lage</h2><p>${property.lage}</p>` : '';
 
   const addressHTML = property.address
     ? `<p class="detail-address">📍 ${property.address}</p>`
@@ -362,22 +372,36 @@ function propertyDetailHTML(property) {
   const badgeLabel = property.type === 'mieten' ? 'Mieten' : 'Kaufen';
 
   return `
-    <div class="detail-media">${media}</div>
-    <span class="eyebrow">${badgeLabel}${property.tag ? ' · ' + property.tag : ''}</span>
-    <h2>${property.title}</h2>
-    <p class="detail-loc">${property.location}</p>
-    ${addressHTML}
-    <p class="detail-price">${formatPrice(property)}</p>
+    <a href="#immobilien" class="property-back">&larr; Zurück zu allen Immobilien</a>
 
-    <ul class="detail-facts">${factsHTML}</ul>
+    <div class="property-hero-media">${media}</div>
 
-    <h3>Objektbeschreibung</h3>
-    ${(property.description || []).map((p) => `<p>${p}</p>`).join('')}
+    <div class="property-page-grid">
+      <div class="property-page-main">
+        <span class="eyebrow">${badgeLabel}${property.tag ? ' · ' + property.tag : ''}</span>
+        <h1>${property.title}</h1>
+        <p class="detail-loc">${property.location}</p>
+        ${addressHTML}
 
-    ${lageHTML}
-    ${costsHTML}
+        <h2>Objektbeschreibung</h2>
+        ${(property.description || []).map((p) => `<p>${p}</p>`).join('')}
 
-    <a href="#kontakt" class="btn btn-primary detail-cta">Besichtigung anfragen</a>
+        ${lageHTML}
+      </div>
+
+      <aside class="property-page-side">
+        <div class="property-side-card">
+          <p class="detail-price">${formatPrice(property)}</p>
+          <ul class="detail-facts">${factsHTML}</ul>
+          ${costsHTML}
+          <a href="#kontakt" class="btn btn-primary detail-cta">Besichtigung anfragen</a>
+          <div class="side-contact-row">
+            <a href="tel:+498912345678" class="btn btn-outline side-contact-btn">Anruf</a>
+            <a href="mailto:info@winfried-immobilien.de" class="btn btn-outline side-contact-btn">E-Mail</a>
+          </div>
+        </div>
+      </aside>
+    </div>
   `;
 }
 
@@ -401,8 +425,7 @@ function initProperties() {
   });
 
   const openCard = (card) => {
-    const property = PROPERTIES.find((p) => p.id === card.dataset.id);
-    if (property) openPropertyModal(property);
+    if (card.dataset.id) location.hash = 'immobilie-' + card.dataset.id;
   };
 
   grid.addEventListener('click', (e) => {
@@ -421,44 +444,47 @@ function initProperties() {
   render('alle');
 }
 
-/* ---------- Property detail modal ---------- */
-function openPropertyModal(property) {
-  const modal = document.getElementById('propertyModal');
-  const body = document.getElementById('propertyModalBody');
-  if (!modal || !body) return;
+/* ---------- Property detail page ---------- */
+const DEFAULT_TITLE = document.title;
+const ROUTE_PREFIX = 'immobilie-';
 
-  body.innerHTML = propertyDetailHTML(property);
-  modal.hidden = false;
-  document.body.style.overflow = 'hidden';
+function showPropertyPage(property) {
+  const main = document.querySelector('main');
+  const page = document.getElementById('propertyPage');
+  const body = document.getElementById('propertyPageBody');
+  if (!main || !page || !body) return;
 
-  const cta = body.querySelector('.detail-cta');
-  if (cta) {
-    cta.addEventListener('click', (e) => {
-      e.preventDefault();
-      closePropertyModal();
-      document.getElementById('kontakt').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+  body.innerHTML = propertyPageHTML(property);
+  main.hidden = true;
+  page.hidden = false;
+  window.scrollTo(0, 0);
+  document.title = `${property.title} – Winfried Immobilien`;
+}
+
+function closePropertyPage() {
+  const main = document.querySelector('main');
+  const page = document.getElementById('propertyPage');
+  if (!page || page.hidden) return;
+  page.hidden = true;
+  if (main) main.hidden = false;
+  document.title = DEFAULT_TITLE;
+}
+
+function syncPropertyRoute() {
+  const hash = decodeURIComponent(location.hash.slice(1));
+  if (hash.startsWith(ROUTE_PREFIX)) {
+    const property = PROPERTIES.find((p) => p.id === hash.slice(ROUTE_PREFIX.length));
+    if (property) {
+      showPropertyPage(property);
+      return;
+    }
   }
+  closePropertyPage();
 }
 
-function closePropertyModal() {
-  const modal = document.getElementById('propertyModal');
-  if (!modal) return;
-  modal.hidden = true;
-  document.body.style.overflow = '';
-}
-
-function initPropertyModal() {
-  const closeBtn = document.getElementById('propertyModalClose');
-  const backdrop = document.getElementById('propertyModalBackdrop');
-  if (!closeBtn || !backdrop) return;
-
-  closeBtn.addEventListener('click', closePropertyModal);
-  backdrop.addEventListener('click', closePropertyModal);
-  document.addEventListener('keydown', (e) => {
-    const modal = document.getElementById('propertyModal');
-    if (e.key === 'Escape' && modal && !modal.hidden) closePropertyModal();
-  });
+function initPropertyPage() {
+  window.addEventListener('hashchange', syncPropertyRoute);
+  syncPropertyRoute();
 }
 
 /* ---------- Testimonial slider ---------- */
