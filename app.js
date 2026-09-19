@@ -457,8 +457,17 @@ function showPropertyPage(property) {
   body.innerHTML = propertyPageHTML(property);
   main.hidden = true;
   page.hidden = false;
+  page.classList.remove('is-visible');
   window.scrollTo(0, 0);
   document.title = `${property.title} – Winfried Immobilien`;
+
+  // Double rAF: lets the browser paint the initial (hidden→shown) state
+  // before adding the class that triggers the transition.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      page.classList.add('is-visible');
+    });
+  });
 }
 
 function closePropertyPage() {
