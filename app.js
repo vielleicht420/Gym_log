@@ -458,7 +458,10 @@ function showPropertyPage(property) {
   main.hidden = true;
   page.hidden = false;
   page.classList.remove('is-visible');
-  window.scrollTo(0, 0);
+  // Explicit 'instant' overrides the global CSS scroll-behavior:smooth —
+  // otherwise this reset itself plays out as a visible smooth-scroll-up
+  // before the page's own fade-in ever becomes visible.
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   document.title = `${property.title} – Winfried Immobilien`;
 
   // Double rAF: lets the browser paint the initial (hidden→shown) state
