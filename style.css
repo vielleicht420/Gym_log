@@ -230,38 +230,11 @@ h1, h2, h3, h4 {
 
 /* Hero */
 .hero { position: relative; padding: 10.5rem 0 3rem; }
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 4rem;
-  align-items: center;
-  margin-bottom: 3.5rem;
-}
-.hero-copy { max-width: 560px; }
-.hero h1 { font-size: clamp(2.5rem, 4.6vw, 3.7rem); margin-bottom: 1.4rem; }
-.hero-sub { font-size: 1.1rem; color: var(--ink-soft); margin-bottom: 2.2rem; }
+.hero-grid { margin-bottom: 3.5rem; }
+.hero-copy { max-width: 640px; }
+.hero h1 { font-size: clamp(2.6rem, 5.5vw, 4.3rem); margin-bottom: 1.4rem; }
+.hero-sub { font-size: 1.15rem; color: var(--ink-soft); margin-bottom: 2.2rem; max-width: 560px; }
 .hero-actions { display: flex; gap: 1.6rem; align-items: center; flex-wrap: wrap; }
-
-.hero-media { display: flex; flex-direction: column; gap: 0.9rem; }
-.hero-frame {
-  aspect-ratio: 5/4;
-  border: 1.5px solid var(--ink);
-  position: relative;
-  display: flex;
-  overflow: hidden;
-}
-.hero-frame img {
-  width: 50%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(0.15);
-}
-.hero-frame img:first-child { border-right: 1.5px solid var(--ink); }
-.hero-frame-caption {
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-  text-align: right;
-}
 
 .hero-search {
   display: flex;
@@ -721,8 +694,6 @@ h1, h2, h3, h4 {
   .about-grid, .faq-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .steps { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .hero-grid { grid-template-columns: 1fr; }
-  .hero-media { order: -1; max-width: 420px; }
   .hero-stats { grid-template-columns: repeat(2, 1fr); row-gap: 2rem; }
   .service-row { grid-template-columns: 3rem 1fr; }
   .service-row p { grid-column: 2; max-width: none; }
