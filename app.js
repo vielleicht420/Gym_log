@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTimeline();
   initProperties();
   initPropertyPage();
-  initGalleryLightbox();
+  initPropertyMedia();
   initTestimonialSlider();
   initAccordion();
   initContactForm();
@@ -530,22 +530,32 @@ function propertyPageHTML(property) {
     ? `<p class="detail-address">${property.address}</p>`
     : '';
 
-  const media = property.photo
-    ? `<img src="${property.photo}" alt="${property.title}">`
+  const heroImages = property.photo
+    ? [{ src: property.photo, alt: property.title }, ...(property.gallery || [])]
+    : [];
+
+  const media = heroImages.length
+    ? `
+      <div class="hero-slider-track">
+        ${heroImages.map((img) => `<img src="${img.src}" alt="${img.alt}">`).join('')}
+      </div>
+      ${
+        heroImages.length > 1
+          ? `<button type="button" class="hero-slider-nav hero-slider-prev" aria-label="Vorheriges Bild">&larr;</button>
+             <button type="button" class="hero-slider-nav hero-slider-next" aria-label="Nächstes Bild">&rarr;</button>
+             <span class="hero-slider-counter">1 / ${heroImages.length}</span>`
+          : ''
+      }
+      <button type="button" class="hero-expand-btn" aria-label="Bild vergrößern">&#10530;</button>
+    `
     : `<div class="property-media" data-initial="${property.location.charAt(0)}" style="--pc1:${property.colors[0]};--pc2:${property.colors[1]}"></div>`;
 
   const badgeLabel = property.type === 'mieten' ? 'Mieten' : 'Kaufen';
 
-  const galleryHTML = property.gallery
-    ? `<div class="property-gallery">${property.gallery
-        .map((img) => `<img src="${img.src}" alt="${img.alt}" loading="lazy">`)
-        .join('')}</div>`
-    : '';
-
   return `
     <a href="#immobilien" class="property-back">&larr; Zurück zu allen Immobilien</a>
 
-    <div class="property-hero-media">${media}</div>
+    <div class="property-hero-media" data-index="0">${media}</div>
 
     <div class="property-page-grid">
       <div class="property-page-main">
@@ -556,8 +566,6 @@ function propertyPageHTML(property) {
 
         <h2>Objektbeschreibung</h2>
         ${(property.description || []).map((p) => `<p>${p}</p>`).join('')}
-
-        ${galleryHTML}
 
         ${lageHTML}
       </div>
@@ -1060,65 +1068,107 @@ function initLegalModal() {
   });
 }
 
-/* ---------- Property gallery lightbox ---------- */
-function initGalleryLightbox() {
+/* ---------- Property hero slider + lightbox ---------- */
+function initPropertyMedia() {
   const container = document.getElementById('propertyPageBody');
   const lightbox = document.getElementById('galleryLightbox');
-  const img = document.getElementById('lightboxImg');
-  const counter = document.getElementById('lightboxCounter');
+  const lbImg = document.getElementById('lightboxImg');
+  const lbCounter = document.getElementById('lightboxCounter');
   const closeBtn = document.getElementById('lightboxClose');
   const backdrop = document.getElementById('lightboxBackdrop');
   const prevBtn = document.getElementById('lightboxPrev');
   const nextBtn = document.getElementById('lightboxNext');
   if (!container || !lightbox) return;
 
-  let images = [];
-  let index = 0;
+  let lbImages = [];
+  let lbIndex = 0;
 
-  const show = () => {
-    const current = images[index];
-    img.src = current.src;
-    img.alt = current.alt;
-    counter.textContent = `${index + 1} / ${images.length}`;
+  const showLightboxImage = () => {
+    const current = lbImages[lbIndex];
+    lbImg.src = current.src;
+    lbImg.alt = current.alt;
+    lbCounter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
   };
 
-  const open = (gallery, startIndex) => {
-    images = gallery;
-    index = startIndex;
-    show();
+  const openLightbox = (images, startIndex) => {
+    lbImages = images;
+    lbIndex = startIndex;
+    showLightboxImage();
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
   };
 
-  const close = () => {
+  const closeLightbox = () => {
     lightbox.hidden = true;
     document.body.style.overflow = '';
   };
 
-  const step = (delta) => {
-    index = (index + delta + images.length) % images.length;
-    show();
+  const stepLightbox = (delta) => {
+    lbIndex = (lbIndex + delta + lbImages.length) % lbImages.length;
+    showLightboxImage();
+  };
+
+  const goToSlide = (media, index) => {
+    const track = media.querySelector('.hero-slider-track');
+    if (!track) return;
+    const total = track.children.length;
+    const clamped = ((index % total) + total) % total;
+    track.style.transform = `translateX(-${clamped * 100}%)`;
+    media.dataset.index = clamped;
+    const sliderCounter = media.querySelector('.hero-slider-counter');
+    if (sliderCounter) sliderCounter.textContent = `${clamped + 1} / ${total}`;
   };
 
   container.addEventListener('click', (e) => {
-    const clicked = e.target.closest('.property-gallery img');
-    if (!clicked) return;
-    const gallery = [...clicked.closest('.property-gallery').querySelectorAll('img')].map(
-      (el) => ({ src: el.src, alt: el.alt })
-    );
-    open(gallery, gallery.findIndex((g) => g.src === clicked.src));
+    const media = e.target.closest('.property-hero-media');
+    if (!media) return;
+
+    if (e.target.closest('.hero-slider-prev')) {
+      goToSlide(media, Number(media.dataset.index || 0) - 1);
+      return;
+    }
+    if (e.target.closest('.hero-slider-next')) {
+      goToSlide(media, Number(media.dataset.index || 0) + 1);
+      return;
+    }
+    if (e.target.closest('.hero-expand-btn') || e.target.closest('.hero-slider-track img')) {
+      const images = [...media.querySelectorAll('.hero-slider-track img')].map((el) => ({
+        src: el.src,
+        alt: el.alt,
+      }));
+      if (images.length) openLightbox(images, Number(media.dataset.index || 0));
+    }
   });
 
-  closeBtn.addEventListener('click', close);
-  backdrop.addEventListener('click', close);
-  prevBtn.addEventListener('click', () => step(-1));
-  nextBtn.addEventListener('click', () => step(1));
+  // Touch swipe support for the hero slider
+  let touchStartX = null;
+  container.addEventListener(
+    'touchstart',
+    (e) => {
+      if (e.target.closest('.property-hero-media')) touchStartX = e.touches[0].clientX;
+    },
+    { passive: true }
+  );
+  container.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const media = e.target.closest('.property-hero-media');
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (media && Math.abs(dx) > 40) {
+      goToSlide(media, Number(media.dataset.index || 0) + (dx < 0 ? 1 : -1));
+    }
+    touchStartX = null;
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+  backdrop.addEventListener('click', closeLightbox);
+  prevBtn.addEventListener('click', () => stepLightbox(-1));
+  nextBtn.addEventListener('click', () => stepLightbox(1));
 
   document.addEventListener('keydown', (e) => {
     if (lightbox.hidden) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'ArrowLeft') step(-1);
-    if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') stepLightbox(-1);
+    if (e.key === 'ArrowRight') stepLightbox(1);
   });
 }
 
