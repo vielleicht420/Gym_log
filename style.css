@@ -1307,6 +1307,7 @@ textarea:focus-visible,
 .side-contact-btn { flex: 1; padding-left: 0.8rem; padding-right: 0.8rem; }
 
 /* Kostenlose Bewertung: multi-step wizard */
+.valuation-page { min-height: 62vh; }
 .valuation-container { max-width: 640px; }
 .valuation-container h2 { font-size: 1.6rem; margin: 0.4rem 0 1.6rem; }
 .valuation-progress { margin-bottom: 2.2rem; }
@@ -1336,19 +1337,33 @@ textarea:focus-visible,
 }
 .valuation-choice:hover { border-color: var(--gold-deep); }
 .valuation-choice.selected { border-color: var(--gold-deep); background: var(--bg-alt); }
+.valuation-choice-sub {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.74rem;
+  font-weight: 400;
+  color: var(--text-soft);
+  text-transform: none;
+  letter-spacing: normal;
+}
 
 .valuation-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.4rem; }
 .valuation-field-wide { grid-column: 1 / -1; }
 .valuation-container .field label { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft); margin-bottom: 0.4rem; }
-.valuation-container .field input {
+.valuation-container .field input,
+.valuation-container .field select {
   width: 100%;
   padding: 0.8rem 1rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
+  background: var(--white);
   font-family: inherit;
   font-size: 0.95rem;
+  color: var(--text);
 }
 .valuation-container .field.error input { border-color: #b3453f; }
+.valuation-container .field .field-error-msg { margin-top: 0.4rem; }
+.valuation-hint { margin-top: 0.5rem; font-size: 0.76rem; color: var(--text-soft); }
 .valuation-container .checkbox-field { margin-bottom: 1rem; }
 .valuation-error { color: #b3453f; font-size: 0.88rem; margin-bottom: 1rem; }
 .valuation-nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 0.6rem; }
@@ -1362,6 +1377,7 @@ textarea:focus-visible,
   .valuation-choices-grid { grid-template-columns: 1fr 1fr; }
   .valuation-form-grid { grid-template-columns: 1fr; }
   .valuation-field-wide { grid-column: auto; }
+  .valuation-page { min-height: 650px; }
 }
 
 @media (max-width: 900px) {

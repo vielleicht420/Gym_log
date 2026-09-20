@@ -723,14 +723,24 @@ const VALUATION_TYPES = [
 let valuationStep = 1;
 let valuationState = {};
 
+const VALUATION_HAUS_TYPES = [
+  { value: 'einfamilienhaus', label: 'Einfamilienhaus' },
+  { value: 'doppelhaushaelfte', label: 'Doppelhaushälfte' },
+  { value: 'reihenhaus', label: 'Reihenhaus' },
+  { value: 'mehrfamilienhaus', label: 'Mehrfamilienhaus' },
+];
+
 function resetValuationState() {
   valuationStep = 1;
   valuationState = {
     anliegen: '',
     typ: '',
     flaeche: '',
+    grundstueck: '',
     zimmer: '',
     baujahr: '',
+    etage: '',
+    hausart: '',
     adresse: '',
     name: '',
     email: '',
@@ -738,10 +748,12 @@ function resetValuationState() {
   };
 }
 
-function valuationChoiceCard(value, label, current) {
+function valuationChoiceCard(value, label, current, subtitle) {
   return `<button type="button" class="valuation-choice${
     current === value ? ' selected' : ''
-  }" data-value="${value}">${label}</button>`;
+  }" data-value="${value}">${label}${
+    subtitle ? `<span class="valuation-choice-sub">${subtitle}</span>` : ''
+  }</button>`;
 }
 
 function valuationProgressHTML(step) {
@@ -760,10 +772,10 @@ function valuationStepHTML() {
     return `
       ${exitLink}
       ${valuationProgressHTML(1)}
-      <h2>Was möchten Sie ermitteln?</h2>
+      <h2>Was möchten Sie wissen?</h2>
       <div class="valuation-choices">
-        ${valuationChoiceCard('kaufpreis', 'Kaufpreis', valuationState.anliegen)}
-        ${valuationChoiceCard('mietpreis', 'Mietpreis', valuationState.anliegen)}
+        ${valuationChoiceCard('kaufpreis', 'Kaufpreis', valuationState.anliegen, 'Möglicher Verkaufspreis Ihrer Immobilie')}
+        ${valuationChoiceCard('mietpreis', 'Mietpreis', valuationState.anliegen, 'Realistische Mieteinschätzung')}
       </div>
     `;
   }
@@ -783,27 +795,91 @@ function valuationStepHTML() {
   }
 
   if (valuationStep === 3) {
-    return `
-      ${exitLink}
-      ${valuationProgressHTML(3)}
-      <h2>Angaben zur Immobilie</h2>
-      <div class="valuation-form-grid">
+    const typ = valuationState.typ;
+    const isHaus = typ === 'haus';
+    const isGrundstueck = typ === 'grundstueck';
+
+    const addressField = `
+      <div class="field valuation-field-wide">
+        <label for="valAdresse">Adresse (Straße, PLZ, Ort) *</label>
+        <input type="text" id="valAdresse" value="${valuationState.adresse}" required>
+        <p class="field-error-msg">Bitte geben Sie die Adresse an.</p>
+        <p class="valuation-hint">Die Lage ist ein wesentlicher Faktor für die Immobilienbewertung.</p>
+      </div>
+    `;
+
+    let fieldsHTML;
+
+    if (isGrundstueck) {
+      fieldsHTML = `
+        <div class="field valuation-field-wide">
+          <label for="valGrundstueck">Grundstücksfläche ca. (m²) *</label>
+          <input type="number" id="valGrundstueck" min="1" value="${valuationState.grundstueck}" required>
+          <p class="field-error-msg">Bitte geben Sie die Grundstücksfläche an.</p>
+        </div>
+        ${addressField}
+      `;
+    } else if (isHaus) {
+      fieldsHTML = `
         <div class="field">
           <label for="valFlaeche">Wohnfläche ca. (m²) *</label>
           <input type="number" id="valFlaeche" min="1" value="${valuationState.flaeche}" required>
+          <p class="field-error-msg">Bitte geben Sie die Wohnfläche an.</p>
+        </div>
+        <div class="field">
+          <label for="valGrundstueck">Grundstücksfläche ca. (m²)</label>
+          <input type="number" id="valGrundstueck" min="1" value="${valuationState.grundstueck}">
         </div>
         <div class="field">
           <label for="valZimmer">Zimmer *</label>
           <input type="number" id="valZimmer" min="1" step="0.5" value="${valuationState.zimmer}" required>
+          <p class="field-error-msg">Bitte geben Sie die Zimmeranzahl an.</p>
         </div>
         <div class="field">
           <label for="valBaujahr">Baujahr</label>
           <input type="number" id="valBaujahr" min="1800" max="2030" value="${valuationState.baujahr}">
         </div>
         <div class="field valuation-field-wide">
-          <label for="valAdresse">Adresse (Straße, PLZ, Ort) *</label>
-          <input type="text" id="valAdresse" value="${valuationState.adresse}" required>
+          <label for="valHausart">Hausart</label>
+          <select id="valHausart">
+            <option value="">Bitte wählen (optional)</option>
+            ${VALUATION_HAUS_TYPES.map(
+              (h) => `<option value="${h.value}"${valuationState.hausart === h.value ? ' selected' : ''}>${h.label}</option>`
+            ).join('')}
+          </select>
         </div>
+        ${addressField}
+      `;
+    } else {
+      fieldsHTML = `
+        <div class="field">
+          <label for="valFlaeche">Wohnfläche ca. (m²) *</label>
+          <input type="number" id="valFlaeche" min="1" value="${valuationState.flaeche}" required>
+          <p class="field-error-msg">Bitte geben Sie die Wohnfläche an.</p>
+        </div>
+        <div class="field">
+          <label for="valZimmer">Zimmer *</label>
+          <input type="number" id="valZimmer" min="1" step="0.5" value="${valuationState.zimmer}" required>
+          <p class="field-error-msg">Bitte geben Sie die Zimmeranzahl an.</p>
+        </div>
+        <div class="field">
+          <label for="valBaujahr">Baujahr</label>
+          <input type="number" id="valBaujahr" min="1800" max="2030" value="${valuationState.baujahr}">
+        </div>
+        <div class="field">
+          <label for="valEtage">Etage</label>
+          <input type="number" id="valEtage" min="0" max="60" value="${valuationState.etage}">
+        </div>
+        ${addressField}
+      `;
+    }
+
+    return `
+      ${exitLink}
+      ${valuationProgressHTML(3)}
+      <h2>Angaben zur Immobilie</h2>
+      <div class="valuation-form-grid">
+        ${fieldsHTML}
       </div>
       <div class="valuation-nav">
         <button type="button" class="btn btn-outline valuation-back">&larr; Zurück</button>
@@ -822,10 +898,12 @@ function valuationStepHTML() {
           <div class="field">
             <label for="valName">Name *</label>
             <input type="text" id="valName" value="${valuationState.name}" required>
+            <p class="field-error-msg">Bitte geben Sie Ihren Namen ein.</p>
           </div>
           <div class="field">
             <label for="valEmail">E-Mail *</label>
             <input type="email" id="valEmail" value="${valuationState.email}" required>
+            <p class="field-error-msg">Bitte geben Sie eine gültige E-Mail-Adresse ein.</p>
           </div>
           <div class="field valuation-field-wide">
             <label for="valPhone">Telefon</label>
@@ -849,8 +927,8 @@ function valuationStepHTML() {
   return `
     <div class="valuation-success">
       <h2>Vielen Dank!</h2>
-      <p>Wir haben Ihre Angaben erhalten und melden uns innerhalb eines Werktags mit einer
-        ersten Einschätzung zu Ihrer Immobilie.</p>
+      <p>Wir haben Ihre Angaben erhalten. Ihre Immobilie wird nun persönlich von uns geprüft.
+        Anschließend melden wir uns mit einer ersten Einschätzung bei Ihnen.</p>
       <a href="#top" class="btn btn-primary">Zur Startseite</a>
     </div>
   `;
@@ -882,21 +960,56 @@ function bindValuationStepEvents() {
   });
 
   body.querySelector('.valuation-next')?.addEventListener('click', () => {
-    const flaeche = document.getElementById('valFlaeche');
-    const zimmer = document.getElementById('valZimmer');
+    const typ = valuationState.typ;
+    const isHaus = typ === 'haus';
+    const isGrundstueck = typ === 'grundstueck';
+
     const adresse = document.getElementById('valAdresse');
-    const valid = flaeche.value.trim() && zimmer.value.trim() && adresse.value.trim();
-    [flaeche, zimmer, adresse].forEach((f) => {
-      const fieldValid = !!f.value.trim();
-      f.setAttribute('aria-invalid', fieldValid ? 'false' : 'true');
-      f.closest('.field')?.classList.toggle('error', !fieldValid);
-    });
+    const adresseOk = !!adresse.value.trim();
+    adresse.setAttribute('aria-invalid', adresseOk ? 'false' : 'true');
+    adresse.closest('.field')?.classList.toggle('error', !adresseOk);
+
+    let valid = adresseOk;
+    let flaeche, zimmer, grundstueck;
+
+    if (isGrundstueck) {
+      grundstueck = document.getElementById('valGrundstueck');
+      const grundstueckOk = Number(grundstueck.value) > 0;
+      grundstueck.setAttribute('aria-invalid', grundstueckOk ? 'false' : 'true');
+      grundstueck.closest('.field')?.classList.toggle('error', !grundstueckOk);
+      valid = valid && grundstueckOk;
+    } else {
+      flaeche = document.getElementById('valFlaeche');
+      zimmer = document.getElementById('valZimmer');
+      const flaecheOk = Number(flaeche.value) > 0;
+      const zimmerOk = Number(zimmer.value) > 0;
+      flaeche.setAttribute('aria-invalid', flaecheOk ? 'false' : 'true');
+      zimmer.setAttribute('aria-invalid', zimmerOk ? 'false' : 'true');
+      flaeche.closest('.field')?.classList.toggle('error', !flaecheOk);
+      zimmer.closest('.field')?.classList.toggle('error', !zimmerOk);
+      valid = valid && flaecheOk && zimmerOk;
+
+      if (isHaus) grundstueck = document.getElementById('valGrundstueck');
+    }
+
     if (!valid) return;
 
-    valuationState.flaeche = flaeche.value;
-    valuationState.zimmer = zimmer.value;
-    valuationState.baujahr = document.getElementById('valBaujahr').value;
     valuationState.adresse = adresse.value;
+
+    if (isGrundstueck) {
+      valuationState.grundstueck = grundstueck.value;
+    } else {
+      valuationState.flaeche = flaeche.value;
+      valuationState.zimmer = zimmer.value;
+      valuationState.baujahr = document.getElementById('valBaujahr').value;
+      if (isHaus) {
+        valuationState.grundstueck = grundstueck.value;
+        valuationState.hausart = document.getElementById('valHausart').value;
+      } else {
+        valuationState.etage = document.getElementById('valEtage').value;
+      }
+    }
+
     valuationStep += 1;
     renderValuationStep();
   });
@@ -925,7 +1038,10 @@ function bindValuationStepEvents() {
       const firstInvalid = form.querySelector('.field.error input, .checkbox-field.error input');
       firstInvalid?.focus();
       error.hidden = false;
-      error.textContent = 'Bitte füllen Sie alle Pflichtfelder korrekt aus.';
+      error.textContent =
+        nameOk && emailOk && !consent.checked
+          ? 'Bitte bestätigen Sie die Datenschutzerklärung.'
+          : 'Bitte füllen Sie alle Pflichtfelder korrekt aus.';
       return;
     }
 
@@ -947,9 +1063,15 @@ function bindValuationStepEvents() {
       fd.append('telefon', valuationState.telefon);
       fd.append('anliegen', anliegenLabel);
       fd.append('immobilientyp', typeLabel);
-      fd.append('wohnflaeche', `${valuationState.flaeche} m²`);
-      fd.append('zimmer', valuationState.zimmer);
-      fd.append('baujahr', valuationState.baujahr);
+      if (valuationState.flaeche) fd.append('wohnflaeche', `${valuationState.flaeche} m²`);
+      if (valuationState.grundstueck) fd.append('grundstuecksflaeche', `${valuationState.grundstueck} m²`);
+      if (valuationState.zimmer) fd.append('zimmer', valuationState.zimmer);
+      if (valuationState.baujahr) fd.append('baujahr', valuationState.baujahr);
+      if (valuationState.etage) fd.append('etage', valuationState.etage);
+      if (valuationState.hausart) {
+        const hausartLabel = VALUATION_HAUS_TYPES.find((h) => h.value === valuationState.hausart)?.label;
+        fd.append('hausart', hausartLabel || valuationState.hausart);
+      }
       fd.append('adresse', valuationState.adresse);
 
       const response = await fetch('https://formspree.io/f/myezkkbq', {
