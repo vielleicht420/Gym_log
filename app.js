@@ -1394,11 +1394,11 @@ function initSideContactTab() {
     'scroll',
     () => {
       const currentY = window.scrollY;
-      const scrollingUp = currentY < lastY - 2;
-      // Slide out only while actively scrolling up; once the scroll settles
+      const scrollingDown = currentY > lastY + 2;
+      // Slide out only while actively scrolling down; once the scroll settles
       // (no more scroll events for a moment), bring it back regardless of
       // which direction that last scroll was — it should always end up visible.
-      tab.classList.toggle('is-hidden', scrollingUp && currentY > 80);
+      tab.classList.toggle('is-hidden', scrollingDown && currentY > 80);
       lastY = currentY;
 
       clearTimeout(idleTimer);
