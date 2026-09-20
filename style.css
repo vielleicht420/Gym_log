@@ -1194,6 +1194,18 @@ textarea:focus-visible,
 @media (min-width: 480px) {
   .contact-panel-people { flex-direction: row; gap: 1.8rem; }
 }
+@media (min-width: 900px) {
+  .contact-panel-body { justify-content: center; padding-left: 6rem; padding-right: 6rem; }
+  .contact-panel-content { max-width: 640px; }
+  .contact-panel-people { gap: 2.6rem; margin-bottom: 1.8rem; }
+  .contact-panel-photo { width: 128px; height: 128px; margin-bottom: 1.2rem; }
+  .contact-panel-name { font-size: 1.5rem; }
+  .contact-panel-role { font-size: 0.95rem; }
+  .contact-panel-sub { font-size: 1.05rem; max-width: 540px; }
+  .contact-panel-links { margin-top: 2.2rem; gap: 1.1rem; }
+  .contact-panel-links a { font-size: 1.15rem; }
+  .contact-panel-heading { top: 2.8rem; left: 3rem; font-size: 1.6rem; }
+}
 
 /* Cookie banner */
 .cookie-banner[hidden] { display: none; }
