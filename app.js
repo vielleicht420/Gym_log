@@ -4,18 +4,6 @@
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Mobile Safari's floating/collapsing address bar doesn't always update
-// the `dvh` unit in step with the actual visible area, which can leave a
-// sliver of whatever follows (the footer) peeking in below full-height
-// sections. window.innerHeight tracks the real current viewport reliably,
-// so mirror it into a custom property and use that instead.
-function updateViewportHeightVar() {
-  document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
-}
-updateViewportHeightVar();
-window.addEventListener('resize', updateViewportHeightVar);
-window.addEventListener('orientationchange', updateViewportHeightVar);
-
 document.addEventListener('DOMContentLoaded', () => {
   initHeader();
   initNavToggle();
@@ -946,6 +934,16 @@ function valuationStepHTML() {
   `;
 }
 
+// The site footer is hidden while the valuation wizard is on steps 1–4, so
+// the black footer never appears below a short step. It's shown again on
+// the success step (step 5) and whenever the wizard is closed.
+function updateValuationFooterVisibility() {
+  const footer = document.querySelector('.site-footer');
+  const page = document.getElementById('valuationPage');
+  if (!footer || !page) return;
+  footer.hidden = !page.hidden && valuationStep < 5;
+}
+
 function renderValuationStep() {
   const body = document.getElementById('valuationBody');
   if (!body) return;
@@ -953,10 +951,11 @@ function renderValuationStep() {
   const applyStep = () => {
     body.innerHTML = valuationStepHTML();
     bindValuationStepEvents();
+    updateValuationFooterVisibility();
     // Always land at the top of the new step — otherwise a scroll
     // position carried over from the previous step (e.g. from a click
     // that had to scroll a card into view) can leave the page looking
-    // mid-scroll, with the footer visible before the step's own content.
+    // mid-scroll.
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -1146,12 +1145,11 @@ function showValuationPage() {
   const page = document.getElementById('valuationPage');
   if (!main || !page) return;
 
-  updateViewportHeightVar();
   resetValuationState();
   document.getElementById('valuationBody').innerHTML = '';
-  renderValuationStep();
   main.hidden = true;
   page.hidden = false;
+  renderValuationStep();
   page.classList.remove('is-visible');
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   document.title = 'Kostenlose Bewertung – Winfried Immobilien';
@@ -1172,6 +1170,7 @@ function closeValuationPage() {
   if (main) main.hidden = false;
   document.title = DEFAULT_TITLE;
   updateHeaderState();
+  updateValuationFooterVisibility();
 }
 
 /* ---------- Testimonial slider ---------- */

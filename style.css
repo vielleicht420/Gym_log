@@ -1381,15 +1381,6 @@ textarea:focus-visible,
   .valuation-choices-grid { grid-template-columns: 1fr 1fr; }
   .valuation-form-grid { grid-template-columns: 1fr; }
   .valuation-field-wide { grid-column: auto; }
-  /* Full viewport height so the footer never peeks in before the user
-     scrolls, on every step — not just a fixed "extra space" amount.
-     --viewport-height (set from window.innerHeight in app.js) is used
-     over dvh because Safari's floating address bar doesn't always keep
-     dvh in sync with the actual visible area. The +16px is a small
-     safety margin against sub-pixel rounding and a stray few-pixel
-     scroll offset some browsers leave behind after a reload — not a
-     fixed spacing value, just insurance on top of the real measurement. */
-  .valuation-page { min-height: 100vh; min-height: 100dvh; min-height: calc(var(--viewport-height, 100dvh) + 16px); }
 }
 
 @media (max-width: 900px) {
