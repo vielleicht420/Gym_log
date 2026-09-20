@@ -1416,7 +1416,7 @@ function initContactPanel() {
   if (!trigger || !panel) return;
 
   const closeBtn = document.getElementById('contactPanelClose');
-  const scrim = panel.querySelector('.contact-panel-scrim');
+  const scrim = panel.querySelector('.contact-panel-backdrop');
 
   const open = () => {
     panel.hidden = false;
