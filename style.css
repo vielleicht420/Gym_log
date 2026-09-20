@@ -1381,7 +1381,9 @@ textarea:focus-visible,
   .valuation-choices-grid { grid-template-columns: 1fr 1fr; }
   .valuation-form-grid { grid-template-columns: 1fr; }
   .valuation-field-wide { grid-column: auto; }
-  .valuation-page { min-height: 650px; }
+  /* Full viewport height so the footer never peeks in before the user
+     scrolls, on every step — not just a fixed "extra space" amount. */
+  .valuation-page { min-height: 100vh; min-height: 100dvh; }
 }
 
 @media (max-width: 900px) {

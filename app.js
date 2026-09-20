@@ -941,6 +941,11 @@ function renderValuationStep() {
   const applyStep = () => {
     body.innerHTML = valuationStepHTML();
     bindValuationStepEvents();
+    // Always land at the top of the new step — otherwise a scroll
+    // position carried over from the previous step (e.g. from a click
+    // that had to scroll a card into view) can leave the page looking
+    // mid-scroll, with the footer visible before the step's own content.
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         body.classList.remove('valuation-step-out');
