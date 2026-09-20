@@ -1124,6 +1124,73 @@ textarea:focus-visible,
 }
 .modal-close:hover { background: var(--border); }
 
+/* Lightbox (property gallery) */
+.lightbox[hidden] { display: none; }
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 1.5rem;
+}
+.lightbox-backdrop { position: absolute; inset: 0; background: rgba(15,15,15,0.92); }
+.lightbox-img {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  object-fit: contain;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1.2rem; right: 1.2rem;
+  background: rgba(255,255,255,0.12);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 1;
+  transition: background var(--transition);
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.24); }
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.12);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 48px; height: 48px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1;
+  transition: background var(--transition);
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.24); }
+.lightbox-prev { left: 1.2rem; }
+.lightbox-next { right: 1.2rem; }
+.lightbox-counter {
+  position: absolute;
+  bottom: 1.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+}
+@media (max-width: 560px) {
+  .lightbox { padding: 4.5rem 1rem 2rem; }
+  .lightbox-nav { width: 40px; height: 40px; font-size: 1rem; }
+  .lightbox-prev { left: 0.5rem; }
+  .lightbox-next { right: 0.5rem; }
+}
+
 /* Property detail page */
 .property-page {
   padding: 9.5rem 0 6rem;
@@ -1177,7 +1244,10 @@ textarea:focus-visible,
   object-fit: cover;
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
 }
+.property-gallery img:hover { transform: scale(1.02); }
 
 .property-page-side { position: sticky; top: 7.5rem; }
 .property-side-card { border-radius: var(--radius-lg); padding: 2rem; background: var(--white); box-shadow: var(--shadow-md); }

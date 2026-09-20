@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTimeline();
   initProperties();
   initPropertyPage();
+  initGalleryLightbox();
   initTestimonialSlider();
   initAccordion();
   initContactForm();
@@ -1056,6 +1057,68 @@ function initLegalModal() {
   backdrop.addEventListener('click', close);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !modal.hidden) close();
+  });
+}
+
+/* ---------- Property gallery lightbox ---------- */
+function initGalleryLightbox() {
+  const container = document.getElementById('propertyPageBody');
+  const lightbox = document.getElementById('galleryLightbox');
+  const img = document.getElementById('lightboxImg');
+  const counter = document.getElementById('lightboxCounter');
+  const closeBtn = document.getElementById('lightboxClose');
+  const backdrop = document.getElementById('lightboxBackdrop');
+  const prevBtn = document.getElementById('lightboxPrev');
+  const nextBtn = document.getElementById('lightboxNext');
+  if (!container || !lightbox) return;
+
+  let images = [];
+  let index = 0;
+
+  const show = () => {
+    const current = images[index];
+    img.src = current.src;
+    img.alt = current.alt;
+    counter.textContent = `${index + 1} / ${images.length}`;
+  };
+
+  const open = (gallery, startIndex) => {
+    images = gallery;
+    index = startIndex;
+    show();
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+
+  const close = () => {
+    lightbox.hidden = true;
+    document.body.style.overflow = '';
+  };
+
+  const step = (delta) => {
+    index = (index + delta + images.length) % images.length;
+    show();
+  };
+
+  container.addEventListener('click', (e) => {
+    const clicked = e.target.closest('.property-gallery img');
+    if (!clicked) return;
+    const gallery = [...clicked.closest('.property-gallery').querySelectorAll('img')].map(
+      (el) => ({ src: el.src, alt: el.alt })
+    );
+    open(gallery, gallery.findIndex((g) => g.src === clicked.src));
+  });
+
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+  prevBtn.addEventListener('click', () => step(-1));
+  nextBtn.addEventListener('click', () => step(1));
+
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
   });
 }
 
