@@ -834,7 +834,7 @@ function valuationStepHTML() {
         </div>
         <label class="checkbox-field">
           <input type="checkbox" id="valConsent" required>
-          Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen. *
+          <span>Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen. *</span>
         </label>
         <p class="valuation-error" id="valuationError" hidden>Bitte füllen Sie alle Pflichtfelder korrekt aus.</p>
         <div class="valuation-nav">
@@ -954,10 +954,21 @@ function bindValuationStepEvents() {
         valuationStep = 5;
         renderValuationStep();
       } else {
+        let detail = '';
+        try {
+          const data = await response.json();
+          detail = (data.errors || []).map((err) => err.message).join(', ');
+        } catch {
+          /* response wasn't JSON — fall back to the generic message below */
+        }
+        console.error('Formspree submission failed:', response.status, detail);
         error.hidden = false;
-        error.textContent = 'Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut.';
+        error.textContent = detail
+          ? `Ihre Anfrage konnte leider nicht gesendet werden: ${detail}`
+          : 'Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut.';
       }
-    } catch {
+    } catch (err) {
+      console.error('Formspree submission network error:', err);
       error.hidden = false;
       error.textContent = 'Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut.';
     } finally {
@@ -1134,9 +1145,11 @@ function initContactForm() {
         form.querySelectorAll('.field.error').forEach((f) => f.classList.remove('error'));
         form.querySelectorAll('[aria-invalid]').forEach((f) => f.setAttribute('aria-invalid', 'false'));
       } else {
+        console.error('Formspree submission failed:', response.status, await response.text());
         error.hidden = false;
       }
-    } catch {
+    } catch (err) {
+      console.error('Formspree submission network error:', err);
       error.hidden = false;
     } finally {
       submitBtn.disabled = false;
