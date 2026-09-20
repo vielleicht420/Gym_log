@@ -4,6 +4,18 @@
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Mobile Safari's floating/collapsing address bar doesn't always update
+// the `dvh` unit in step with the actual visible area, which can leave a
+// sliver of whatever follows (the footer) peeking in below full-height
+// sections. window.innerHeight tracks the real current viewport reliably,
+// so mirror it into a custom property and use that instead.
+function updateViewportHeightVar() {
+  document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
+}
+updateViewportHeightVar();
+window.addEventListener('resize', updateViewportHeightVar);
+window.addEventListener('orientationchange', updateViewportHeightVar);
+
 document.addEventListener('DOMContentLoaded', () => {
   initHeader();
   initNavToggle();
@@ -1134,6 +1146,7 @@ function showValuationPage() {
   const page = document.getElementById('valuationPage');
   if (!main || !page) return;
 
+  updateViewportHeightVar();
   resetValuationState();
   document.getElementById('valuationBody').innerHTML = '';
   renderValuationStep();
