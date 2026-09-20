@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletterForm();
   initHeroSearch();
   initBackToTop();
+  initSideContactTab();
   initLegalModal();
   initCookieBanner();
   initMapEmbed();
@@ -1379,6 +1380,32 @@ function initBackToTop() {
   );
 
   btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
+
+/* ---------- Side contact tab ---------- */
+function initSideContactTab() {
+  const tab = document.getElementById('sideContactTab');
+  if (!tab) return;
+
+  let lastY = window.scrollY;
+  let idleTimer = null;
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      const currentY = window.scrollY;
+      const scrollingUp = currentY < lastY - 2;
+      // Slide out only while actively scrolling up; once the scroll settles
+      // (no more scroll events for a moment), bring it back regardless of
+      // which direction that last scroll was — it should always end up visible.
+      tab.classList.toggle('is-hidden', scrollingUp && currentY > 80);
+      lastY = currentY;
+
+      clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => tab.classList.remove('is-hidden'), 200);
+    },
+    { passive: true }
+  );
 }
 
 /* ---------- Cookie consent ---------- */
