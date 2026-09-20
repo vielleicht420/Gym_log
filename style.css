@@ -1165,6 +1165,20 @@ textarea:focus-visible,
 .detail-loc { color: var(--text-soft); font-size: 0.98rem; }
 .detail-address { color: var(--text-soft); font-size: 0.9rem; margin-top: 0.3rem; }
 
+.property-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.8rem 0 0.8rem;
+}
+.property-gallery img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
 .property-page-side { position: sticky; top: 7.5rem; }
 .property-side-card { border-radius: var(--radius-lg); padding: 2rem; background: var(--white); box-shadow: var(--shadow-md); }
 .detail-price { font-family: var(--font-head); font-size: 1.7rem; font-weight: 600; margin-bottom: 1.3rem; }

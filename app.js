@@ -305,6 +305,12 @@ const PROPERTIES = [
     rooms: 3,
     area: 84,
     photo: 'images/haar-eglfing-exterior.jpg',
+    gallery: [
+      { src: 'images/haar-eglfing-treppenhaus.jpg', alt: 'Treppenhaus zur Maisonette-Ebene' },
+      { src: 'images/haar-eglfing-wohnzimmer.jpg', alt: 'Wohnbereich mit Parkettboden' },
+      { src: 'images/haar-eglfing-wohnzimmer-terrasse.jpg', alt: 'Wohnbereich mit Zugang zur Dachterrasse' },
+      { src: 'images/haar-eglfing-bad.jpg', alt: 'Badezimmer mit Dusche und WC' },
+    ],
     address: 'Tassilostraße 6, 85540 Haar',
     pricePerSqm: '7.024 €/m²',
     commission: 'Keine Provision für Käufer',
@@ -529,6 +535,12 @@ function propertyPageHTML(property) {
 
   const badgeLabel = property.type === 'mieten' ? 'Mieten' : 'Kaufen';
 
+  const galleryHTML = property.gallery
+    ? `<div class="property-gallery">${property.gallery
+        .map((img) => `<img src="${img.src}" alt="${img.alt}" loading="lazy">`)
+        .join('')}</div>`
+    : '';
+
   return `
     <a href="#immobilien" class="property-back">&larr; Zurück zu allen Immobilien</a>
 
@@ -543,6 +555,8 @@ function propertyPageHTML(property) {
 
         <h2>Objektbeschreibung</h2>
         ${(property.description || []).map((p) => `<p>${p}</p>`).join('')}
+
+        ${galleryHTML}
 
         ${lageHTML}
       </div>
