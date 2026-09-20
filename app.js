@@ -96,19 +96,21 @@ function initSmoothAnchors() {
     // Let legal-link handler manage modal targets separately.
     if (anchor.id === 'impressum' || anchor.id === 'datenschutz') return;
 
-    // Leaving the property detail page (e.g. "Zurück zu allen Immobilien")
-    // lands on a different part of the page than where the user currently
-    // is, since that page always opens scrolled to its own top — an
-    // animated smooth scroll there just plays a long, disorienting scroll
-    // through unrelated sections instead of a clean "go back". Jump
-    // straight there, the same way opening the page itself does.
-    const leavingPropertyPage = !!anchor.closest('#propertyPage');
+    // Leaving the property detail page or the valuation wizard (e.g.
+    // "Zurück zu allen Immobilien", "Abbrechen") lands on a different part
+    // of the page than where the user currently is, since those overlays
+    // always open scrolled to their own top — an animated smooth scroll
+    // there just plays a long, disorienting scroll through unrelated
+    // sections instead of a clean "go back". Jump straight there, the
+    // same way opening the page itself does.
+    const leavingOverlayPage = !!anchor.closest('#propertyPage, #valuationPage');
 
     if (id === '#top') {
       e.preventDefault();
       closePropertyPage();
+      closeValuationPage();
       history.replaceState(null, '', '#top');
-      window.scrollTo({ top: 0, behavior: leavingPropertyPage ? 'instant' : 'smooth' });
+      window.scrollTo({ top: 0, behavior: leavingOverlayPage ? 'instant' : 'smooth' });
       return;
     }
 
@@ -116,8 +118,9 @@ function initSmoothAnchors() {
     if (!target) return;
     e.preventDefault();
     closePropertyPage();
+    closeValuationPage();
     history.replaceState(null, '', id);
-    target.scrollIntoView({ behavior: leavingPropertyPage ? 'instant' : 'smooth', block: 'start' });
+    target.scrollIntoView({ behavior: leavingOverlayPage ? 'instant' : 'smooth', block: 'start' });
   });
 }
 
@@ -686,16 +689,313 @@ function syncPropertyRoute() {
   if (hash.startsWith(ROUTE_PREFIX)) {
     const property = PROPERTIES.find((p) => p.id === hash.slice(ROUTE_PREFIX.length));
     if (property) {
+      closeValuationPage();
       showPropertyPage(property);
       return;
     }
   }
+  if (hash === VALUATION_ROUTE) {
+    closePropertyPage();
+    showValuationPage();
+    return;
+  }
   closePropertyPage();
+  closeValuationPage();
 }
 
 function initPropertyPage() {
   window.addEventListener('hashchange', syncPropertyRoute);
   syncPropertyRoute();
+}
+
+/* ---------- Kostenlose Bewertung: multi-step wizard ---------- */
+const VALUATION_ROUTE = 'bewertung';
+const VALUATION_STEP_COUNT = 4;
+const VALUATION_TYPES = [
+  { value: 'eg-wohnung', label: 'EG-Wohnung' },
+  { value: 'etagenwohnung', label: 'Etagenwohnung' },
+  { value: 'maisonette', label: 'Maisonette' },
+  { value: 'dg-wohnung', label: 'DG-Wohnung' },
+  { value: 'haus', label: 'Haus' },
+  { value: 'grundstueck', label: 'Grundstück' },
+];
+
+let valuationStep = 1;
+let valuationState = {};
+
+function resetValuationState() {
+  valuationStep = 1;
+  valuationState = {
+    anliegen: '',
+    typ: '',
+    flaeche: '',
+    zimmer: '',
+    baujahr: '',
+    adresse: '',
+    name: '',
+    email: '',
+    telefon: '',
+  };
+}
+
+function valuationChoiceCard(value, label, current) {
+  return `<button type="button" class="valuation-choice${
+    current === value ? ' selected' : ''
+  }" data-value="${value}">${label}</button>`;
+}
+
+function valuationProgressHTML(step) {
+  return `
+    <div class="valuation-progress">
+      <div class="valuation-progress-bar"><span style="width:${(step / VALUATION_STEP_COUNT) * 100}%"></span></div>
+      <p class="valuation-progress-label">Schritt ${step} von ${VALUATION_STEP_COUNT}</p>
+    </div>
+  `;
+}
+
+function valuationStepHTML() {
+  const exitLink = `<a href="#top" class="property-back">&larr; Abbrechen</a>`;
+
+  if (valuationStep === 1) {
+    return `
+      ${exitLink}
+      ${valuationProgressHTML(1)}
+      <h2>Was möchten Sie ermitteln?</h2>
+      <div class="valuation-choices">
+        ${valuationChoiceCard('kaufpreis', 'Kaufpreis', valuationState.anliegen)}
+        ${valuationChoiceCard('mietpreis', 'Mietpreis', valuationState.anliegen)}
+      </div>
+    `;
+  }
+
+  if (valuationStep === 2) {
+    return `
+      ${exitLink}
+      ${valuationProgressHTML(2)}
+      <h2>Um welchen Immobilientyp handelt es sich?</h2>
+      <div class="valuation-choices valuation-choices-grid">
+        ${VALUATION_TYPES.map((t) => valuationChoiceCard(t.value, t.label, valuationState.typ)).join('')}
+      </div>
+      <div class="valuation-nav">
+        <button type="button" class="btn btn-outline valuation-back">&larr; Zurück</button>
+      </div>
+    `;
+  }
+
+  if (valuationStep === 3) {
+    return `
+      ${exitLink}
+      ${valuationProgressHTML(3)}
+      <h2>Angaben zur Immobilie</h2>
+      <div class="valuation-form-grid">
+        <div class="field">
+          <label for="valFlaeche">Wohnfläche ca. (m²) *</label>
+          <input type="number" id="valFlaeche" min="1" value="${valuationState.flaeche}" required>
+        </div>
+        <div class="field">
+          <label for="valZimmer">Zimmer *</label>
+          <input type="number" id="valZimmer" min="1" step="0.5" value="${valuationState.zimmer}" required>
+        </div>
+        <div class="field">
+          <label for="valBaujahr">Baujahr</label>
+          <input type="number" id="valBaujahr" min="1800" max="2030" value="${valuationState.baujahr}">
+        </div>
+        <div class="field valuation-field-wide">
+          <label for="valAdresse">Adresse (Straße, PLZ, Ort) *</label>
+          <input type="text" id="valAdresse" value="${valuationState.adresse}" required>
+        </div>
+      </div>
+      <div class="valuation-nav">
+        <button type="button" class="btn btn-outline valuation-back">&larr; Zurück</button>
+        <button type="button" class="btn btn-primary valuation-next">Weiter <span class="arrow">&rarr;</span></button>
+      </div>
+    `;
+  }
+
+  if (valuationStep === 4) {
+    return `
+      ${exitLink}
+      ${valuationProgressHTML(4)}
+      <h2>Ihre Kontaktdaten</h2>
+      <form id="valuationForm" novalidate>
+        <div class="valuation-form-grid">
+          <div class="field">
+            <label for="valName">Name *</label>
+            <input type="text" id="valName" value="${valuationState.name}" required>
+          </div>
+          <div class="field">
+            <label for="valEmail">E-Mail *</label>
+            <input type="email" id="valEmail" value="${valuationState.email}" required>
+          </div>
+          <div class="field valuation-field-wide">
+            <label for="valPhone">Telefon</label>
+            <input type="tel" id="valPhone" value="${valuationState.telefon}">
+          </div>
+        </div>
+        <label class="checkbox-field">
+          <input type="checkbox" id="valConsent" required>
+          Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> zur Kenntnis genommen. *
+        </label>
+        <p class="valuation-error" id="valuationError" hidden>Bitte füllen Sie alle Pflichtfelder korrekt aus.</p>
+        <div class="valuation-nav">
+          <button type="button" class="btn btn-outline valuation-back">&larr; Zurück</button>
+          <button type="submit" class="btn btn-primary valuation-submit">Bewertung anfordern <span class="arrow">&rarr;</span></button>
+        </div>
+      </form>
+    `;
+  }
+
+  // Step 5: success
+  return `
+    <div class="valuation-success">
+      <h2>Vielen Dank!</h2>
+      <p>Wir haben Ihre Angaben erhalten und melden uns innerhalb eines Werktags mit einer
+        ersten Einschätzung zu Ihrer Immobilie.</p>
+      <a href="#top" class="btn btn-primary">Zur Startseite</a>
+    </div>
+  `;
+}
+
+function renderValuationStep() {
+  const body = document.getElementById('valuationBody');
+  if (!body) return;
+  body.innerHTML = valuationStepHTML();
+  bindValuationStepEvents();
+}
+
+function bindValuationStepEvents() {
+  const body = document.getElementById('valuationBody');
+  if (!body) return;
+
+  body.querySelectorAll('.valuation-choice').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (valuationStep === 1) valuationState.anliegen = btn.dataset.value;
+      if (valuationStep === 2) valuationState.typ = btn.dataset.value;
+      valuationStep += 1;
+      renderValuationStep();
+    });
+  });
+
+  body.querySelector('.valuation-back')?.addEventListener('click', () => {
+    valuationStep -= 1;
+    renderValuationStep();
+  });
+
+  body.querySelector('.valuation-next')?.addEventListener('click', () => {
+    const flaeche = document.getElementById('valFlaeche');
+    const zimmer = document.getElementById('valZimmer');
+    const adresse = document.getElementById('valAdresse');
+    const valid = flaeche.value.trim() && zimmer.value.trim() && adresse.value.trim();
+    [flaeche, zimmer, adresse].forEach((f) =>
+      f.setAttribute('aria-invalid', f.value.trim() ? 'false' : 'true')
+    );
+    if (!valid) return;
+
+    valuationState.flaeche = flaeche.value;
+    valuationState.zimmer = zimmer.value;
+    valuationState.baujahr = document.getElementById('valBaujahr').value;
+    valuationState.adresse = adresse.value;
+    valuationStep += 1;
+    renderValuationStep();
+  });
+
+  const form = document.getElementById('valuationForm');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('valName');
+    const email = document.getElementById('valEmail');
+    const phone = document.getElementById('valPhone');
+    const consent = document.getElementById('valConsent');
+    const error = document.getElementById('valuationError');
+    const submitBtn = form.querySelector('.valuation-submit');
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
+    const valid = name.value.trim() && emailOk && consent.checked;
+    name.setAttribute('aria-invalid', name.value.trim() ? 'false' : 'true');
+    email.setAttribute('aria-invalid', emailOk ? 'false' : 'true');
+    error.hidden = true;
+
+    if (!valid) {
+      error.hidden = false;
+      error.textContent = 'Bitte füllen Sie alle Pflichtfelder korrekt aus.';
+      return;
+    }
+
+    valuationState.name = name.value;
+    valuationState.email = email.value;
+    valuationState.telefon = phone.value;
+
+    const originalLabel = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Wird gesendet …';
+
+    try {
+      const typeLabel = VALUATION_TYPES.find((t) => t.value === valuationState.typ)?.label || valuationState.typ;
+      const anliegenLabel = valuationState.anliegen === 'mietpreis' ? 'Mietpreis' : 'Kaufpreis';
+      const fd = new FormData();
+      fd.append('_subject', 'Neue Online-Bewertung – Winfried Immobilien');
+      fd.append('name', valuationState.name);
+      fd.append('email', valuationState.email);
+      fd.append('telefon', valuationState.telefon);
+      fd.append('anliegen', anliegenLabel);
+      fd.append('immobilientyp', typeLabel);
+      fd.append('wohnflaeche', `${valuationState.flaeche} m²`);
+      fd.append('zimmer', valuationState.zimmer);
+      fd.append('baujahr', valuationState.baujahr);
+      fd.append('adresse', valuationState.adresse);
+
+      const response = await fetch('https://formspree.io/f/myezkkbq', {
+        method: 'POST',
+        body: fd,
+        headers: { Accept: 'application/json' },
+      });
+
+      if (response.ok) {
+        valuationStep = 5;
+        renderValuationStep();
+      } else {
+        error.hidden = false;
+        error.textContent = 'Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut.';
+      }
+    } catch {
+      error.hidden = false;
+      error.textContent = 'Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es erneut.';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalLabel;
+    }
+  });
+}
+
+function showValuationPage() {
+  const main = document.querySelector('main');
+  const page = document.getElementById('valuationPage');
+  if (!main || !page) return;
+
+  resetValuationState();
+  renderValuationStep();
+  main.hidden = true;
+  page.hidden = false;
+  page.classList.remove('is-visible');
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  document.title = 'Kostenlose Bewertung – Winfried Immobilien';
+  updateHeaderState();
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      page.classList.add('is-visible');
+    });
+  });
+}
+
+function closeValuationPage() {
+  const main = document.querySelector('main');
+  const page = document.getElementById('valuationPage');
+  if (!page || page.hidden) return;
+  page.hidden = true;
+  if (main) main.hidden = false;
+  document.title = DEFAULT_TITLE;
+  updateHeaderState();
 }
 
 /* ---------- Testimonial slider ---------- */

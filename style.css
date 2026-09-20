@@ -1305,6 +1305,63 @@ textarea:focus-visible,
 .side-contact-row { display: flex; gap: 0.7rem; margin-top: 0.8rem; }
 .side-contact-btn { flex: 1; padding-left: 0.8rem; padding-right: 0.8rem; }
 
+/* Kostenlose Bewertung: multi-step wizard */
+.valuation-container { max-width: 640px; }
+.valuation-container h2 { font-size: 1.6rem; margin: 0.4rem 0 1.6rem; }
+.valuation-progress { margin-bottom: 2.2rem; }
+.valuation-progress-bar { height: 4px; border-radius: 999px; background: var(--border); overflow: hidden; }
+.valuation-progress-bar span { display: block; height: 100%; background: var(--gold-deep); transition: width var(--transition); }
+.valuation-progress-label { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.valuation-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+.valuation-choices-grid { grid-template-columns: repeat(3, 1fr); }
+.valuation-choice {
+  min-width: 0;
+  padding: 1.6rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+.valuation-choice:hover { border-color: var(--gold-deep); }
+.valuation-choice.selected { border-color: var(--gold-deep); background: var(--bg-alt); }
+
+.valuation-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.4rem; }
+.valuation-field-wide { grid-column: 1 / -1; }
+.valuation-container .field label { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft); margin-bottom: 0.4rem; }
+.valuation-container .field input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+.valuation-container .checkbox-field { margin-bottom: 1rem; }
+.valuation-error { color: #b3453f; font-size: 0.88rem; margin-bottom: 1rem; }
+.valuation-nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 0.6rem; }
+.valuation-nav .btn-outline { border: 1px solid var(--border); }
+
+.valuation-success { text-align: center; padding: 2rem 0; }
+.valuation-success h2 { margin-bottom: 1rem; }
+.valuation-success p { color: var(--text-soft); margin-bottom: 1.8rem; max-width: 440px; margin-left: auto; margin-right: auto; }
+
+@media (max-width: 560px) {
+  .valuation-choices-grid { grid-template-columns: 1fr 1fr; }
+  .valuation-form-grid { grid-template-columns: 1fr; }
+  .valuation-field-wide { grid-column: auto; }
+}
+
 @media (max-width: 900px) {
   .property-page-grid { grid-template-columns: 1fr; }
   .property-page-side { position: static; }
