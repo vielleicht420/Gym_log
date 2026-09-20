@@ -993,6 +993,7 @@ textarea:focus-visible,
 .field.error input, .field.error select, .field.error textarea { border-color: #b3453f; }
 .field-error-msg { color: #b3453f; font-size: 0.78rem; margin-top: 0.35rem; display: none; }
 .field.error .field-error-msg { display: block; }
+.checkbox-field.error input { outline: 2px solid #b3453f; outline-offset: 2px; }
 
 /* Footer */
 .site-footer { background: var(--ink); color: rgba(255,255,255,0.6); padding: 5rem 0 0; }
@@ -1347,6 +1348,7 @@ textarea:focus-visible,
   font-family: inherit;
   font-size: 0.95rem;
 }
+.valuation-container .field.error input { border-color: #b3453f; }
 .valuation-container .checkbox-field { margin-bottom: 1rem; }
 .valuation-error { color: #b3453f; font-size: 0.88rem; margin-bottom: 1rem; }
 .valuation-nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 0.6rem; }

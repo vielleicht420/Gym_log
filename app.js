@@ -886,9 +886,11 @@ function bindValuationStepEvents() {
     const zimmer = document.getElementById('valZimmer');
     const adresse = document.getElementById('valAdresse');
     const valid = flaeche.value.trim() && zimmer.value.trim() && adresse.value.trim();
-    [flaeche, zimmer, adresse].forEach((f) =>
-      f.setAttribute('aria-invalid', f.value.trim() ? 'false' : 'true')
-    );
+    [flaeche, zimmer, adresse].forEach((f) => {
+      const fieldValid = !!f.value.trim();
+      f.setAttribute('aria-invalid', fieldValid ? 'false' : 'true');
+      f.closest('.field')?.classList.toggle('error', !fieldValid);
+    });
     if (!valid) return;
 
     valuationState.flaeche = flaeche.value;
@@ -909,13 +911,19 @@ function bindValuationStepEvents() {
     const error = document.getElementById('valuationError');
     const submitBtn = form.querySelector('.valuation-submit');
 
+    const nameOk = !!name.value.trim();
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
-    const valid = name.value.trim() && emailOk && consent.checked;
-    name.setAttribute('aria-invalid', name.value.trim() ? 'false' : 'true');
+    const valid = nameOk && emailOk && consent.checked;
+    name.setAttribute('aria-invalid', nameOk ? 'false' : 'true');
     email.setAttribute('aria-invalid', emailOk ? 'false' : 'true');
+    name.closest('.field')?.classList.toggle('error', !nameOk);
+    email.closest('.field')?.classList.toggle('error', !emailOk);
+    consent.closest('.checkbox-field')?.classList.toggle('error', !consent.checked);
     error.hidden = true;
 
     if (!valid) {
+      const firstInvalid = form.querySelector('.field.error input, .checkbox-field.error input');
+      firstInvalid?.focus();
       error.hidden = false;
       error.textContent = 'Bitte füllen Sie alle Pflichtfelder korrekt aus.';
       return;
