@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroSearch();
   initBackToTop();
   initSideContactTab();
+  initContactPanel();
   initLegalModal();
   initCookieBanner();
   initMapEmbed();
@@ -1406,6 +1407,44 @@ function initSideContactTab() {
     },
     { passive: true }
   );
+}
+
+/* ---------- Contact panel (opened from the side contact tab) ---------- */
+function initContactPanel() {
+  const trigger = document.getElementById('sideContactTab');
+  const panel = document.getElementById('contactPanel');
+  if (!trigger || !panel) return;
+
+  const closeBtn = document.getElementById('contactPanelClose');
+  const scrim = panel.querySelector('.contact-panel-scrim');
+
+  const open = () => {
+    panel.hidden = false;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => panel.classList.add('is-visible'));
+    });
+  };
+
+  const close = () => {
+    panel.classList.remove('is-visible');
+    document.body.style.overflow = '';
+    window.setTimeout(() => { panel.hidden = true; }, 350);
+  };
+
+  // Open the panel instead of the tab's #kontakt fallback link — stopping
+  // propagation keeps the delegated anchor-scroll handler from also firing.
+  trigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    open();
+  });
+
+  closeBtn.addEventListener('click', close);
+  scrim.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !panel.hidden) close();
+  });
 }
 
 /* ---------- Cookie consent ---------- */
