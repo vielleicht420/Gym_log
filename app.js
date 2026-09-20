@@ -937,8 +937,24 @@ function valuationStepHTML() {
 function renderValuationStep() {
   const body = document.getElementById('valuationBody');
   if (!body) return;
-  body.innerHTML = valuationStepHTML();
-  bindValuationStepEvents();
+
+  const applyStep = () => {
+    body.innerHTML = valuationStepHTML();
+    bindValuationStepEvents();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        body.classList.remove('valuation-step-out');
+      });
+    });
+  };
+
+  if (REDUCED_MOTION || !body.hasChildNodes()) {
+    applyStep();
+    return;
+  }
+
+  body.classList.add('valuation-step-out');
+  window.setTimeout(applyStep, 160);
 }
 
 function bindValuationStepEvents() {
@@ -1114,6 +1130,7 @@ function showValuationPage() {
   if (!main || !page) return;
 
   resetValuationState();
+  document.getElementById('valuationBody').innerHTML = '';
   renderValuationStep();
   main.hidden = true;
   page.hidden = false;
