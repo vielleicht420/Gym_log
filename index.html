@@ -236,7 +236,7 @@
           <li>Persönlicher Ansprechpartner bis zum Notartermin</li>
         </ul>
 
-        <a href="#kontakt" class="btn btn-primary">Erstgespräch vereinbaren</a>
+        <a href="#kontakt" class="btn btn-primary js-first-meeting">Erstgespräch vereinbaren</a>
       </div>
     </div>
   </section>
@@ -255,11 +255,33 @@
         <button class="filter-btn" data-filter="mieten">Mieten</button>
       </div>
 
+      <p class="property-results-count reveal" id="propertyResultsCount"></p>
+
       <div class="grid property-grid" id="propertyGrid"></div>
 
       <div class="center" style="margin-top:2.5rem;">
         <a href="#kontakt" class="btn btn-outline">Alle Angebote auf Anfrage anzeigen</a>
       </div>
+    </div>
+  </section>
+
+  <!-- REGIONEN -->
+  <section id="regionen" class="section alt">
+    <div class="container">
+      <p class="eyebrow center reveal">München &amp; Umgebung</p>
+      <h2 class="section-title center reveal">Wir kennen nicht nur Immobilien.<br>Wir kennen die Lagen.</h2>
+
+      <div class="region-chips reveal" id="regionChips" role="tablist">
+        <button class="region-chip active" data-region="schwabing">Schwabing</button>
+        <button class="region-chip" data-region="bogenhausen">Bogenhausen</button>
+        <button class="region-chip" data-region="nymphenburg">Nymphenburg</button>
+        <button class="region-chip" data-region="solln">Solln</button>
+        <button class="region-chip" data-region="gruenwald">Grünwald</button>
+        <button class="region-chip" data-region="pullach">Pullach</button>
+        <button class="region-chip" data-region="starnberg">Starnberg</button>
+      </div>
+
+      <div class="region-detail reveal" id="regionDetail"></div>
     </div>
   </section>
 
@@ -271,7 +293,7 @@
         <p>Erhalten Sie eine fundierte, kostenlose Einschätzung &ndash; digital in 5 Minuten
           oder persönlich vor Ort.</p>
       </div>
-      <a href="#kontakt" class="btn btn-primary-inverted">Jetzt kostenlos bewerten</a>
+      <a href="#bewertung" class="btn btn-primary-inverted">Jetzt kostenlos bewerten</a>
     </div>
   </section>
 
@@ -343,6 +365,27 @@
     </div>
   </section>
 
+  <!-- VERKÄUFER-CHECKLISTE -->
+  <section id="checkliste" class="section alt">
+    <div class="container checklist-container">
+      <p class="eyebrow center reveal">Für Eigentümer</p>
+      <h2 class="section-title center reveal">Bereit für den Verkauf?</h2>
+      <p class="section-sub center reveal">Mit unserer Checkliste sehen Sie in wenigen Minuten, welche
+        Unterlagen und Informationen für einen erfolgreichen Immobilienverkauf wichtig sind.</p>
+
+      <div class="checklist-progress reveal">
+        <div class="checklist-progress-track"><div class="checklist-progress-fill" id="checklistProgressFill"></div></div>
+        <p class="checklist-progress-label" id="checklistProgressLabel">0 von 9 Punkten vorbereitet</p>
+      </div>
+
+      <div class="checklist-items reveal" id="checklistItems"></div>
+
+      <div class="center reveal">
+        <a href="#bewertung" class="btn btn-primary">Kostenlose Bewertung anfragen</a>
+      </div>
+    </div>
+  </section>
+
   <!-- TEAM -->
   <section id="team" class="section">
     <div class="container">
@@ -385,25 +428,32 @@
       <p class="eyebrow center reveal">Kundenstimmen</p>
       <h2 class="section-title center reveal">Was unsere Kund:innen sagen</h2>
 
+      <div class="filter-tabs testimonial-filter-tabs reveal" id="testimonialFilterTabs" role="tablist">
+        <button class="filter-btn active" data-filter="alle">Alle</button>
+        <button class="filter-btn" data-filter="verkauf">Verkauf</button>
+        <button class="filter-btn" data-filter="kauf">Kauf</button>
+        <button class="filter-btn" data-filter="vermietung">Vermietung</button>
+      </div>
+
       <div class="testimonial-slider reveal" id="testimonialSlider">
         <div class="testimonial-viewport">
           <div class="testimonial-track" id="testimonialTrack">
-            <blockquote class="testimonial">
+            <blockquote class="testimonial" data-category="verkauf">
               <p>&bdquo;Von der Bewertung bis zum Notartermin lief alles reibungslos.
                 Wir wurden zu jedem Zeitpunkt ehrlich beraten.&ldquo;</p>
               <footer>&mdash; Familie Hoffmann, Hausverkauf in München</footer>
             </blockquote>
-            <blockquote class="testimonial">
+            <blockquote class="testimonial" data-category="verkauf">
               <p>&bdquo;Unsere Wohnung war innerhalb von drei Wochen zum gewünschten
                 Preis verkauft. Absolut professionell.&ldquo;</p>
               <footer>&mdash; S. Kraus, Eigentumswohnung Starnberg</footer>
             </blockquote>
-            <blockquote class="testimonial">
+            <blockquote class="testimonial" data-category="vermietung">
               <p>&bdquo;Als Kapitalanleger schätze ich die zuverlässige Objektverwaltung
                 und die schnelle Kommunikation.&ldquo;</p>
               <footer>&mdash; T. Reinhardt, Kapitalanleger</footer>
             </blockquote>
-            <blockquote class="testimonial">
+            <blockquote class="testimonial" data-category="kauf">
               <p>&bdquo;Endlich ein Makler, der zuhört. Wir haben genau das Haus
                 gefunden, das zu unserer Familie passt.&ldquo;</p>
               <footer>&mdash; Familie Nowak, Immobilienkauf</footer>
@@ -416,6 +466,14 @@
           <button class="testimonial-arrow" id="testimonialNext" aria-label="Nächste Bewertung">&rarr;</button>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- BRAND LINE -->
+  <section class="brand-line">
+    <div class="container reveal">
+      <span class="rule" aria-hidden="true"></span>
+      <p>Nicht jede Immobilie braucht einen Makler.<br>Aber jede verdient den richtigen Auftritt.</p>
     </div>
   </section>
 
@@ -478,6 +536,8 @@
         <h2 class="section-title">Lassen Sie uns über Ihre Immobilie sprechen.</h2>
         <p>Ob Kauf, Verkauf, Vermietung oder einfach eine erste Einschätzung &ndash;
           wir freuen uns auf Ihre Nachricht.</p>
+        <p class="contact-valuation-hint">Sie möchten stattdessen direkt den Wert Ihrer Immobilie erfahren?
+          <a href="#bewertung">Kostenlose Bewertung <span class="arrow">&rarr;</span></a></p>
 
         <ul class="contact-list">
           <li><strong>Adresse</strong><span>Maximilianstraße 12, 80539 München</span></li>
@@ -520,12 +580,27 @@
           <div class="field">
             <label for="topic">Anliegen</label>
             <select id="topic" name="topic">
+              <option>Erstgespräch vereinbaren</option>
               <option>Immobilie verkaufen</option>
               <option>Immobilie kaufen</option>
               <option>Immobilie vermieten</option>
               <option>Immobilie mieten</option>
               <option>Sonstiges</option>
             </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="preferredContact">Bevorzugter Kontakt</label>
+            <select id="preferredContact" name="preferredContact">
+              <option>E-Mail</option>
+              <option>Telefon</option>
+              <option>Beides</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="timeframe">Gewünschter Zeitraum</label>
+            <input type="text" id="timeframe" name="timeframe" placeholder="z. B. nächste Woche, vormittags">
           </div>
         </div>
         <div class="field">

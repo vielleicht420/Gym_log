@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPropertyPage();
   initPropertyMedia();
   initTestimonialSlider();
+  initTestimonialFilter();
   initAccordion();
   initContactForm();
   initNewsletterForm();
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initCookieBanner();
   initMapEmbed();
   initFooterYear();
+  initRegions();
+  initSellerChecklist();
+  initFirstMeetingPrefill();
 });
 
 /* ---------- Header shrink on scroll + progress bar + light/dark theme ---------- */
@@ -324,6 +328,12 @@ const PROPERTIES = [
       'Diese gepflegte 3-Zimmer-Maisonettewohnung aus dem Baujahr 2008 erstreckt sich über zwei Etagen und bietet auf 84 m² ein modernes und komfortables Wohngefühl. Die offene Einbauküche mit hochwertigen Fronten, Granitarbeitsplatte, Dunstabzugshaube und praktischer Frühstücksbar ist ein echtes Highlight. Der großzügige, lichtdurchflutete Wohnbereich mit hellem Parkettboden lädt zum Wohlfühlen ein und bietet direkten Zugang zur sonnigen Dachterrasse mit schönem Ausblick ins Grüne – perfekt zum Entspannen und Genießen. Das gepflegte Badezimmer mit Dusche und WC sowie ein separates Gäste-WC runden das Raumangebot ab. Ein Aufzug im Gebäude sorgt ebenfalls für zusätzlichen Komfort.',
       'Im Kaufpreis inbegriffen ist ein Tiefgaragen-Einzelstellplatz im Wert von 15.000 €. Ein Energieausweis liegt vor. Die Wohnung ist zeitnah bezugsfrei. Die Wohnung ist aktuell noch voll möbliert. Die Einbauküche kann bei Interesse kostenlos übernommen werden.',
     ],
+    highlights: [
+      'Dachterrasse mit direktem Zugang vom Wohnbereich',
+      'Tiefgaragen-Stellplatz im Kaufpreis inbegriffen',
+      'Hochwertige Einbauküche mit Granitarbeitsplatte',
+      'Personenaufzug im Gebäude',
+    ],
     lage:
       'Die Wohnung befindet sich in Haar-Eglfing, einer ruhigen und grünen Wohnsiedlung mit gepflegter Außenanlage – und das direkt vor den Toren Münchens. Haar überzeugt mit einer hervorragenden Infrastruktur: Einkaufsmöglichkeiten, Schulen, Ärzte und Freizeitangebote sind alle in unmittelbarer Nähe. Die S-Bahn (S6 und S4) bringt Sie schnell und bequem in die Münchner Innenstadt – ideal für Berufspendler und Stadtliebhaber gleichermaßen.',
     facts: [
@@ -360,6 +370,7 @@ const PROPERTIES = [
     description: [
       'Stilvolle Altbauwohnung mit hohen Decken, Stuckelementen und Dielenboden in gefragter Lage nahe der Leopoldstraße.',
     ],
+    highlights: ['Hohe Decken und Stuckelemente', 'Dielenboden im Altbau-Charakter', 'Nahe der Leopoldstraße'],
   },
   {
     id: 'bogenhausen-penthouse',
@@ -375,6 +386,7 @@ const PROPERTIES = [
     description: [
       'Exklusives Penthouse mit umlaufender Dachterrasse und Blick über die Isarauen, hochwertig ausgestattet mit Fußbodenheizung und Smart-Home-Technik.',
     ],
+    highlights: ['Umlaufende Dachterrasse mit Blick über die Isarauen', 'Fußbodenheizung', 'Smart-Home-Technik'],
   },
   {
     id: 'haidhausen-loft',
@@ -390,6 +402,7 @@ const PROPERTIES = [
     description: [
       'Loft-Wohnung mit großen Fensterfronten und offenem Grundriss in zentraler Lage nahe dem Gasteig.',
     ],
+    highlights: ['Große Fensterfronten', 'Offener Grundriss', 'Nähe zum Gasteig'],
   },
   {
     id: 'starnberg-reihenhaus',
@@ -404,6 +417,7 @@ const PROPERTIES = [
     description: [
       'Familienfreundliches Reihenhaus mit privatem Garten, offener Wohnküche und kurzer Anbindung an den S-Bahnhof Starnberg.',
     ],
+    highlights: ['Privater Garten', 'Offene Wohnküche', 'Kurze Anbindung an den S-Bahnhof Starnberg'],
   },
   {
     id: 'sendling-2zi',
@@ -418,6 +432,7 @@ const PROPERTIES = [
     description: [
       'Ruhige 2-Zimmer-Wohnung mit Südbalkon, Einbauküche und guter Anbindung an die U3.',
     ],
+    highlights: ['Südbalkon', 'Einbauküche', 'Gute Anbindung an die U3'],
   },
   {
     id: 'germering-familienhaus',
@@ -432,6 +447,7 @@ const PROPERTIES = [
     description: [
       'Geräumiges Familienhaus mit Doppelgarage, Garten und Kellergeschoss in kinderfreundlicher Wohnlage.',
     ],
+    highlights: ['Doppelgarage', 'Garten', 'Kellergeschoss'],
   },
   {
     id: 'innenstadt-gewerbe',
@@ -446,6 +462,7 @@ const PROPERTIES = [
     description: [
       'Repräsentative Gewerbefläche mit Schaufensterfront, ideal für Einzelhandel oder Showroom in bester Innenstadtlage.',
     ],
+    highlights: ['Schaufensterfront', 'Beste Innenstadtlage', 'Ideal für Einzelhandel oder Showroom'],
   },
   {
     id: 'ammersee-villa',
@@ -461,6 +478,7 @@ const PROPERTIES = [
     description: [
       'Freistehende Villa mit direktem Seeblick, großzügigem Grundstück und privatem Bootssteg am Ammersee.',
     ],
+    highlights: ['Direkter Seeblick', 'Privater Bootssteg', 'Großzügiges Grundstück'],
   },
 ];
 
@@ -529,6 +547,12 @@ function propertyPageHTML(property) {
         .join('')}</ul>`
     : '';
 
+  const highlightsHTML = property.highlights
+    ? `<h2>Highlights</h2><ul class="detail-highlights">${property.highlights
+        .map((h) => `<li>${h}</li>`)
+        .join('')}</ul>`
+    : '';
+
   const lageHTML = property.lage ? `<h2>Lage</h2><p>${property.lage}</p>` : '';
 
   const addressHTML = property.address
@@ -572,12 +596,14 @@ function propertyPageHTML(property) {
         <h2>Objektbeschreibung</h2>
         ${(property.description || []).map((p) => `<p>${p}</p>`).join('')}
 
+        ${highlightsHTML}
         ${lageHTML}
       </div>
 
       <aside class="property-page-side">
         <div class="property-side-card">
           <p class="detail-price">${formatPrice(property)}</p>
+          <p class="detail-facts-label">Ausstattung</p>
           <ul class="detail-facts">${factsHTML}</ul>
           ${costsHTML}
           <a href="#kontakt" class="btn btn-primary detail-cta">Besichtigung anfragen</a>
@@ -591,20 +617,43 @@ function propertyPageHTML(property) {
   `;
 }
 
-function initProperties() {
-  const grid = document.getElementById('propertyGrid');
-  const tabs = document.getElementById('filterTabs');
-  if (!grid || !tabs) return;
+// Shared property search/filter state, driven by both the filter tabs on the
+// Immobilien section and the hero search form.
+const activePropertyFilters = { type: 'alle', location: '', budget: null };
 
-  const render = (filter) => {
-    const items =
-      filter === 'alle' ? PROPERTIES : PROPERTIES.filter((p) => p.type === filter);
-
-    if (items.length < 3) {
-      grid.innerHTML = items.map((p) => propertyCardHTML(p)).join('');
-      return;
+function getFilteredProperties() {
+  return PROPERTIES.filter((p) => {
+    if (activePropertyFilters.type !== 'alle' && p.type !== activePropertyFilters.type) return false;
+    if (activePropertyFilters.location && !p.location.toLowerCase().includes(activePropertyFilters.location.toLowerCase())) {
+      return false;
     }
+    if (activePropertyFilters.budget && p.price > activePropertyFilters.budget) return false;
+    return true;
+  });
+}
 
+function renderPropertyResults() {
+  const grid = document.getElementById('propertyGrid');
+  const countEl = document.getElementById('propertyResultsCount');
+  if (!grid) return;
+
+  const items = getFilteredProperties();
+  const hasExtraFilters = !!activePropertyFilters.location || !!activePropertyFilters.budget;
+
+  if (countEl) {
+    if (items.length === 0) {
+      countEl.innerHTML = `Keine passenden Objekte gefunden. Nicht das Richtige dabei? <a href="#kontakt">Wir finden auch abseits der Kartei etwas Passendes für Sie.</a>` +
+        (hasExtraFilters ? ` <button type="button" class="property-filter-reset" id="propertyFilterReset">Filter zurücksetzen</button>` : '');
+    } else {
+      const noun = items.length === 1 ? 'passende Immobilie' : 'passende Immobilien';
+      countEl.innerHTML = `<strong>${items.length}</strong> ${noun} gefunden` +
+        (hasExtraFilters ? ` <button type="button" class="property-filter-reset" id="propertyFilterReset">Filter zurücksetzen</button>` : '');
+    }
+  }
+
+  if (items.length < 3) {
+    grid.innerHTML = items.map((p) => propertyCardHTML(p)).join('');
+  } else {
     const [first, second, third, ...rest] = items;
     const featureRow = `
       <div class="property-feature-row">
@@ -616,14 +665,29 @@ function initProperties() {
       </div>
     `;
     grid.innerHTML = featureRow + rest.map((p) => propertyCardHTML(p)).join('');
-  };
+  }
+
+  document.getElementById('propertyFilterReset')?.addEventListener('click', () => {
+    activePropertyFilters.type = 'alle';
+    activePropertyFilters.location = '';
+    activePropertyFilters.budget = null;
+    document.querySelectorAll('#filterTabs .filter-btn').forEach((b) => b.classList.toggle('active', b.dataset.filter === 'alle'));
+    renderPropertyResults();
+  });
+}
+
+function initProperties() {
+  const grid = document.getElementById('propertyGrid');
+  const tabs = document.getElementById('filterTabs');
+  if (!grid || !tabs) return;
 
   tabs.addEventListener('click', (e) => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
     tabs.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    render(btn.dataset.filter);
+    activePropertyFilters.type = btn.dataset.filter;
+    renderPropertyResults();
   });
 
   const openCard = (card) => {
@@ -643,7 +707,7 @@ function initProperties() {
     openCard(card);
   });
 
-  render('alle');
+  renderPropertyResults();
 }
 
 /* ---------- Property detail page ---------- */
@@ -1184,13 +1248,17 @@ function initTestimonialSlider() {
   const slider = document.getElementById('testimonialSlider');
   if (!track || !counter || !slider) return;
 
-  const slides = track.children.length;
   let index = 0;
   let timer = null;
 
   const pad = (n) => String(n).padStart(2, '0');
 
+  // Recomputed on every call rather than captured once, so this keeps
+  // working correctly after the testimonial filter replaces the track's
+  // content with a smaller subset.
   function goTo(i) {
+    const slides = track.children.length;
+    if (!slides) return;
     index = (i + slides) % slides;
     track.style.transform = `translateX(-${index * 100}%)`;
     counter.innerHTML = `<strong>${pad(index + 1)}</strong> / ${pad(slides)}`;
@@ -1227,6 +1295,11 @@ function initTestimonialSlider() {
 
   goTo(0);
   startAutoplay();
+
+  // Exposed so the category filter can jump back to the start and restart
+  // autoplay over a freshly-rendered subset, without re-registering all
+  // the listeners above a second time.
+  track._resetSlider = () => { goTo(0); startAutoplay(); };
 }
 
 /* ---------- FAQ accordion ---------- */
@@ -1341,7 +1414,7 @@ function initNewsletterForm() {
   });
 }
 
-/* ---------- Hero search -> scrolls to contact with prefilled topic ---------- */
+/* ---------- Hero search -> real property search, or the valuation wizard for sellers ---------- */
 function initHeroSearch() {
   const form = document.getElementById('heroSearch');
   if (!form) return;
@@ -1349,23 +1422,28 @@ function initHeroSearch() {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const type = document.getElementById('searchType').value;
-    const location = document.getElementById('searchLocation').value.trim();
+    const locationQuery = document.getElementById('searchLocation').value.trim();
+    const budget = document.getElementById('searchBudget').value;
 
-    const topicSelect = document.getElementById('topic');
-    const messageField = document.getElementById('message');
-
-    const labelMap = {
-      kaufen: 'Immobilie kaufen',
-      mieten: 'Immobilie mieten',
-      verkaufen: 'Immobilie verkaufen',
-    };
-
-    if (topicSelect && labelMap[type]) topicSelect.value = labelMap[type];
-    if (messageField && location) {
-      messageField.value = `Ich interessiere mich für eine Immobilie in/bei "${location}".`;
+    // "Verkaufen" means the visitor wants to sell, not browse listings —
+    // there's nothing to search for, so send them straight to the real
+    // valuation flow instead of an empty/irrelevant results view.
+    if (type === 'verkaufen') {
+      location.hash = VALUATION_ROUTE;
+      return;
     }
 
-    document.getElementById('kontakt').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    activePropertyFilters.type = type;
+    activePropertyFilters.location = locationQuery;
+    activePropertyFilters.budget = budget ? Number(budget) : null;
+
+    document.querySelectorAll('#filterTabs .filter-btn').forEach((b) => {
+      b.classList.toggle('active', b.dataset.filter === type);
+    });
+    renderPropertyResults();
+
+    history.replaceState(null, '', '#immobilien');
+    document.getElementById('immobilien')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }
 
@@ -1719,4 +1797,188 @@ function initPropertyMedia() {
 function initFooterYear() {
   const el = document.getElementById('year');
   if (el) el.textContent = new Date().getFullYear().toString();
+}
+
+/* ---------- Regions (München & Umgebung) ---------- */
+const REGIONS = {
+  schwabing: {
+    label: 'Schwabing',
+    text: 'Schwabing zählt zu den gefragtesten Altbaulagen Münchens – hohe Nachfrage bei Eigentumswohnungen, stabile Wertentwicklung und eine Käuferschaft, die Charakter und zentrale Lage schätzt.',
+  },
+  bogenhausen: {
+    label: 'Bogenhausen',
+    text: 'Bogenhausen steht für gehobenes Wohnen mit Villencharakter und guter Anbindung an die Isar – ein Stadtteil mit hoher Kaufkraft und entsprechend gefragtem Objektsegment.',
+  },
+  nymphenburg: {
+    label: 'Nymphenburg',
+    text: 'Nymphenburg verbindet großzügige Grundstücke und ruhige Wohnstraßen mit kurzen Wegen in die Innenstadt – ein Markt für Familien und langfristig orientierte Käufer:innen.',
+  },
+  solln: {
+    label: 'Solln',
+    text: 'Solln ist geprägt von freistehenden Einfamilienhäusern und Grundstücken in gewachsener Lage – gefragt bei Familien, die Ruhe und dennoch Stadtnähe suchen.',
+  },
+  gruenwald: {
+    label: 'Grünwald',
+    text: 'Grünwald gilt als eine der wertstabilsten Wohnlagen im Münchner Süden – große Grundstücke, hoher Diskretionsanspruch und ein Markt mit sehr geringer Fluktuation.',
+  },
+  pullach: {
+    label: 'Pullach',
+    text: 'Pullach bietet gehobenes Wohnen im Grünen mit direkter Isartal-Nähe – eine Lage, die zunehmend auch jüngere Familien mit höherem Budget anzieht.',
+  },
+  starnberg: {
+    label: 'Starnberg',
+    text: 'Starnberg profitiert von der Nähe zum See und der S-Bahn-Anbindung nach München – gefragt sowohl als Erstwohnsitz als auch für Kapitalanleger:innen.',
+  },
+};
+
+function initRegions() {
+  const chips = document.getElementById('regionChips');
+  const detail = document.getElementById('regionDetail');
+  if (!chips || !detail) return;
+
+  const render = (key) => {
+    const region = REGIONS[key];
+    if (!region) return;
+
+    const matches = PROPERTIES.filter((p) => p.location.toLowerCase().includes(region.label.toLowerCase()));
+    const matchesHTML = matches.length
+      ? `
+        <p class="region-matches-label">Demo-Objekte aus dieser Lage</p>
+        <div class="region-matches">${matches.map((p) => propertyCardHTML(p)).join('')}</div>
+      `
+      : `<p class="region-matches-label">Aktuell keine gelisteten Demo-Objekte in dieser Lage – <a href="#kontakt">sprechen Sie uns gerne an</a>.</p>`;
+
+    detail.innerHTML = `
+      <h3>${region.label}</h3>
+      <p>${region.text}</p>
+      ${matchesHTML}
+    `;
+  };
+
+  chips.addEventListener('click', (e) => {
+    const chip = e.target.closest('.region-chip');
+    if (!chip) return;
+    chips.querySelectorAll('.region-chip').forEach((c) => c.classList.remove('active'));
+    chip.classList.add('active');
+    render(chip.dataset.region);
+  });
+
+  detail.addEventListener('click', (e) => {
+    const card = e.target.closest('.property-card');
+    if (card?.dataset.id) location.hash = 'immobilie-' + card.dataset.id;
+  });
+
+  detail.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.property-card');
+    if (!card?.dataset.id) return;
+    e.preventDefault();
+    location.hash = 'immobilie-' + card.dataset.id;
+  });
+
+  render('schwabing');
+}
+
+/* ---------- Verkäufer-Checkliste ---------- */
+const SELLER_CHECKLIST_ITEMS = [
+  'Grundbuchauszug',
+  'Grundriss',
+  'Wohnflächenberechnung',
+  'Energieausweis',
+  'Bauunterlagen',
+  'Wohn-/Nutzflächen',
+  'Modernisierungen',
+  'Nebenkosten / Hausgeld',
+  'Teilungserklärung (bei Wohnung)',
+];
+const SELLER_CHECKLIST_KEY = 'sellerChecklistState';
+
+function initSellerChecklist() {
+  const list = document.getElementById('checklistItems');
+  const fill = document.getElementById('checklistProgressFill');
+  const label = document.getElementById('checklistProgressLabel');
+  if (!list || !fill || !label) return;
+
+  let checked = {};
+  try {
+    checked = JSON.parse(localStorage.getItem(SELLER_CHECKLIST_KEY)) || {};
+  } catch {
+    checked = {};
+  }
+
+  const updateProgress = () => {
+    const total = SELLER_CHECKLIST_ITEMS.length;
+    const done = SELLER_CHECKLIST_ITEMS.filter((_, i) => checked[i]).length;
+    fill.style.width = `${(done / total) * 100}%`;
+    label.textContent = `${done} von ${total} Punkten vorbereitet`;
+  };
+
+  list.innerHTML = SELLER_CHECKLIST_ITEMS.map(
+    (item, i) => `
+      <button type="button" class="checklist-item${checked[i] ? ' checked' : ''}" data-index="${i}">
+        <span class="checklist-box" aria-hidden="true">${checked[i] ? '&#10003;' : ''}</span>
+        <span class="checklist-label">${item}</span>
+      </button>
+    `
+  ).join('');
+
+  list.addEventListener('click', (e) => {
+    const btn = e.target.closest('.checklist-item');
+    if (!btn) return;
+    const i = btn.dataset.index;
+    checked[i] = !checked[i];
+    btn.classList.toggle('checked', !!checked[i]);
+    btn.querySelector('.checklist-box').innerHTML = checked[i] ? '&#10003;' : '';
+    try {
+      localStorage.setItem(SELLER_CHECKLIST_KEY, JSON.stringify(checked));
+    } catch {
+      /* localStorage unavailable (private mode etc.) — state just won't persist */
+    }
+    updateProgress();
+  });
+
+  updateProgress();
+}
+
+/* ---------- Testimonial category filter ---------- */
+function initTestimonialFilter() {
+  const tabs = document.getElementById('testimonialFilterTabs');
+  const track = document.getElementById('testimonialTrack');
+  if (!tabs || !track) return;
+
+  // Keep the original markup so a filter can be reversed exactly, since
+  // filtering replaces the track's content rather than just hiding items
+  // (the slider positions slides by index, which hidden-but-present
+  // elements would throw off).
+  const allTestimonials = [...track.querySelectorAll('.testimonial')].map((el) => ({
+    category: el.dataset.category,
+    html: el.outerHTML,
+  }));
+
+  tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    tabs.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const filter = btn.dataset.filter;
+    const filtered = filter === 'alle' ? allTestimonials : allTestimonials.filter((t) => t.category === filter);
+
+    track.innerHTML = filtered.length
+      ? filtered.map((t) => t.html).join('')
+      : '<p class="testimonial-empty">Noch keine Bewertungen in dieser Kategorie.</p>';
+
+    track._resetSlider?.();
+  });
+}
+
+/* ---------- "Erstgespräch vereinbaren" -> prefill the contact form ---------- */
+function initFirstMeetingPrefill() {
+  const btn = document.querySelector('.js-first-meeting');
+  const topicSelect = document.getElementById('topic');
+  if (!btn || !topicSelect) return;
+
+  btn.addEventListener('click', () => {
+    topicSelect.value = 'Erstgespräch vereinbaren';
+  });
 }

@@ -1562,6 +1562,128 @@ textarea:focus-visible,
   .scroll-arrow::after { animation: none !important; top: 0; }
 }
 
+/* Property search results */
+.property-results-count { text-align: center; color: var(--text-soft); font-size: 0.92rem; margin: -1.4rem 0 1.8rem; }
+.property-results-count strong { color: var(--text); font-family: var(--font-head); font-size: 1.05rem; }
+.property-results-count a { color: var(--gold-deep); text-decoration: underline; text-underline-offset: 2px; }
+.property-filter-reset {
+  border: none;
+  background: none;
+  color: var(--gold-deep);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  margin-left: 0.4rem;
+  padding: 0;
+}
+.property-filter-reset:hover { color: var(--ink); }
+
+/* Property detail: Highlights + Ausstattung label */
+.detail-highlights { margin: 1.4rem 0 0.6rem; display: grid; gap: 0.6rem; }
+.detail-highlights li { padding-left: 1.7rem; position: relative; color: var(--text-soft); }
+.detail-highlights li::before { content: '—'; position: absolute; left: 0; color: var(--gold-deep); font-weight: 700; }
+.detail-facts-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.74rem;
+  color: var(--text-soft);
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+/* Regionen (München & Umgebung) */
+.region-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin: 2rem 0 2.4rem; }
+.region-chip {
+  padding: 0.6rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.region-chip:hover { border-color: var(--gold); color: var(--gold-deep); }
+.region-chip.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+.region-detail {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.4rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.region-detail h3 { font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 0.9rem; }
+.region-detail > p { color: var(--text-soft); line-height: 1.7; }
+.region-matches-label { margin-top: 1.6rem; font-size: 0.82rem; color: var(--text-soft); text-align: center; }
+.region-matches-label a { color: var(--gold-deep); }
+.region-matches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; text-align: left; }
+
+/* Verkäufer-Checkliste */
+.checklist-container { max-width: 640px; }
+.checklist-progress { max-width: 420px; margin: 2rem auto 0; text-align: center; }
+.checklist-progress-track { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; }
+.checklist-progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width var(--transition); }
+.checklist-progress-label { margin-top: 0.7rem; font-size: 0.85rem; color: var(--text-soft); }
+.checklist-items { display: grid; gap: 0.7rem; margin: 2rem 0 2.4rem; }
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  font-family: inherit;
+  font-size: 0.96rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.checklist-item:hover { border-color: var(--gold); }
+.checklist-item.checked { border-color: var(--gold-deep); background: var(--bg); }
+.checklist-box {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--white);
+  font-size: 0.8rem;
+  transition: all var(--transition-fast);
+}
+.checklist-item.checked .checklist-box { background: var(--gold-deep); border-color: var(--gold-deep); }
+.checklist-item.checked .checklist-label { color: var(--text-soft); text-decoration: line-through; text-decoration-color: var(--border); }
+
+/* Testimonial filter + empty state */
+.testimonial-filter-tabs { margin-bottom: 2rem; }
+.testimonial-empty { text-align: center; color: var(--text-soft); padding: 2rem 0; }
+
+/* Kontakt: link to the valuation flow */
+.contact-valuation-hint { font-size: 0.92rem; color: var(--text-soft); margin-top: -0.6rem; margin-bottom: 1.6rem; }
+.contact-valuation-hint a { color: var(--gold-deep); font-weight: 600; text-decoration: none; }
+.contact-valuation-hint a:hover .arrow { transform: translateX(3px); }
+.contact-valuation-hint .arrow { display: inline-block; transition: transform var(--transition-fast); }
+
+/* Brand line */
+.brand-line { padding: 4.5rem 0; text-align: center; }
+.brand-line .rule { display: block; width: 40px; height: 2px; background: var(--gold); margin: 0 auto 1.8rem; }
+.brand-line p {
+  font-family: var(--font-head);
+  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+  font-weight: 500;
+  color: var(--text);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.45;
+}
+
 /* Responsive */
 @media (max-width: 1000px) {
   .property-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1791,6 +1913,15 @@ textarea:focus-visible,
   .cookie-banner-actions .btn { width: 100%; }
 
   .footer-legal { flex-wrap: wrap; gap: 0.6rem 1.2rem; }
+
+  /* New sections: quieter spacing and single-column layouts on phones. */
+  .region-chips { gap: 0.4rem; margin: 1.6rem 0 1.8rem; }
+  .region-chip { padding: 0.5rem 1.1rem; font-size: 0.82rem; }
+  .region-detail { padding: 1.6rem; }
+  .region-matches { grid-template-columns: 1fr; }
+  .checklist-item { padding: 0.85rem 1rem; font-size: 0.92rem; }
+  .brand-line { padding: 3rem 0; }
+  .property-results-count { margin-top: -1rem; }
 }
 
 /* Touch devices: no hover-only feedback — give buttons, cards and rows a
@@ -1800,6 +1931,8 @@ textarea:focus-visible,
   .property-card:active { transform: translateY(-2px); box-shadow: var(--shadow-md); }
   .service-row:active { background: var(--white); }
   .team-card:active .team-photo img { transform: scale(1.02); }
+  .checklist-item:active { transform: scale(0.99); }
+  .region-chip:active { transform: scale(0.97); }
 }
 
 @media (max-width: 340px) {
