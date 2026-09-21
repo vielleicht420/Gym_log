@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initMapEmbed();
   initFooterYear();
   initRegions();
-  initSellerChecklist();
   initFirstMeetingPrefill();
 });
 
@@ -1877,67 +1876,6 @@ function initRegions() {
   });
 
   render('schwabing');
-}
-
-/* ---------- Verkäufer-Checkliste ---------- */
-const SELLER_CHECKLIST_ITEMS = [
-  'Grundbuchauszug',
-  'Grundriss',
-  'Wohnflächenberechnung',
-  'Energieausweis',
-  'Bauunterlagen',
-  'Wohn-/Nutzflächen',
-  'Modernisierungen',
-  'Nebenkosten / Hausgeld',
-  'Teilungserklärung (bei Wohnung)',
-];
-const SELLER_CHECKLIST_KEY = 'sellerChecklistState';
-
-function initSellerChecklist() {
-  const list = document.getElementById('checklistItems');
-  const fill = document.getElementById('checklistProgressFill');
-  const label = document.getElementById('checklistProgressLabel');
-  if (!list || !fill || !label) return;
-
-  let checked = {};
-  try {
-    checked = JSON.parse(localStorage.getItem(SELLER_CHECKLIST_KEY)) || {};
-  } catch {
-    checked = {};
-  }
-
-  const updateProgress = () => {
-    const total = SELLER_CHECKLIST_ITEMS.length;
-    const done = SELLER_CHECKLIST_ITEMS.filter((_, i) => checked[i]).length;
-    fill.style.width = `${(done / total) * 100}%`;
-    label.textContent = `${done} von ${total} Punkten vorbereitet`;
-  };
-
-  list.innerHTML = SELLER_CHECKLIST_ITEMS.map(
-    (item, i) => `
-      <button type="button" class="checklist-item${checked[i] ? ' checked' : ''}" data-index="${i}">
-        <span class="checklist-box" aria-hidden="true">${checked[i] ? '&#10003;' : ''}</span>
-        <span class="checklist-label">${item}</span>
-      </button>
-    `
-  ).join('');
-
-  list.addEventListener('click', (e) => {
-    const btn = e.target.closest('.checklist-item');
-    if (!btn) return;
-    const i = btn.dataset.index;
-    checked[i] = !checked[i];
-    btn.classList.toggle('checked', !!checked[i]);
-    btn.querySelector('.checklist-box').innerHTML = checked[i] ? '&#10003;' : '';
-    try {
-      localStorage.setItem(SELLER_CHECKLIST_KEY, JSON.stringify(checked));
-    } catch {
-      /* localStorage unavailable (private mode etc.) — state just won't persist */
-    }
-    updateProgress();
-  });
-
-  updateProgress();
 }
 
 /* ---------- Testimonial category filter ---------- */

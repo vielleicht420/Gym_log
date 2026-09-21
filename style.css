@@ -1624,43 +1624,6 @@ textarea:focus-visible,
 .region-matches-label a { color: var(--gold-deep); }
 .region-matches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; text-align: left; }
 
-/* Verkäufer-Checkliste */
-.checklist-container { max-width: 640px; }
-.checklist-progress { max-width: 420px; margin: 2rem auto 0; text-align: center; }
-.checklist-progress-track { height: 5px; background: var(--border); border-radius: 999px; overflow: hidden; }
-.checklist-progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width var(--transition); }
-.checklist-progress-label { margin-top: 0.7rem; font-size: 0.85rem; color: var(--text-soft); }
-.checklist-items { display: grid; gap: 0.7rem; margin: 2rem 0 2.4rem; }
-.checklist-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  padding: 1rem 1.2rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--white);
-  font-family: inherit;
-  font-size: 0.96rem;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color var(--transition-fast), background var(--transition-fast);
-}
-.checklist-item:hover { border-color: var(--gold); }
-.checklist-item.checked { border-color: var(--gold-deep); background: var(--bg); }
-.checklist-box {
-  flex-shrink: 0;
-  width: 22px; height: 22px;
-  border-radius: 6px;
-  border: 1.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--white);
-  font-size: 0.8rem;
-  transition: all var(--transition-fast);
-}
-.checklist-item.checked .checklist-box { background: var(--gold-deep); border-color: var(--gold-deep); }
-.checklist-item.checked .checklist-label { color: var(--text-soft); text-decoration: line-through; text-decoration-color: var(--border); }
-
 /* Testimonial filter + empty state */
 .testimonial-filter-tabs { margin-bottom: 2rem; }
 .testimonial-empty { text-align: center; color: var(--text-soft); padding: 2rem 0; }
@@ -1919,7 +1882,6 @@ textarea:focus-visible,
   .region-chip { padding: 0.5rem 1.1rem; font-size: 0.82rem; }
   .region-detail { padding: 1.6rem; }
   .region-matches { grid-template-columns: 1fr; }
-  .checklist-item { padding: 0.85rem 1rem; font-size: 0.92rem; }
   .brand-line { padding: 3rem 0; }
   .property-results-count { margin-top: -1rem; }
 }
@@ -1931,7 +1893,6 @@ textarea:focus-visible,
   .property-card:active { transform: translateY(-2px); box-shadow: var(--shadow-md); }
   .service-row:active { background: var(--white); }
   .team-card:active .team-photo img { transform: scale(1.02); }
-  .checklist-item:active { transform: scale(0.99); }
   .region-chip:active { transform: scale(0.97); }
 }
 
