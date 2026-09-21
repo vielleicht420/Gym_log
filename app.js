@@ -540,11 +540,25 @@ function propertyPageHTML(property) {
     .map((f) => `<li><span>${f.label}</span><strong>${f.value}</strong></li>`)
     .join('');
 
-  const costsHTML = property.costs
-    ? `<h2>Kosten</h2><ul class="detail-facts">${property.costs
+  // "Preis pro m²" and "Provision für Käufer" now already appear in the
+  // price block near the top — drop them here so the price-related facts
+  // don't show up twice on the same page.
+  const DUPLICATED_COST_LABELS = ['Preis pro m²', 'Provision für Käufer'];
+  const remainingCosts = (property.costs || []).filter((c) => !DUPLICATED_COST_LABELS.includes(c.label));
+  const costsHTML = remainingCosts.length
+    ? `<h2>Kosten</h2><ul class="detail-facts">${remainingCosts
         .map((c) => `<li><span>${c.label}</span><strong>${c.value}</strong></li>`)
         .join('')}</ul>`
     : '';
+
+  const priceSubParts = [property.pricePerSqm, property.commission].filter(Boolean);
+  const priceSubHTML = priceSubParts.length
+    ? `<p class="detail-price-sub">${priceSubParts.join(' &middot; ')}</p>`
+    : '';
+  const priceBlockHTML = `
+    <p class="detail-price-main">${formatPrice(property)}</p>
+    ${priceSubHTML}
+  `;
 
   const highlightsHTML = property.highlights
     ? `<h2>Highlights</h2><ul class="detail-highlights">${property.highlights
@@ -591,6 +605,7 @@ function propertyPageHTML(property) {
         <h1>${property.title}</h1>
         <p class="detail-loc">${property.location}</p>
         ${addressHTML}
+        ${priceBlockHTML}
 
         <h2>Objektbeschreibung</h2>
         ${(property.description || []).map((p) => `<p>${p}</p>`).join('')}
@@ -601,7 +616,6 @@ function propertyPageHTML(property) {
 
       <aside class="property-page-side">
         <div class="property-side-card">
-          <p class="detail-price">${formatPrice(property)}</p>
           <p class="detail-facts-label">Ausstattung</p>
           <ul class="detail-facts">${factsHTML}</ul>
           ${costsHTML}
@@ -613,6 +627,43 @@ function propertyPageHTML(property) {
         </div>
       </aside>
     </div>
+
+    ${relatedPropertiesHTML(property)}
+  `;
+}
+
+// Prefers the same property type first, then the same region (the part of
+// the location after the last comma, e.g. "München" in "Schwabing, München")
+// as a fallback — falling back further to plain listing order when neither
+// matches, so this always returns something as long as other properties exist.
+function propertyRegion(location) {
+  const parts = location.split(',');
+  return parts[parts.length - 1].trim().toLowerCase();
+}
+
+function getSimilarProperties(property, max = 3) {
+  const region = propertyRegion(property.location);
+  return PROPERTIES.filter((p) => p.id !== property.id)
+    .map((p, idx) => ({
+      p,
+      idx,
+      score: (p.type === property.type ? 2 : 0) + (propertyRegion(p.location) === region ? 1 : 0),
+    }))
+    .sort((a, b) => b.score - a.score || a.idx - b.idx)
+    .slice(0, max)
+    .map((x) => x.p);
+}
+
+function relatedPropertiesHTML(property) {
+  const related = getSimilarProperties(property, 3);
+  if (!related.length) return '';
+
+  return `
+    <section class="related-properties">
+      <h2 class="section-title center">Weitere Immobilien</h2>
+      <p class="section-sub center">Vielleicht ist noch etwas für Sie dabei.</p>
+      <div class="related-grid">${related.map((p) => propertyCardHTML(p)).join('')}</div>
+    </section>
   `;
 }
 
@@ -771,6 +822,24 @@ function syncPropertyRoute() {
 function initPropertyPage() {
   window.addEventListener('hashchange', syncPropertyRoute);
   syncPropertyRoute();
+
+  // Delegated once on the stable body element, since its innerHTML (and so
+  // the "Weitere Immobilien" cards within it) is replaced on every navigation.
+  const body = document.getElementById('propertyPageBody');
+  const openCard = (card) => {
+    if (card.dataset.id) location.hash = 'immobilie-' + card.dataset.id;
+  };
+  body?.addEventListener('click', (e) => {
+    const card = e.target.closest('.related-properties .property-card');
+    if (card) openCard(card);
+  });
+  body?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.related-properties .property-card');
+    if (!card) return;
+    e.preventDefault();
+    openCard(card);
+  });
 }
 
 /* ---------- Kostenlose Bewertung: multi-step wizard ---------- */
